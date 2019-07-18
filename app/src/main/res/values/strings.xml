@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Calculendar</string>
-    <string name="title_activity_calculendar_about">Calculendar</string>
+    <string name="title_activity_calculendar_about">About Calculendar</string>
+    <string name="app_about_action_text">About</string>
+    <string name="version_header">Version %s</string>
+    <string name="developer_name_header">Developers</string>
 </resources>

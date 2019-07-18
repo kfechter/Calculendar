@@ -14,8 +14,8 @@ class CalculendarMain : BaseActivity() {
         viewPager.adapter = object : FragmentStateAdapter(this) {
             override fun createFragment(position: Int): Fragment {
                 return when(position) {
-                    0 -> DateFragment.create("Date Range")
-                    else -> DateFragment.create("Date Range")
+                    0 -> DateFragment.create()
+                    else -> DateFragment.create()
                 }
             }
 

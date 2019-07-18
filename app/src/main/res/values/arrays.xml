@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="developer_names">
+        <item>Kenneth Fechter</item>
+        <item>Graham Klein</item>
+        <item>Tobyn Collinsworth</item>
+    </string-array>
+</resources>

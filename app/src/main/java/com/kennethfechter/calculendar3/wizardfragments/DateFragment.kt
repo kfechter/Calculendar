@@ -19,20 +19,17 @@ class DateFragment : Fragment() {
         val futureDate = Calendar.getInstance()
         futureDate.add(Calendar.YEAR, 5)
         pastDate.add(Calendar.YEAR, -5)
-        val todaysDate = Date()
+        val today = Date()
         calendarPicker.init(pastDate.time, futureDate.time)
             .inMode(CalendarPickerView.SelectionMode.RANGE)
-            .withSelectedDate(todaysDate)
+            .withSelectedDate(today)
+        activity?.title = "Choose Date Range"
         return view
     }
 
     companion object {
-        fun create(title: String) : DateFragment {
-            val dateFragment = DateFragment()
-            val args = Bundle()
-            args.putString("title", title)
-            dateFragment.arguments = args
-            return dateFragment
+        fun create() : DateFragment {
+            return DateFragment()
         }
     }
 }
