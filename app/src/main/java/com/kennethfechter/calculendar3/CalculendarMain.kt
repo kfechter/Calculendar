@@ -3,6 +3,7 @@ package com.kennethfechter.calculendar3
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.kennethfechter.calculendar3.wizardfragments.BaseActivity
 import com.kennethfechter.calculendar3.wizardfragments.DateFragment
 

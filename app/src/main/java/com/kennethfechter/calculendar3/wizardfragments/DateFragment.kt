@@ -1,5 +1,6 @@
 package com.kennethfechter.calculendar3.wizardfragments
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import androidx.fragment.app.Fragment
 import com.kennethfechter.calculendar3.R
 import com.squareup.timessquare.CalendarPickerView
 import java.util.*
+import kotlin.Exception
 
 class DateFragment : Fragment() {
 
@@ -24,6 +26,19 @@ class DateFragment : Fragment() {
             .inMode(CalendarPickerView.SelectionMode.RANGE)
             .withSelectedDate(today)
         activity?.title = "Choose Date Range"
+
+        calendarPicker.setOnDateSelectedListener(object : CalendarPickerView.OnDateSelectedListener {
+            override fun onDateSelected(date: Date?) {
+                if (calendarPicker.selectedDates.size > 1)
+                {
+                    // date range is selected, send data to activity
+                }
+            }
+
+            override fun onDateUnselected(date: Date?) {
+                // don't do anything?
+            }
+        })
         return view
     }
 
