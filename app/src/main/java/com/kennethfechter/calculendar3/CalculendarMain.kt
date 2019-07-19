@@ -19,6 +19,9 @@ class CalculendarMain : AppCompatActivity() {
 
     private val layoutId: Int = R.layout.activity_calculendar_main
 
+    private var selectedDates: MutableList<Date> = mutableListOf()
+    private var excludedDates: MutableList<Date> = mutableListOf()
+
     override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
             setContentView(layoutId)
@@ -27,6 +30,10 @@ class CalculendarMain : AppCompatActivity() {
 
             btn_pick_range.setOnClickListener{
                 showRangePickerDialog()
+            }
+
+            btn_pick_custom.setOnClickListener {
+                showCustomDateSelectionDialog()
             }
         }
 
@@ -57,8 +64,8 @@ class CalculendarMain : AppCompatActivity() {
         pastDate.add(Calendar.YEAR, -1)
         val today = Date()
 
-        calendarPicker.init(pastDate.time, futureDate.time)
-            .inMode(CalendarPickerView.SelectionMode.RANGE)
+            calendarPicker.init(pastDate.time, futureDate.time)
+                .inMode(CalendarPickerView.SelectionMode.RANGE)
 
         calendarPicker.selectDate(today, true)
 
@@ -78,6 +85,7 @@ class CalculendarMain : AppCompatActivity() {
                 if(calendarPicker.selectedDates.size > 1) {
                     alertDialog.dismiss()
                     btn_pick_range.text = Utilities.getSelectedRangeString(calendarPicker.selectedDates)
+                    selectedDates = calendarPicker.selectedDates
                 } else {
                     Toast.makeText(applicationContext, "A date range has not been selected", Toast.LENGTH_LONG).show()
                 }
@@ -90,6 +98,37 @@ class CalculendarMain : AppCompatActivity() {
     }
 
     private fun showCustomDateSelectionDialog() {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_calculendar_datepicker, null)
+
+        val calendarPicker: CalendarPickerView = dialogView.findViewById(R.id.calendar_view)
+        if(selectedDates.size > 1) {
+            calendarPicker.init(selectedDates[0], selectedDates[selectedDates.size - 1])
+                .inMode(CalendarPickerView.SelectionMode.MULTIPLE)
+                .withSelectedDates(excludedDates)
+
+            val dialogBuilder = AlertDialog.Builder(this)
+                .setView(dialogView)
+                .setTitle(R.string.custom_date_dialog_title)
+
+            dialogBuilder.setPositiveButton("Select"){_, _ -> }
+
+            dialogBuilder.setNegativeButton("Cancel"){_, _ -> }
+
+            val alertDialog = dialogBuilder.create()
+            alertDialog.show()
+
+            alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                .setOnClickListener{
+                        alertDialog.dismiss()
+                        excludedDates = calendarPicker.selectedDates
+                        btn_pick_custom.text = "%d Custom Dates Selected".format(excludedDates.size)
+                }
+
+            alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+                .setOnClickListener{
+                    alertDialog.dismiss()
+                }
+        }
 
     }
 }

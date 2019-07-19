@@ -15,7 +15,6 @@ object Utilities {
     fun calculateDays(selectedDates: MutableList<Date>, customDateExclusions: MutableList<Date>, exclusionMethod: String) : Int {
 
         var calculatedDays: Int = selectedDates.size
-        calculatedDays -= customDateExclusions.size
 
         var saturdays = 0
         var sundays = 0
@@ -38,7 +37,7 @@ object Utilities {
             "Sundays" -> sundays
             "Saturdays" -> saturdays
             "Both" -> (saturdays + sundays)
-            "None" -> 0
+            "Custom" -> customDateExclusions.size
             else -> 0
         }
 
