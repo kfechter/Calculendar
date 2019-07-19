@@ -3,9 +3,21 @@
     <string name="title_activity_calculendar_about">About Calculendar</string>
     <string name="app_about_action_text">About</string>
     <string name="version_header">Version %s</string>
+    <string name="calculation_result_formatter">The interval from %s to %s with %d exclusions is %d %s</string>
     <string name="developer_name_header">Developers</string>
     <string name="button_select_range">Select Date Range</string>
     <string name="date_picker_dialog_title">Select Date Range</string>
     <string name="custom_date_dialog_title">Custom Excluded Dates</string>
-    <string name="button_select_custom">Custom Dates</string>
+    <string name="button_select_custom">Select Custom Dates</string>
+    <string name="btn_perform_calculation">Perform Calculation</string>
+    <string name="exclusion_options_header">Select Date Exclusion Options</string>
+    <string name="custom_dates_formatter">%d Custom %s Selected</string>
+    <plurals name="custom_dates">
+        <item quantity="one">Date</item>
+        <item quantity="other">Dates</item>
+    </plurals>
+    <plurals name="calculated_days">
+        <item quantity="one">Day</item>
+        <item quantity="other">Days</item>
+    </plurals>
 </resources>

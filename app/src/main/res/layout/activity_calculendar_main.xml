@@ -30,14 +30,61 @@
                 android:textStyle="bold"
                 android:text="@string/button_select_range" />
 
+        <LinearLayout android:layout_width="match_parent"
+                      android:id="@+id/exclusion_options_container"
+                      android:paddingTop="50dp"
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical"
+                      android:visibility="invisible"
+                      android:layout_centerHorizontal="true"
+                      android:layout_below="@id/btn_pick_range">
+
+            <TextView
+                    android:id="@+id/exclusionHeader"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:text="@string/exclusion_options_header"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center_horizontal"/>
+
+            <Spinner
+                    android:id="@+id/exclusionOptions"
+                    android:minHeight="48dp"
+                    android:enabled="false"
+                    android:minWidth="48dp"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center_horizontal"
+                    android:spinnerMode="dropdown"
+                    android:entries="@array/exclusion_options"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <Button
+                    android:id="@+id/btn_pick_custom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="invisible"
+                    android:layout_marginTop="10dp"
+                    android:textStyle="bold"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/button_select_custom" />
+
+        </LinearLayout>
+
         <Button
-                android:layout_below="@id/btn_pick_range"
-                android:id="@+id/btn_pick_custom"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="40dp"
                 android:layout_centerHorizontal="true"
-                android:textStyle="bold"
-                android:text="@string/button_select_custom" />
+                android:layout_alignParentBottom="true"
+                android:id="@+id/btnPerformCalculation"
+                android:minHeight="48dp"
+                android:minWidth="48dp"
+                android:layout_gravity="center"
+                android:text="@string/btn_perform_calculation" />
+
     </RelativeLayout>
 </LinearLayout>

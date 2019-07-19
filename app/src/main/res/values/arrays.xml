@@ -10,4 +10,11 @@
         <item>https://www.linkedin.com/in/graham-klein-04b976106/</item>
         <item>https://www.linkedin.com/in/tobyncollinsworth/</item>
     </string-array>
+    <string-array name="exclusion_options">
+        <item>Exclude None</item>
+        <item>Exclude Saturdays</item>
+        <item>Exclude Sundays</item>
+        <item>Exclude Both</item>
+        <item>Exclude Custom</item>
+    </string-array>
 </resources>

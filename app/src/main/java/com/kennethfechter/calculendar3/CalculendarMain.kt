@@ -2,10 +2,13 @@ package com.kennethfechter.calculendar3
 
 import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.opengl.Visibility
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.AdapterView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -15,12 +18,13 @@ import com.squareup.timessquare.CalendarPickerView
 import kotlinx.android.synthetic.main.activity_calculendar_main.*
 import java.util.*
 
-class CalculendarMain : AppCompatActivity() {
+class CalculendarMain : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     private val layoutId: Int = R.layout.activity_calculendar_main
 
     private var selectedDates: MutableList<Date> = mutableListOf()
     private var excludedDates: MutableList<Date> = mutableListOf()
+    private var exclusionOption: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
@@ -35,6 +39,22 @@ class CalculendarMain : AppCompatActivity() {
             btn_pick_custom.setOnClickListener {
                 showCustomDateSelectionDialog()
             }
+
+            btnPerformCalculation.setOnClickListener {
+                val result = Utilities.calculateDays(this, selectedDates, excludedDates, exclusionOption)
+
+                val dialogBuilder = AlertDialog.Builder(this)
+                dialogBuilder.setTitle("Calculation Result")
+                dialogBuilder.setMessage(result)
+
+                dialogBuilder.setNeutralButton("OK") {dialog, _ ->
+                    dialog.dismiss()
+                }
+
+                dialogBuilder.create().show()
+            }
+
+            exclusionOptions.onItemSelectedListener = this
         }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -47,6 +67,22 @@ class CalculendarMain : AppCompatActivity() {
             R.id.about_application -> navigateToAbout()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, id: Long) {
+        val exclusionOptions = resources.getStringArray(R.array.exclusion_options)
+        exclusionOption = exclusionOptions[position]
+        when(exclusionOption) {
+            "Exclude Custom" -> {
+                btn_pick_custom.visibility = View.VISIBLE
+                btn_pick_custom.text = Utilities.getCustomDatesFormatterString(this, excludedDates.size)
+            }
+            else -> btn_pick_custom.visibility = View.INVISIBLE
+        }
+    }
+
+    override fun onNothingSelected(adapterView: AdapterView<*>) {
+
     }
 
     private fun navigateToAbout() {
@@ -86,6 +122,7 @@ class CalculendarMain : AppCompatActivity() {
                     alertDialog.dismiss()
                     btn_pick_range.text = Utilities.getSelectedRangeString(calendarPicker.selectedDates)
                     selectedDates = calendarPicker.selectedDates
+                    exclusion_options_container.visibility = View.VISIBLE
                 } else {
                     Toast.makeText(applicationContext, "A date range has not been selected", Toast.LENGTH_LONG).show()
                 }
@@ -121,7 +158,7 @@ class CalculendarMain : AppCompatActivity() {
                 .setOnClickListener{
                         alertDialog.dismiss()
                         excludedDates = calendarPicker.selectedDates
-                        btn_pick_custom.text = "%d Custom Dates Selected".format(excludedDates.size)
+                        btn_pick_custom.text = Utilities.getCustomDatesFormatterString(this, excludedDates.size)
                 }
 
             alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE)

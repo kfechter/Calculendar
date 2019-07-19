@@ -2,6 +2,7 @@ package com.kennethfechter.calculendar3.businesslogic
 
 import android.content.Context
 import android.content.pm.PackageManager
+import com.kennethfechter.calculendar3.R
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -24,9 +25,17 @@ object Utilities {
 
     }
 
-    fun calculateDays(selectedDates: MutableList<Date>, customDateExclusions: MutableList<Date>, exclusionMethod: String) : Int {
+    fun getCustomDatesFormatterString(context: Context, customDates: Int): String {
+        val customDatePlural = context.resources.getQuantityString(R.plurals.custom_dates, customDates)
+
+        return context.resources.getString(R.string.custom_dates_formatter).format(customDates, customDatePlural)
+    }
+
+    fun calculateDays(context: Context, selectedDates: MutableList<Date>, customDateExclusions: MutableList<Date>, exclusionMethod: String) : String {
 
         var calculatedDays: Int = selectedDates.size
+
+        var excludedDays: Int
 
         var saturdays = 0
         var sundays = 0
@@ -45,15 +54,22 @@ object Utilities {
             }
         }
 
-        calculatedDays -= when(exclusionMethod) {
-            "Sundays" -> sundays
-            "Saturdays" -> saturdays
-            "Both" -> (saturdays + sundays)
-            "Custom" -> customDateExclusions.size
+        excludedDays = when(exclusionMethod) {
+            "Exclude Sundays" -> sundays
+            "Exclude Saturdays" -> saturdays
+            "Exclude Both" -> (saturdays + sundays)
+            "Exclude Custom" -> customDateExclusions.size
             else -> 0
         }
 
-        return calculatedDays
+        calculatedDays -= excludedDays
+
+        val startDate = convertDateToString(selectedDates[0])
+        val endDate = convertDateToString(selectedDates[selectedDates.size -1])
+        val calculationPlural = context.resources.getQuantityString(R.plurals.calculated_days, calculatedDays)
+
+        return context.resources.getString(R.string.calculation_result_formatter)
+            .format(startDate, endDate, excludedDays, calculatedDays, calculationPlural)
     }
 }
 
