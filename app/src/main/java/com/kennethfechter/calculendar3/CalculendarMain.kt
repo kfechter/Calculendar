@@ -26,7 +26,7 @@ class CalculendarMain : AppCompatActivity() {
             setSupportActionBar(toolbar)
 
             btn_pick_range.setOnClickListener{
-                showPickerDialog()
+                showRangePickerDialog()
             }
         }
 
@@ -47,7 +47,7 @@ class CalculendarMain : AppCompatActivity() {
         startActivity(aboutIntent)
     }
 
-    private fun showPickerDialog() {
+    private fun showRangePickerDialog() {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_calculendar_datepicker, null)
 
         val calendarPicker: CalendarPickerView = dialogView.findViewById(R.id.calendar_view)
@@ -87,5 +87,9 @@ class CalculendarMain : AppCompatActivity() {
             .setOnClickListener{
                 alertDialog.dismiss()
             }
+    }
+
+    private fun showCustomDateSelectionDialog() {
+
     }
 }
