@@ -4,4 +4,6 @@
     <string name="app_about_action_text">About</string>
     <string name="version_header">Version %s</string>
     <string name="developer_name_header">Developers</string>
+    <string name="button_select_range">Select Date Range</string>
+    <string name="date_picker_dialog_title">Select Date Range</string>
 </resources>
