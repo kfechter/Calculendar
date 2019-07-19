@@ -7,6 +7,8 @@ import com.kennethfechter.calculendar3.R
 import kotlinx.android.synthetic.main.activity_calculendar_about.*
 import android.content.Intent
 import android.net.Uri
+import android.widget.ArrayAdapter
+import com.kennethfechter.calculendar3.businesslogic.Utilities
 
 
 class CalculendarAbout : AppCompatActivity() {
@@ -16,12 +18,15 @@ class CalculendarAbout : AppCompatActivity() {
         setContentView(R.layout.activity_calculendar_about)
         setSupportActionBar(toolbar)
 
+        title = "Calculendar %s".format(Utilities.getPackageVersionName(this))
+
         val developerProfiles = resources.getStringArray(R.array.developer_profiles)
+
+        developers_list.adapter = ArrayAdapter(applicationContext, R.layout.developer_name_list_item, resources.getStringArray(R.array.developer_names))
 
         developers_list.setOnItemClickListener{ _, _, position, _ ->
             val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(developerProfiles[position]))
             startActivity(browserIntent)
         }
     }
-
 }

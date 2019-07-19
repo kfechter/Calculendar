@@ -1,5 +1,7 @@
 package com.kennethfechter.calculendar3.businesslogic
 
+import android.content.Context
+import android.content.pm.PackageManager
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -10,6 +12,16 @@ object Utilities {
 
     fun convertDateToString(selectedDate: Date) : String {
         return SimpleDateFormat("EEEE MMM d, yyyy", Locale.getDefault()).format(selectedDate)
+    }
+
+    fun getPackageVersionName(context: Context): String {
+        try {
+            val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+            return packageInfo.versionName
+        } catch (e: PackageManager.NameNotFoundException) {
+            return ""
+        }
+
     }
 
     fun calculateDays(selectedDates: MutableList<Date>, customDateExclusions: MutableList<Date>, exclusionMethod: String) : Int {
