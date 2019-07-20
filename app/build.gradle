@@ -1,6 +1,16 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'com.chattylabs.versioning'
+
+versioning {
+    tagPrefix "v"
+    keywords {
+        major "[incompatible]", "[breaking]", "[major]", "[Major]", "[Breaking]", "[Incompatible]"
+        minor "[feature]", "[Feature]", "[Minor", "[minor]"
+        patch "[bug]", "[patch]", "[hotfix]", "[Bug]", "[Patch]", "[Hotfix]"
+    }
+}
 
 android {
     compileSdkVersion 29
@@ -13,13 +23,39 @@ android {
         versionName "1.0"
         // testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
+    signingConfigs {
+        release {
+            storeFile file("calculendar-bundle-signing.jks")
+            storePassword System.getenv("KEYSTORE_MASTER")
+            keyAlias "calculendar-bundle-release-signing"
+            keyPassword System.getenv("RELEASE_SIGNING")
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
+
+    testOptions {
+        unitTests.includeAndroidResources = true
+    }
 }
+
+project.afterEvaluate {
+    preBuild.dependsOn updateVersion
+    if (project.hasProperty("assembleRelease")) {
+        assembleRelease.dependsOn connectedAndroidTest
+        assembleRelease.dependsOn updateVersion
+    }
+}
+
+clean.dependsOn updateVersion
+clean.mustRunAfter updateVersion
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
