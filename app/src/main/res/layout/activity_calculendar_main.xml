@@ -83,6 +83,7 @@
                 android:id="@+id/btnPerformCalculation"
                 android:minHeight="48dp"
                 android:minWidth="48dp"
+                android:enabled="false"
                 android:layout_gravity="center"
                 android:text="@string/btn_perform_calculation" />
 

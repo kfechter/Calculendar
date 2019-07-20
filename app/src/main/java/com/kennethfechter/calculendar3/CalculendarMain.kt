@@ -2,9 +2,7 @@ package com.kennethfechter.calculendar3
 
 import android.content.Intent
 import android.content.pm.ActivityInfo
-import android.opengl.Visibility
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -14,13 +12,17 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.kennethfechter.calculendar3.activities.CalculendarAbout
 import com.kennethfechter.calculendar3.businesslogic.Utilities
-import com.squareup.timessquare.CalendarPickerView
 import kotlinx.android.synthetic.main.activity_calculendar_main.*
+import kotlinx.coroutines.*
 import java.util.*
 
 class CalculendarMain : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     private val layoutId: Int = R.layout.activity_calculendar_main
+
+    private var viewModelJob = Job()
+    private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
+
 
     private var selectedDates: MutableList<Date> = mutableListOf()
     private var excludedDates: MutableList<Date> = mutableListOf()
@@ -32,12 +34,12 @@ class CalculendarMain : AppCompatActivity(), AdapterView.OnItemSelectedListener 
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             setSupportActionBar(toolbar)
 
-            btn_pick_range.setOnClickListener{
-                showRangePickerDialog()
+            btn_pick_range.setOnClickListener {
+                showRangeDialog()
             }
 
             btn_pick_custom.setOnClickListener {
-                showCustomDateSelectionDialog()
+                showCustomDialog()
             }
 
             btnPerformCalculation.setOnClickListener {
@@ -69,6 +71,31 @@ class CalculendarMain : AppCompatActivity(), AdapterView.OnItemSelectedListener 
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onPause() {
+        super.onPause()
+        viewModelJob.cancel()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModelJob.cancel()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModelJob.cancel()
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        viewModelJob = Job()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModelJob = Job()
+    }
+
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, id: Long) {
         val exclusionOptions = resources.getStringArray(R.array.exclusion_options)
         exclusionOption = exclusionOptions[position]
@@ -90,82 +117,18 @@ class CalculendarMain : AppCompatActivity(), AdapterView.OnItemSelectedListener 
         startActivity(aboutIntent)
     }
 
-    private fun showRangePickerDialog() {
-        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_calculendar_datepicker, null)
+    fun showRangeDialog() = uiScope.launch {
+        selectedDates = Utilities.displayDatePickerDialog(this@CalculendarMain, resources.getString(R.string.date_picker_dialog_title),true)
 
-        val calendarPicker: CalendarPickerView = dialogView.findViewById(R.id.calendar_view)
-        val pastDate = Calendar.getInstance()
-        val futureDate = Calendar.getInstance()
-        futureDate.add(Calendar.YEAR, 1)
-        pastDate.add(Calendar.YEAR, -1)
-        val today = Date()
-
-            calendarPicker.init(pastDate.time, futureDate.time)
-                .inMode(CalendarPickerView.SelectionMode.RANGE)
-
-        calendarPicker.selectDate(today, true)
-
-        val dialogBuilder = AlertDialog.Builder(this)
-            .setView(dialogView)
-            .setTitle(R.string.date_picker_dialog_title)
-
-        dialogBuilder.setPositiveButton("Select"){_, _ -> }
-
-        dialogBuilder.setNegativeButton("Cancel"){_, _ -> }
-
-        val alertDialog = dialogBuilder.create()
-        alertDialog.show()
-
-        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)
-            .setOnClickListener{
-                if(calendarPicker.selectedDates.size > 1) {
-                    alertDialog.dismiss()
-                    btn_pick_range.text = Utilities.getSelectedRangeString(calendarPicker.selectedDates)
-                    selectedDates = calendarPicker.selectedDates
-                    exclusion_options_container.visibility = View.VISIBLE
-                } else {
-                    Toast.makeText(applicationContext, "A date range has not been selected", Toast.LENGTH_LONG).show()
-                }
-            }
-
-        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE)
-            .setOnClickListener{
-                alertDialog.dismiss()
-            }
+        if(selectedDates.size > 1) {
+            exclusion_options_container.visibility = View.VISIBLE
+            btnPerformCalculation.isEnabled = true
+        } else {
+            Toast.makeText(this@CalculendarMain, "A date range has not been selected", Toast.LENGTH_LONG).show()
+        }
     }
 
-    private fun showCustomDateSelectionDialog() {
-        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_calculendar_datepicker, null)
-
-        val calendarPicker: CalendarPickerView = dialogView.findViewById(R.id.calendar_view)
-        if(selectedDates.size > 1) {
-            calendarPicker.init(selectedDates[0], selectedDates[selectedDates.size - 1])
-                .inMode(CalendarPickerView.SelectionMode.MULTIPLE)
-                .withSelectedDates(excludedDates)
-
-            val dialogBuilder = AlertDialog.Builder(this)
-                .setView(dialogView)
-                .setTitle(R.string.custom_date_dialog_title)
-
-            dialogBuilder.setPositiveButton("Select"){_, _ -> }
-
-            dialogBuilder.setNegativeButton("Cancel"){_, _ -> }
-
-            val alertDialog = dialogBuilder.create()
-            alertDialog.show()
-
-            alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)
-                .setOnClickListener{
-                        alertDialog.dismiss()
-                        excludedDates = calendarPicker.selectedDates
-                        btn_pick_custom.text = Utilities.getCustomDatesFormatterString(this, excludedDates.size)
-                }
-
-            alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE)
-                .setOnClickListener{
-                    alertDialog.dismiss()
-                }
-        }
-
+    fun showCustomDialog() = uiScope.launch {
+        excludedDates =  Utilities.displayDatePickerDialog(this@CalculendarMain, resources.getString(R.string.custom_date_dialog_title),false, selectedDates, excludedDates)
     }
 }
