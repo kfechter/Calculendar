@@ -19,8 +19,13 @@ android {
         applicationId "com.kennethfechter.calculendar"
         minSdkVersion 23
         targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        if(System.getenv("CI_PIPELINE_IID") != null) {
+            versionCode (34686956 + System.getenv("CI_PIPELINE_IID"))
+        } else {
+            versionCode = 1
+        }
+
+        versionName versioning.name()
         // testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
