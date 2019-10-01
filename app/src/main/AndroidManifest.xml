@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools" package="com.kennethfechter.calculendar3">
+          xmlns:tools="http://schemas.android.com/tools" package="com.kennethfechter.calculendar">
 
     <application
             android:allowBackup="true"
@@ -10,11 +10,11 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme" tools:ignore="GoogleAppIndexingWarning">
         <activity
-                android:name=".activities.CalculendarAbout"
+                android:name="com.kennethfechter.calculendar.activities.CalculendarAbout"
                 android:label="@string/title_activity_calculendar_about"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name=".CalculendarMain"
+        <activity android:name="com.kennethfechter.calculendar.CalculendarMain"
         android:label="@string/app_name"
         android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>

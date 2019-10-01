@@ -1,14 +1,13 @@
-package com.kennethfechter.calculendar3.businesslogic
+package com.kennethfechter.calculendar.businesslogic
 
 import android.app.AlertDialog
 import android.content.Context
 import android.content.pm.PackageManager
 import android.view.LayoutInflater
-import com.kennethfechter.calculendar3.R
+import com.kennethfechter.calculendar.R
 import com.squareup.timessquare.CalendarPickerView
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 

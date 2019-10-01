@@ -1,14 +1,14 @@
-package com.kennethfechter.calculendar3.activities
+package com.kennethfechter.calculendar.activities
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.kennethfechter.calculendar3.R
+import com.kennethfechter.calculendar.R
 
 import kotlinx.android.synthetic.main.activity_calculendar_about.*
 import android.content.Intent
 import android.net.Uri
 import android.widget.ArrayAdapter
-import com.kennethfechter.calculendar3.businesslogic.Utilities
+import com.kennethfechter.calculendar.businesslogic.Utilities
 
 
 class CalculendarAbout : AppCompatActivity() {

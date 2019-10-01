@@ -1,4 +1,4 @@
-package com.kennethfechter.calculendar3
+package com.kennethfechter.calculendar
 
 import android.content.Intent
 import android.content.pm.ActivityInfo
@@ -10,8 +10,8 @@ import android.widget.AdapterView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.kennethfechter.calculendar3.activities.CalculendarAbout
-import com.kennethfechter.calculendar3.businesslogic.Utilities
+import com.kennethfechter.calculendar.activities.CalculendarAbout
+import com.kennethfechter.calculendar.businesslogic.Utilities
 import kotlinx.android.synthetic.main.activity_calculendar_main.*
 import kotlinx.coroutines.*
 import java.util.*
