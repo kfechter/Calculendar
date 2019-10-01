@@ -28,6 +28,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_centerHorizontal="true"
                 android:textStyle="bold"
+                android:textAllCaps="false"
                 android:text="@string/button_select_range" />
 
         <LinearLayout android:layout_width="match_parent"
@@ -45,6 +46,7 @@
                     android:layout_height="match_parent"
                     android:textSize="16sp"
                     android:textStyle="bold"
+                    android:textAllCaps="false"
                     android:textColor="@android:color/black"
                     android:text="@string/exclusion_options_header"
                     android:layout_gravity="center_horizontal"
@@ -57,6 +59,7 @@
                     android:minWidth="48dp"
                     android:layout_gravity="center_horizontal"
                     android:gravity="center_horizontal"
+                    android:textAllCaps="false"
                     android:spinnerMode="dropdown"
                     android:entries="@array/exclusion_options"
                     android:layout_width="wrap_content"
@@ -68,6 +71,7 @@
                     android:layout_height="wrap_content"
                     android:visibility="invisible"
                     android:layout_marginTop="10dp"
+                    android:textAllCaps="false"
                     android:textStyle="bold"
                     android:layout_gravity="center_horizontal"
                     android:text="@string/button_select_custom" />
@@ -83,6 +87,7 @@
                 android:id="@+id/btnPerformCalculation"
                 android:minHeight="48dp"
                 android:minWidth="48dp"
+                android:textAllCaps="false"
                 android:enabled="false"
                 android:layout_gravity="center"
                 android:text="@string/btn_perform_calculation" />

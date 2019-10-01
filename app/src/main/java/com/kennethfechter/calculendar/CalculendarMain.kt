@@ -3,6 +3,7 @@ package com.kennethfechter.calculendar
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -123,6 +124,7 @@ class CalculendarMain : AppCompatActivity(), AdapterView.OnItemSelectedListener 
         if(selectedDates.size > 1) {
             exclusion_options_container.visibility = View.VISIBLE
             btnPerformCalculation.isEnabled = true
+            btn_pick_range.text = Utilities.getSelectedRangeString(selectedDates)
         } else {
             Toast.makeText(this@CalculendarMain, "A date range has not been selected", Toast.LENGTH_LONG).show()
         }

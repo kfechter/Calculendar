@@ -14,6 +14,7 @@ import kotlin.coroutines.suspendCoroutine
 object Utilities {
 
     fun getSelectedRangeString(selectedDates: MutableList<Date>): String {
+        if (selectedDates.size < 2 ) { return "Invalid Range" }
         return "%s - %s".format(convertDateToString(selectedDates[0]), convertDateToString(selectedDates[selectedDates.size -1]))
     }
 
@@ -22,11 +23,11 @@ object Utilities {
     }
 
     fun getPackageVersionName(context: Context): String {
-        try {
+        return try {
             val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
-            return packageInfo.versionName
+            packageInfo.versionName
         } catch (e: PackageManager.NameNotFoundException) {
-            return ""
+            ""
         }
 
     }
