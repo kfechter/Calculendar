@@ -29,7 +29,6 @@ object Utilities {
         } catch (e: PackageManager.NameNotFoundException) {
             ""
         }
-
     }
 
     fun getCustomDatesFormatterString(context: Context, customDates: Int): String {

@@ -119,14 +119,15 @@ class CalculendarMain : AppCompatActivity(), AdapterView.OnItemSelectedListener 
     }
 
     fun showRangeDialog() = uiScope.launch {
-        selectedDates = Utilities.displayDatePickerDialog(this@CalculendarMain, resources.getString(R.string.date_picker_dialog_title),true)
+        val localSelectedDates = Utilities.displayDatePickerDialog(this@CalculendarMain, resources.getString(R.string.date_picker_dialog_title),true)
 
-        if(selectedDates.size > 1) {
+        if(localSelectedDates.size > 1) {
+            selectedDates = localSelectedDates
             exclusion_options_container.visibility = View.VISIBLE
             btnPerformCalculation.isEnabled = true
             btn_pick_range.text = Utilities.getSelectedRangeString(selectedDates)
         } else {
-            Toast.makeText(this@CalculendarMain, "A date range has not been selected", Toast.LENGTH_LONG).show()
+            Toast.makeText(this@CalculendarMain, "A valid date range was not selected", Toast.LENGTH_LONG).show()
         }
     }
 

@@ -16,7 +16,10 @@ import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasData
 import androidx.test.espresso.matcher.ViewMatchers.*
+import com.kennethfechter.calculendar.businesslogic.Utilities
 import org.hamcrest.CoreMatchers.allOf
+import org.junit.Assert
+import java.util.regex.Pattern
 
 
 class EspressoAboutActivityInstrumentationTests
@@ -38,6 +41,19 @@ class EspressoAboutActivityInstrumentationTests
     @Test
     fun verifyDeveloperHeader() {
         onView(withText("Developers"))
+            .check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun verifyAppVersionText() {
+        val context = activity.activity.applicationContext
+        val versionCode = Utilities.getPackageVersionName(context)
+
+        val versionMatch = Pattern.matches("\\d+(\\.\\d+)+", versionCode)
+
+        Assert.assertTrue("The version code was not valid", versionMatch)
+
+        onView(withText(containsString(versionCode)))
             .check(matches(isDisplayed()))
     }
 
