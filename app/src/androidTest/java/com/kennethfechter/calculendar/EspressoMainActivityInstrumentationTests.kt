@@ -130,10 +130,10 @@ class EspressoMainActivityInstrumentationTests
     fun testAboutAppButton() {
 
         Intents.init()
-        val expectedIntentkfechter = allOf(IntentMatchers.hasComponent(hasClassName(CalculendarAbout::class.java.name)))
-        intending(expectedIntentkfechter).respondWith(Instrumentation.ActivityResult(0, null))
+        val expectedIntent = allOf(IntentMatchers.hasComponent(hasClassName(CalculendarAbout::class.java.name)))
+        intending(expectedIntent).respondWith(Instrumentation.ActivityResult(0, null))
         onView(withId(R.id.about_application)).perform(click())
-        intended(expectedIntentkfechter)
+        intended(expectedIntent)
         Intents.release()
     }
 }
