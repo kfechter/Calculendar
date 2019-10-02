@@ -1,16 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'com.chattylabs.versioning'
-
-versioning {
-    tagPrefix "v"
-    keywords {
-        major "[incompatible]", "[breaking]", "[major]", "[Major]", "[Breaking]", "[Incompatible]"
-        minor "[feature]", "[Feature]", "[Minor", "[minor]"
-        patch "[bug]", "[patch]", "[hotfix]", "[Bug]", "[Patch]", "[Hotfix]"
-    }
-}
 
 android {
     compileSdkVersion 29
@@ -21,11 +11,12 @@ android {
         targetSdkVersion 29
         if(System.getenv("CI_PIPELINE_IID") != null) {
             versionCode = (34686956 + System.getenv("CI_PIPELINE_IID").toInteger())
+            versionName = new Date().format('yyyyMMddHHmmss')
         } else {
             versionCode = 1
+            versionName = "ASDevBuild"
         }
 
-        versionName versioning.name()
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -53,15 +44,10 @@ android {
 }
 
 project.afterEvaluate {
-    preBuild.dependsOn updateVersion
     if (project.hasProperty("assembleRelease")) {
         assembleRelease.dependsOn connectedAndroidTest
-        assembleRelease.dependsOn updateVersion
     }
 }
-
-clean.dependsOn updateVersion
-clean.mustRunAfter updateVersion
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
