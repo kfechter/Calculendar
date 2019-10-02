@@ -15,7 +15,7 @@ android {
             versionCode = 1
         }
 
-        versionName = new Date().format('yyyyMMddHHmmss')
+        versionName = new Date().format('yyyyMMdd')
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 

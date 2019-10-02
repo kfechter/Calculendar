@@ -50,7 +50,7 @@ class EspressoAboutActivityInstrumentationTests
         val context = activity.activity.applicationContext
         val versionCode = Utilities.getPackageVersionName(context)
 
-        val dateFormat = SimpleDateFormat("yyyyMMddHHmmss")
+        val dateFormat = SimpleDateFormat("yyyyMMdd")
         val date : Date? = dateFormat.parse(versionCode)
 
         if(date == null) {
