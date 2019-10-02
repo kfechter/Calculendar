@@ -7,8 +7,7 @@ before_script:
   - export LANG=en_US.UTF-8
   - export LANGUAGE=en_US:en
   - export LC_ALL=en_US.UTF-8
-  - gem install bundler && bundle update 
-#  - echo "$SUPPLY_JSON_KEY_DATA" > /root/.google_secrets.json
+  - gem install bundler && bundle update
 
 stages:
   - develop
@@ -27,6 +26,27 @@ develop:
   only:
     refs:
       - develop
+    
+  artifacts:
+     paths:
+       - app/build/outputs/apk/release/app-release.apk
+       - app/build/outputs/androidTest-results/connected/*.xml
+
+alpha:
+  stage: alpha
+  tags:
+    - android
+  script:
+    #  - echo "$SUPPLY_JSON_KEY_DATA" > /root/.google_secrets.json
+    - /opt/start-default-emulator.sh
+    - chmod +x ./gradlew
+    - ./gradlew assembleRelease
+    # - fastlane alpha 
+  only:
+    refs:
+      - alpha
+    variables:
+       - $CI_COMMIT_MESSAGE =~ /\[Deploy\]/
     
   artifacts:
      paths:
