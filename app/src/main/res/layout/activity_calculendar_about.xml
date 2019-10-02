@@ -38,8 +38,16 @@
                 android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:id="@+id/developers_list"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:entries="@array/developer_names"/>
     </LinearLayout>
 
+    <TextView
+            android:id="@+id/versionIdFooter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:textColor="@android:color/darker_gray"
+            android:gravity="center_horizontal"
+            android:textStyle="bold" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

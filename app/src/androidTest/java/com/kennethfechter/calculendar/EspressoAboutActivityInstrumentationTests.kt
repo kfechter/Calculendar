@@ -50,7 +50,9 @@ class EspressoAboutActivityInstrumentationTests
         val context = activity.activity.applicationContext
         val versionCode = Utilities.getPackageVersionName(context)
 
-        onView(withText(containsString(versionCode)))
+        val versionCodeFormattedString = context.resources.getString(R.string.build_id_formatter).format(versionCode)
+
+        onView(withText(containsString(versionCodeFormattedString)))
             .check(matches(isDisplayed()))
     }
 

@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Calculendar</string>
-    <string name="title_activity_calculendar_about">About Calculendar</string>
+    <string name="title_activity_calculendar_about">Calculendar</string>
     <string name="app_about_action_text">About</string>
     <string name="version_header">Version %s</string>
     <string name="calculation_result_formatter">The interval from %s to %s with %d exclusions is %d %s</string>
@@ -15,6 +15,7 @@
     <string name="disabled_message_text">This shortcut is not currently enabled</string>
     <string name="shortcut_long_text">Open the app to the new calculation dialog</string>
     <string name="shortcut_short_text">New Calculation</string>
+    <string name="build_id_formatter">Build Id: %s</string>
     <plurals name="custom_dates">
         <item quantity="one">Date</item>
         <item quantity="other">Dates</item>
