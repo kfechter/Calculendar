@@ -21,7 +21,7 @@ alpha:
   script:
     - /opt/start-default-emulator.sh
     - ./gradlew assembleRelease
-#    - fastlane alpha
+#   - fastlane alpha
   only:
     refs:
       - develop
