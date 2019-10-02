@@ -50,13 +50,6 @@ class EspressoAboutActivityInstrumentationTests
         val context = activity.activity.applicationContext
         val versionCode = Utilities.getPackageVersionName(context)
 
-        val dateFormat = SimpleDateFormat("yyyyMMdd")
-        val date : Date? = dateFormat.parse(versionCode)
-
-        if(date == null) {
-            Assert.assertTrue("The Parse did not complete successfully", false)
-        }
-
         onView(withText(containsString(versionCode)))
             .check(matches(isDisplayed()))
     }
