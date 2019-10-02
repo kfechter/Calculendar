@@ -11,12 +11,11 @@ android {
         targetSdkVersion 29
         if(System.getenv("CI_PIPELINE_IID") != null) {
             versionCode = (34686956 + System.getenv("CI_PIPELINE_IID").toInteger())
-            versionName = new Date().format('yyyyMMddHHmmss')
         } else {
             versionCode = 1
-            versionName = "ASDevBuild"
         }
 
+        versionName = new Date().format('yyyyMMddHHmmss')
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 

@@ -19,7 +19,8 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import com.kennethfechter.calculendar.businesslogic.Utilities
 import org.hamcrest.CoreMatchers.allOf
 import org.junit.Assert
-import java.util.regex.Pattern
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class EspressoAboutActivityInstrumentationTests
@@ -49,9 +50,12 @@ class EspressoAboutActivityInstrumentationTests
         val context = activity.activity.applicationContext
         val versionCode = Utilities.getPackageVersionName(context)
 
-        val versionMatch = Pattern.matches("\\d+(\\.\\d+)+", versionCode)
+        val dateFormat = SimpleDateFormat("yyyyMMddHHmmss")
+        val date : Date? = dateFormat.parse(versionCode)
 
-        Assert.assertTrue("The version code was not valid", versionMatch)
+        if(date == null) {
+            Assert.assertTrue("The Parse did not complete successfully", false)
+        }
 
         onView(withText(containsString(versionCode)))
             .check(matches(isDisplayed()))
