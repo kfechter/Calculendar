@@ -2,6 +2,7 @@ before_script:
   - apt-get --quiet update --yes
   - apt-get --quiet install --yes ruby-full build-essential git locales
   - echo "en_US UTF-8" > /etc/locale.gen
+  - echo "$CI_PIPELINE_IID"
   - locale-gen en_US.UTF-8
   - export LANG=en_US.UTF-8
   - export LANGUAGE=en_US:en
