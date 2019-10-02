@@ -12,6 +12,9 @@
     <string name="btn_perform_calculation">Perform Calculation</string>
     <string name="exclusion_options_header">Select Date Exclusion Options</string>
     <string name="custom_dates_formatter">%d Custom %s Selected</string>
+    <string name="disabled_message_text">This shortcut is not currently enabled</string>
+    <string name="shortcut_long_text">Open the app to the new calculation dialog</string>
+    <string name="shortcut_short_text">New Calculation</string>
     <plurals name="custom_dates">
         <item quantity="one">Date</item>
         <item quantity="other">Dates</item>
