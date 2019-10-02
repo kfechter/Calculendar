@@ -20,6 +20,7 @@ develop:
     - android
   script:
     - /opt/start-default-emulator.sh
+    - chmod +x ./gradlew
     - ./gradlew assembleRelease
 #   - fastlane alpha
   only:
