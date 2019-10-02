@@ -2,7 +2,6 @@ before_script:
   - apt-get --quiet update --yes
   - apt-get --quiet install --yes ruby-full build-essential git locales
   - echo "en_US UTF-8" > /etc/locale.gen
-  - echo "$CI_PIPELINE_IID"
   - locale-gen en_US.UTF-8
   - export LANG=en_US.UTF-8
   - export LANGUAGE=en_US:en
@@ -37,11 +36,11 @@ alpha:
   tags:
     - android
   script:
-    #  - echo "$SUPPLY_JSON_KEY_DATA" > /root/.google_secrets.json
+    - echo "$SUPPLY_JSON_KEY_DATA" > /root/.google_secrets.json
     - /opt/start-default-emulator.sh
     - chmod +x ./gradlew
     - ./gradlew assembleRelease
-    # - fastlane alpha 
+    - fastlane alpha 
   only:
     refs:
       - alpha
