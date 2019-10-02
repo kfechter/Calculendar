@@ -12,6 +12,7 @@ before_script:
 
 stages:
   - develop
+  - alpha
   - beta
   - production
 
@@ -23,12 +24,9 @@ develop:
     - /opt/start-default-emulator.sh
     - chmod +x ./gradlew
     - ./gradlew assembleRelease
-#   - fastlane alpha
   only:
     refs:
       - develop
-#   variables:
-#     - $CI_COMMIT_MESSAGE =~ /\[Deploy\]/
     
   artifacts:
      paths:
