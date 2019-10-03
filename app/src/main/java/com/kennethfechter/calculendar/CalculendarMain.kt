@@ -139,5 +139,6 @@ class CalculendarMain : AppCompatActivity(), AdapterView.OnItemSelectedListener 
 
     fun showCustomDialog() = uiScope.launch {
         excludedDates =  Utilities.displayDatePickerDialog(this@CalculendarMain, resources.getString(R.string.custom_date_dialog_title),false, selectedDates, excludedDates)
+        btn_pick_custom.text = Utilities.getCustomDatesFormatterString(this@CalculendarMain, excludedDates.size)
     }
 }
