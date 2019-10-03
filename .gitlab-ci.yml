@@ -25,6 +25,8 @@ develop:
   only:
     refs:
       - develop
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /\[Build\]/
     
   artifacts:
      paths:
