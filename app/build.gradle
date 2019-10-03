@@ -22,7 +22,7 @@ android {
 
     signingConfigs {
         release {
-            storeFile file("calculendar-bundle-signing.jks")
+            storeFile file("calculendar-upload-store.jks")
             storePassword System.getenv("KEYSTORE_MASTER")
             keyAlias "calculendar-bundle-release-signing"
             keyPassword System.getenv("RELEASE_SIGNING")
