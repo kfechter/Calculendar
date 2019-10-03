@@ -24,7 +24,7 @@ android {
         release {
             storeFile file("calculendar-upload-store.jks")
             storePassword System.getenv("KEYSTORE_MASTER")
-            keyAlias "calculendar-bundle-release-signing"
+            keyAlias "calculendar-release-key"
             keyPassword System.getenv("RELEASE_SIGNING")
         }
     }
