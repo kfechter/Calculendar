@@ -51,3 +51,24 @@ alpha:
      paths:
        - app/build/outputs/apk/release/app-release.apk
        - app/build/outputs/androidTest-results/connected/*.xml
+
+beta:
+  stage: beta
+  tags:
+    - android
+  script:
+    - echo "$SUPPLY_JSON_KEY_DATA" > /root/.google_secrets.json
+    - /opt/start-default-emulator.sh
+    - chmod +x ./gradlew
+    - ./gradlew assembleRelease
+    - fastlane alpha 
+  only:
+    refs:
+      - beta
+    variables:
+       - $CI_COMMIT_MESSAGE =~ /\[Deploy\]/
+    
+  artifacts:
+     paths:
+       - app/build/outputs/apk/release/app-release.apk
+       - app/build/outputs/androidTest-results/connected/*.xml
