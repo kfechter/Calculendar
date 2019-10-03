@@ -28,7 +28,6 @@ class EspressoAboutActivityInstrumentationTests
     @get:Rule
     val activity = ActivityTestRule(CalculendarAbout::class.java)
 
-
     @Test
     fun verifyDeveloperNames() {
         onView(withText("Kenneth Fechter"))
