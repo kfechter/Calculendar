@@ -2,6 +2,7 @@ package com.kennethfechter.calculendar.businesslogic
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.view.LayoutInflater
 import com.kennethfechter.calculendar.R
@@ -76,6 +77,46 @@ object Utilities {
 
         return context.resources.getString(R.string.calculation_result_formatter)
             .format(startDate, endDate, excludedDays, calculatedDays, calculationPlural)
+    }
+
+    fun updateBooleanSharedPref(context: Context, prefKey: String, prefValue: Boolean) {
+        val preferenceFileName = context.getString(R.string.shared_preference_file_name)
+        val sharedPrefs = context.getSharedPreferences(preferenceFileName, 0)
+        val preferenceEditor = sharedPrefs!!.edit()
+
+        preferenceEditor.putBoolean(prefKey, prefValue)
+        preferenceEditor.apply()
+    }
+
+    fun retrieveBooleanSharedPref(context: Context, prefKey: String, defaultValue: Boolean) : Boolean {
+        val preferenceFileName = context.getString(R.string.shared_preference_file_name)
+        val sharedPrefs = context.getSharedPreferences(preferenceFileName, 0)
+        return sharedPrefs!!.getBoolean(prefKey, defaultValue)
+    }
+
+    suspend fun displayAnalyticsOptInDialog(context: Context) = suspendCoroutine<Boolean> {
+        val optInPreferenceName = context.getString(R.string.opt_in_preference_name)
+        val firstRunPreferenceName = context.getString(R.string.first_run_preference_name)
+        val builder = AlertDialog.Builder(context)
+
+        builder.setTitle(R.string.opt_in_dialog_title)
+        builder.setMessage(R.string.opt_in_dialog_message)
+
+        builder.setPositiveButton("Opt-In") { dialog, _ ->
+            updateBooleanSharedPref(context, optInPreferenceName, true)
+            updateBooleanSharedPref(context, firstRunPreferenceName, false)
+            dialog.dismiss()
+            it.resume(true)
+        }
+
+        builder.setNegativeButton("Opt-Out") { dialog, _ ->
+            updateBooleanSharedPref(context, optInPreferenceName, false)
+            updateBooleanSharedPref(context, firstRunPreferenceName, false)
+            dialog.dismiss()
+            it.resume(false)
+        }
+
+        builder.create().show()
     }
 
     suspend fun displayDatePickerDialog(context: Context, dialogTitle: String, rangeSelectionMode: Boolean, selectedDates: MutableList<Date> = mutableListOf(), excludedDates: MutableList<Date> = mutableListOf()) = suspendCoroutine<MutableList<Date>> {

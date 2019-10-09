@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "481431413161",
+    "firebase_url": "https://calculendar-63e30.firebaseio.com",
+    "project_id": "calculendar-63e30",
+    "storage_bucket": "calculendar-63e30.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:481431413161:android:045f59af69e76e3462e4b8",
+        "android_client_info": {
+          "package_name": "com.kennethfechter.calculendar"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "481431413161-77prno7uj0jm7hu7c4d1ebkl0c783e4o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNZdVQX0LMHAFl5wcX7y70UfL4kQntiEI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "481431413161-77prno7uj0jm7hu7c4d1ebkl0c783e4o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

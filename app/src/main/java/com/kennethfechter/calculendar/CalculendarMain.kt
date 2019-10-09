@@ -3,7 +3,6 @@ package com.kennethfechter.calculendar
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -11,8 +10,10 @@ import android.widget.AdapterView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.crashlytics.android.Crashlytics
 import com.kennethfechter.calculendar.activities.CalculendarAbout
 import com.kennethfechter.calculendar.businesslogic.Utilities
+import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_calculendar_main.*
 import kotlinx.coroutines.*
 import java.util.*
@@ -29,11 +30,17 @@ class CalculendarMain : AppCompatActivity(), AdapterView.OnItemSelectedListener 
     private var excludedDates: MutableList<Date> = mutableListOf()
     private var exclusionOption: String = ""
 
+    private var optInPreferenceKey = ""
+    private var firstRunPreferenceKey = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
             setContentView(layoutId)
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             setSupportActionBar(toolbar)
+
+            optInPreferenceKey = getString(R.string.opt_in_preference_name)
+            firstRunPreferenceKey = getString(R.string.first_run_preference_name)
 
             btn_pick_range.setOnClickListener {
                 showRangeDialog()
@@ -61,8 +68,21 @@ class CalculendarMain : AppCompatActivity(), AdapterView.OnItemSelectedListener 
 
             val extraString = intent.extras?.getString("action")
 
-            if(extraString != null && extraString == "newCalc") {
+            val firstRun = Utilities.retrieveBooleanSharedPref(this@CalculendarMain, firstRunPreferenceKey, true)
+            if(extraString != null && extraString == "newCalc" && !firstRun) {
                 showRangeDialog()
+            }
+
+            if(firstRun) uiScope.launch {
+                val analyticsResult = Utilities.displayAnalyticsOptInDialog(this@CalculendarMain)
+                if (analyticsResult) {
+                    Fabric.with(this@CalculendarMain, Crashlytics())
+                }
+            } else {
+                val analyticsOptIn = Utilities.retrieveBooleanSharedPref(this@CalculendarMain, optInPreferenceKey, false)
+                if(analyticsOptIn) {
+                    Fabric.with(this@CalculendarMain, Crashlytics())
+                }
             }
         }
 
@@ -74,7 +94,13 @@ class CalculendarMain : AppCompatActivity(), AdapterView.OnItemSelectedListener 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             R.id.about_application -> navigateToAbout()
+
+            R.id.analytics_opt_status -> uiScope.launch {
+                val optStatus = Utilities.displayAnalyticsOptInDialog(this@CalculendarMain)
+                Utilities.updateBooleanSharedPref(this@CalculendarMain, optInPreferenceKey, optStatus)
+            }
         }
+        
         return super.onOptionsItemSelected(item)
     }
 
