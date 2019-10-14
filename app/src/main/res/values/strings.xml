@@ -30,6 +30,7 @@
         opt-in status at any time by selecting the bug button on the
         action bar. Once set, changing status requires an app reboot.
     </string>
+    <string name="app_daynight_action_text">Set Day/Night Mode</string>
 
     <plurals name="custom_dates">
         <item quantity="one">Date</item>

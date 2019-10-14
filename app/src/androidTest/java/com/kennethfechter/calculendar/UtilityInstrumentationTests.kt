@@ -8,7 +8,6 @@ import org.junit.Test
 import org.junit.Assert.*
 import java.util.*
 
-
 class UtilityInstrumentationTests {
     private lateinit var instrumentationContext: Context
     lateinit var selectedDatesList: MutableList<Date>
