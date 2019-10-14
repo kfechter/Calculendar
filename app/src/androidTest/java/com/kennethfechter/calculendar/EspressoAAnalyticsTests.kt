@@ -24,7 +24,7 @@ class EspressoAAnalyticsTests {
         val dialogText = activity.activity.getString(R.string.opt_in_dialog_message)
         val context = activity.activity.applicationContext
         val preferenceKey = context.getString(R.string.first_run_preference_name)
-        val performTest =  Utilities.retrieveBooleanSharedPref(context, preferenceKey, false)
+        val performTest =  Utilities.retrieveBooleanSharedPref(context, preferenceKey, true)
 
         if(performTest) {
             onView(withText(dialogText)).inRoot(isDialog()).check(matches(isDisplayed()))
