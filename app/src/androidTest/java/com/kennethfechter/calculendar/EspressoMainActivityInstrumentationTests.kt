@@ -14,6 +14,7 @@ import androidx.test.espresso.intent.matcher.ComponentNameMatchers.hasClassName
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.RootMatchers.withDecorView
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.rule.ActivityTestRule
 import com.kennethfechter.calculendar.activities.CalculendarAbout
@@ -192,6 +193,24 @@ class EspressoMainActivityInstrumentationTests {
             currentDayNightMode = AppCompatDelegate.getDefaultNightMode()
             Assert.assertEquals("The Expected Mode does not match", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM, currentDayNightMode)
         }
+    }
+
+    @Test
+    fun verifyDayNightMenuExists() {
+        onView(withId(R.id.day_night_mode))
+            .check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun verifyAnalyticsMenuExists() {
+        onView(withId(R.id.analytics_opt_status))
+            .check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun verifyAboutMenuExists() {
+        onView(withId(R.id.about_application))
+            .check(matches(isDisplayed()))
     }
 
     @Test
