@@ -10,6 +10,7 @@ import android.widget.AdapterView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import com.crashlytics.android.Crashlytics
 import com.kennethfechter.calculendar.activities.CalculendarAbout
 import com.kennethfechter.calculendar.businesslogic.Utilities
@@ -84,6 +85,9 @@ class CalculendarMain : AppCompatActivity(), AdapterView.OnItemSelectedListener 
                     Fabric.with(this@CalculendarMain, Crashlytics())
                 }
             }
+
+            val dayNightMode = Utilities.getDayNightMode(this@CalculendarMain)
+            AppCompatDelegate.setDefaultNightMode(dayNightMode)
         }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -99,6 +103,8 @@ class CalculendarMain : AppCompatActivity(), AdapterView.OnItemSelectedListener 
                 val optStatus = Utilities.displayAnalyticsOptInDialog(this@CalculendarMain)
                 Utilities.updateBooleanSharedPref(this@CalculendarMain, optInPreferenceKey, optStatus)
             }
+
+            R.id.day_night_mode -> Utilities.showDayNightModeDialog(this@CalculendarMain)
         }
 
         return super.onOptionsItemSelected(item)

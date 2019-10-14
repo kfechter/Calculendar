@@ -20,7 +20,21 @@
 
     <string name="opt_in_preference_name">analytics_opt_in</string>
     <string name="first_run_preference_name">first_run</string>
+    <string name="day_night_preference_name">day_night_mode</string>
     <string name="shared_preference_file_name">com.kennethfechter.calculendar.prefs</string>
+
+    <string name="radio_day_mode_text">Light Theme</string>
+    <string name="radio_night_mode_text">Dark Theme</string>
+    <string name="radio_battery_saver_mode_text">Follow Battery Saver</string>
+    <string name="radio_auto_mode_text">Follow System</string>
+
+    <string name="theme_dialog_title">Set Application Theme</string>
+
+    <string name="preference_day_mode_value">Day</string>
+    <string name="preference_night_mode_value">Night</string>
+    <string name="preference_battery_saver_mode_value">Battery</string>
+    <string name="preference_auto_mode_value">Auto</string>
+
 
     <string name="opt_in_dialog_title">Analytics Opt-In</string>
     <string name="opt_in_dialog_message">

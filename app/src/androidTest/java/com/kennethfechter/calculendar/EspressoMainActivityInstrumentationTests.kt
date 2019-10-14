@@ -1,7 +1,10 @@
 package com.kennethfechter.calculendar
 
 import android.app.Instrumentation
+import android.os.Build
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
@@ -135,6 +138,60 @@ class EspressoMainActivityInstrumentationTests {
         onView(withId(R.id.about_application)).perform(click())
         intended(expectedIntent)
         Intents.release()
+    }
+
+    @Test
+    fun testAnalyticsOptInButton() {
+        onView(withId(R.id.analytics_opt_status)).perform(click())
+        val dialogText = activity.activity.getString(R.string.opt_in_dialog_message)
+        onView(withText(dialogText)).inRoot(isDialog()).check(matches(isDisplayed()))
+
+        onView(withText("Opt-Out"))
+            .perform(click())
+    }
+
+    @Test
+    fun testThemingButton() {
+        val testAutoThemeMode = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
+        val dialogText = activity.activity.getString(R.string.theme_dialog_title)
+
+        onView(withId(R.id.day_night_mode)).perform(click())
+        onView(withText(dialogText)).check(matches(isDisplayed()))
+
+        onView(withId(R.id.radio_day_mode)).check(matches(isDisplayed()))
+        onView(withId(R.id.radio_night_mode)).check(matches(isDisplayed()))
+        onView(withId(R.id.radio_battery_mode)).check(matches(isDisplayed()))
+
+        onView(withId(R.id.radio_day_mode)).perform(click())
+        onView(withText("OK")).perform(click())
+        var currentDayNightMode = AppCompatDelegate.getDefaultNightMode()
+        Assert.assertEquals("The Expected Mode does not match", AppCompatDelegate.MODE_NIGHT_NO, currentDayNightMode)
+
+
+        onView(withId(R.id.day_night_mode)).perform(click())
+        onView(withId(R.id.radio_night_mode)).perform(click())
+        onView(withText("OK")).perform(click())
+
+        currentDayNightMode = AppCompatDelegate.getDefaultNightMode()
+        Assert.assertEquals("The Expected Mode does not match", AppCompatDelegate.MODE_NIGHT_YES, currentDayNightMode)
+
+
+        onView(withId(R.id.day_night_mode)).perform(click())
+        onView(withId(R.id.radio_battery_mode)).perform(click())
+        onView(withText("OK")).perform(click())
+
+        currentDayNightMode = AppCompatDelegate.getDefaultNightMode()
+        Assert.assertEquals("The Expected Mode does not match", AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY, currentDayNightMode)
+
+        if(testAutoThemeMode) {
+            onView(withId(R.id.day_night_mode)).perform(click())
+            onView(withId(R.id.radio_auto_mode)).check(matches(isDisplayed()))
+            onView(withId(R.id.radio_auto_mode)).perform(click())
+            onView(withText("OK")).perform(click())
+
+            currentDayNightMode = AppCompatDelegate.getDefaultNightMode()
+            Assert.assertEquals("The Expected Mode does not match", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM, currentDayNightMode)
+        }
     }
 
     @Test

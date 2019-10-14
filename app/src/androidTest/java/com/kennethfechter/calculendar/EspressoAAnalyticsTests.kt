@@ -11,6 +11,7 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.rule.ActivityTestRule
+import com.kennethfechter.calculendar.businesslogic.Utilities
 import org.junit.Rule
 import org.junit.Test
 
@@ -19,11 +20,35 @@ class EspressoAAnalyticsTests {
     val activity = ActivityTestRule(CalculendarMain::class.java)
 
     @Test
-    fun testAnalyticsOptDialog() {
+    fun testAnalyticsOptDialogFirstRun() {
         val dialogText = activity.activity.getString(R.string.opt_in_dialog_message)
-        onView(withText(dialogText)).inRoot(isDialog()).check(matches(isDisplayed()))
+        val context = activity.activity.applicationContext
+        val preferenceKey = context.getString(R.string.first_run_preference_name)
+        val performTest =  Utilities.retrieveBooleanSharedPref(context, preferenceKey, false)
 
-        onView(withText("Opt-Out"))
-            .perform(ViewActions.click())
+        if(performTest) {
+            onView(withText(dialogText)).inRoot(isDialog()).check(matches(isDisplayed()))
+
+            onView(withText("Opt-Out"))
+                .perform(ViewActions.click())
+        }
+    }
+
+    @Test
+    fun verifyDayNightMenuExists() {
+        onView(ViewMatchers.withId(R.id.day_night_mode))
+            .check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun verifyAnalyticsMenuExists() {
+        onView(ViewMatchers.withId(R.id.analytics_opt_status))
+            .check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun verifyAboutMenuExists() {
+        onView(ViewMatchers.withId(R.id.about_application))
+            .check(matches(isDisplayed()))
     }
 }
