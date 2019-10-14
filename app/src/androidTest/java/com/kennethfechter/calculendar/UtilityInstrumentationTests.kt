@@ -11,7 +11,7 @@ import java.util.*
 
 class UtilityInstrumentationTests
 {
-    lateinit var instrumentationContext: Context
+    private lateinit var instrumentationContext: Context
     lateinit var selectedDatesList: MutableList<Date>
 
     @Before

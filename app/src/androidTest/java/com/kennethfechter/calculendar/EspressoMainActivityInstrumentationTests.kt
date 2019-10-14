@@ -29,8 +29,11 @@ class EspressoMainActivityInstrumentationTests
     @get:Rule
     val activity = ActivityTestRule(CalculendarMain::class.java)
 
-    lateinit var selectedDatesList: MutableList<Date>
-    lateinit var customDatesList: MutableList<Date>
+    private lateinit var selectedDatesList: MutableList<Date>
+    private lateinit var customDatesList: MutableList<Date>
+
+    private var testSharedPreferenceKey1 = "testSharedPreferenceKey1"
+    private var testSharedPreferenceKey2 = "testSharedPreferenceKey2"
 
     @Before
     fun setup() {
@@ -72,7 +75,6 @@ class EspressoMainActivityInstrumentationTests
         customDatesList.add(Date(1567483200000))
         customDatesList.add(Date(1567569600000))
     }
-
 
     @Test
     fun testShowDateDialog(){
@@ -135,5 +137,18 @@ class EspressoMainActivityInstrumentationTests
         onView(withId(R.id.about_application)).perform(click())
         intended(expectedIntent)
         Intents.release()
+    }
+
+    @Test
+    fun testSharedPreferences() {
+
+        Utilities.updateBooleanSharedPref(activity.activity.applicationContext,testSharedPreferenceKey1, true)
+        Utilities.updateBooleanSharedPref(activity.activity.applicationContext, testSharedPreferenceKey2, false)
+
+        val testSharedPref1 = Utilities.retrieveBooleanSharedPref(activity.activity.applicationContext, testSharedPreferenceKey1, false)
+        val testSharedPref2 = Utilities.retrieveBooleanSharedPref(activity.activity.applicationContext, testSharedPreferenceKey2, true)
+
+        Assert.assertEquals("The returned shared preference value does not match", true, testSharedPref1)
+        Assert.assertEquals("The returned shared preference value does not match", false, testSharedPref2)
     }
 }

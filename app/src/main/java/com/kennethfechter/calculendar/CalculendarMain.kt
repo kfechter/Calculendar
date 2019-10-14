@@ -100,7 +100,7 @@ class CalculendarMain : AppCompatActivity(), AdapterView.OnItemSelectedListener 
                 Utilities.updateBooleanSharedPref(this@CalculendarMain, optInPreferenceKey, optStatus)
             }
         }
-        
+
         return super.onOptionsItemSelected(item)
     }
 
