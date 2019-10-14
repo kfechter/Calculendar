@@ -23,9 +23,7 @@ import org.junit.Test
 import java.util.*
 
 
-class EspressoMainActivityInstrumentationTests
-{
-
+class EspressoMainActivityInstrumentationTests {
     @get:Rule
     val activity = ActivityTestRule(CalculendarMain::class.java)
 

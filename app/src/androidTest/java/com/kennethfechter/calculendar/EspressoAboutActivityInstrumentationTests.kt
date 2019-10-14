@@ -23,8 +23,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class EspressoAboutActivityInstrumentationTests
-{
+class EspressoAboutActivityInstrumentationTests {
     @get:Rule
     val activity = ActivityTestRule(CalculendarAbout::class.java)
 
