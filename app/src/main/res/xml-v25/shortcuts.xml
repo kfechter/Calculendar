@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+            android:icon="@mipmap/ic_launcher"
+            android:shortcutId="new_calculation"
+            android:enabled="true"
+            android:shortcutDisabledMessage="@string/disabled_message_text"
+            android:shortcutLongLabel="@string/shortcut_long_text"
+            android:shortcutShortLabel="@string/shortcut_short_text">
+
+        <intent
+                android:action="android.intent.action.VIEW"
+                android:targetClass="com.kennethfechter.calculendar.CalculendarMain"
+                android:targetPackage="com.kennethfechter.calculendar" >
+            <extra android:name="action" android:value="newCalc"/>
+        </intent>
+    </shortcut>
+</shortcuts>
