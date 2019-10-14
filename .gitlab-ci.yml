@@ -47,7 +47,7 @@ alpha:
     refs:
       - alpha
     variables:
-       - $CI_COMMIT_MESSAGE =~ /\[Deploy\]/
+       - $CI_COMMIT_MESSAGE =~ /\[Alpha\]/
     
   artifacts:
      paths:
@@ -60,38 +60,22 @@ beta:
     - android
   script:
     - echo "$SUPPLY_JSON_KEY_DATA" > /root/.google_secrets.json
-    - /opt/start-default-emulator.sh
-    - chmod +x ./gradlew
-    - ./gradlew assembleRelease
-    - fastlane alpha 
+    - fastlane beta 
   only:
     refs:
       - beta
     variables:
-       - $CI_COMMIT_MESSAGE =~ /\[Deploy\]/
-    
-  artifacts:
-     paths:
-       - app/build/outputs/apk/release/app-release.apk
-       - app/build/outputs/androidTest-results/connected/*.xml
+       - $CI_COMMIT_MESSAGE =~ /\[Beta\]/
 
-beta:
-  stage: beta
+production:
+  stage: production
   tags:
     - android
   script:
     - echo "$SUPPLY_JSON_KEY_DATA" > /root/.google_secrets.json
-    - /opt/start-default-emulator.sh
-    - chmod +x ./gradlew
-    - ./gradlew assembleRelease
-    - fastlane alpha 
+    - fastlane prod 
   only:
     refs:
-      - beta
+      - master
     variables:
-       - $CI_COMMIT_MESSAGE =~ /\[Deploy\]/
-    
-  artifacts:
-     paths:
-       - app/build/outputs/apk/release/app-release.apk
-       - app/build/outputs/androidTest-results/connected/*.xml
+       - $CI_COMMIT_MESSAGE =~ /\[Release\]/

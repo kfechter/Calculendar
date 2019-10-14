@@ -9,6 +9,9 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme" tools:ignore="GoogleAppIndexingWarning">
+
+        <meta-data android:name="firebase_crash_collection_enabled" android:value="false" />
+
         <activity
                 android:name="com.kennethfechter.calculendar.activities.CalculendarAbout"
                 android:label="@string/title_activity_calculendar_about"

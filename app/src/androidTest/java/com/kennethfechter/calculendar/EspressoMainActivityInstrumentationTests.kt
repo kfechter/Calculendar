@@ -1,7 +1,10 @@
 package com.kennethfechter.calculendar
 
 import android.app.Instrumentation
+import android.os.Build
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
@@ -11,6 +14,7 @@ import androidx.test.espresso.intent.matcher.ComponentNameMatchers.hasClassName
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.RootMatchers.withDecorView
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.rule.ActivityTestRule
 import com.kennethfechter.calculendar.activities.CalculendarAbout
@@ -23,14 +27,15 @@ import org.junit.Test
 import java.util.*
 
 
-class EspressoMainActivityInstrumentationTests
-{
-
+class EspressoMainActivityInstrumentationTests {
     @get:Rule
     val activity = ActivityTestRule(CalculendarMain::class.java)
 
-    lateinit var selectedDatesList: MutableList<Date>
-    lateinit var customDatesList: MutableList<Date>
+    private lateinit var selectedDatesList: MutableList<Date>
+    private lateinit var customDatesList: MutableList<Date>
+
+    private var testSharedPreferenceKey1 = "testSharedPreferenceKey1"
+    private var testSharedPreferenceKey2 = "testSharedPreferenceKey2"
 
     @Before
     fun setup() {
@@ -72,7 +77,6 @@ class EspressoMainActivityInstrumentationTests
         customDatesList.add(Date(1567483200000))
         customDatesList.add(Date(1567569600000))
     }
-
 
     @Test
     fun testShowDateDialog(){
@@ -135,5 +139,90 @@ class EspressoMainActivityInstrumentationTests
         onView(withId(R.id.about_application)).perform(click())
         intended(expectedIntent)
         Intents.release()
+    }
+
+    @Test
+    fun testAnalyticsOptInButton() {
+        onView(withId(R.id.analytics_opt_status)).perform(click())
+        val dialogText = activity.activity.getString(R.string.opt_in_dialog_message)
+        onView(withText(dialogText)).inRoot(isDialog()).check(matches(isDisplayed()))
+
+        onView(withText("Opt-Out"))
+            .perform(click())
+    }
+
+    @Test
+    fun testThemingButton() {
+        val testAutoThemeMode = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
+        val dialogText = activity.activity.getString(R.string.theme_dialog_title)
+
+        onView(withId(R.id.day_night_mode)).perform(click())
+        onView(withText(dialogText)).check(matches(isDisplayed()))
+
+        onView(withId(R.id.radio_day_mode)).check(matches(isDisplayed()))
+        onView(withId(R.id.radio_night_mode)).check(matches(isDisplayed()))
+        onView(withId(R.id.radio_battery_mode)).check(matches(isDisplayed()))
+
+        onView(withId(R.id.radio_day_mode)).perform(click())
+        onView(withText("OK")).perform(click())
+        var currentDayNightMode = AppCompatDelegate.getDefaultNightMode()
+        Assert.assertEquals("The Expected Mode does not match", AppCompatDelegate.MODE_NIGHT_NO, currentDayNightMode)
+
+
+        onView(withId(R.id.day_night_mode)).perform(click())
+        onView(withId(R.id.radio_night_mode)).perform(click())
+        onView(withText("OK")).perform(click())
+
+        currentDayNightMode = AppCompatDelegate.getDefaultNightMode()
+        Assert.assertEquals("The Expected Mode does not match", AppCompatDelegate.MODE_NIGHT_YES, currentDayNightMode)
+
+
+        onView(withId(R.id.day_night_mode)).perform(click())
+        onView(withId(R.id.radio_battery_mode)).perform(click())
+        onView(withText("OK")).perform(click())
+
+        currentDayNightMode = AppCompatDelegate.getDefaultNightMode()
+        Assert.assertEquals("The Expected Mode does not match", AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY, currentDayNightMode)
+
+        if(testAutoThemeMode) {
+            onView(withId(R.id.day_night_mode)).perform(click())
+            onView(withId(R.id.radio_auto_mode)).check(matches(isDisplayed()))
+            onView(withId(R.id.radio_auto_mode)).perform(click())
+            onView(withText("OK")).perform(click())
+
+            currentDayNightMode = AppCompatDelegate.getDefaultNightMode()
+            Assert.assertEquals("The Expected Mode does not match", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM, currentDayNightMode)
+        }
+    }
+
+    @Test
+    fun verifyDayNightMenuExists() {
+        onView(withId(R.id.day_night_mode))
+            .check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun verifyAnalyticsMenuExists() {
+        onView(withId(R.id.analytics_opt_status))
+            .check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun verifyAboutMenuExists() {
+        onView(withId(R.id.about_application))
+            .check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testSharedPreferences() {
+
+        Utilities.updateBooleanSharedPref(activity.activity.applicationContext,testSharedPreferenceKey1, true)
+        Utilities.updateBooleanSharedPref(activity.activity.applicationContext, testSharedPreferenceKey2, false)
+
+        val testSharedPref1 = Utilities.retrieveBooleanSharedPref(activity.activity.applicationContext, testSharedPreferenceKey1, false)
+        val testSharedPref2 = Utilities.retrieveBooleanSharedPref(activity.activity.applicationContext, testSharedPreferenceKey2, true)
+
+        Assert.assertEquals("The returned shared preference value does not match", true, testSharedPref1)
+        Assert.assertEquals("The returned shared preference value does not match", false, testSharedPref2)
     }
 }

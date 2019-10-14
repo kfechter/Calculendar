@@ -2,9 +2,16 @@ package com.kennethfechter.calculendar.businesslogic
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.os.Build
 import android.view.LayoutInflater
+import android.view.View
+import android.widget.RadioButton
+import androidx.appcompat.app.AppCompatDelegate
 import com.kennethfechter.calculendar.R
+import com.kennethfechter.calculendar.businesslogic.Utilities.getDayNightMode
+import com.kennethfechter.calculendar.businesslogic.Utilities.updateBooleanSharedPref
 import com.squareup.timessquare.CalendarPickerView
 import java.text.SimpleDateFormat
 import java.util.*
@@ -41,14 +48,14 @@ object Utilities {
 
         var calculatedDays: Int = selectedDates.size
 
-        var excludedDays: Int
+        val excludedDays: Int
 
         var saturdays = 0
         var sundays = 0
 
         val iterator = selectedDates.listIterator()
         for(item in iterator) {
-            var calendar = Calendar.getInstance()
+            val calendar = Calendar.getInstance()
             calendar.time = item
 
             if(calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
@@ -60,7 +67,7 @@ object Utilities {
             }
         }
 
-        excludedDays = when(exclusionMethod) {
+        excludedDays = when (exclusionMethod) {
             "Exclude Sundays" -> sundays
             "Exclude Saturdays" -> saturdays
             "Exclude Both" -> (saturdays + sundays)
@@ -76,6 +83,145 @@ object Utilities {
 
         return context.resources.getString(R.string.calculation_result_formatter)
             .format(startDate, endDate, excludedDays, calculatedDays, calculationPlural)
+    }
+
+    fun updateBooleanSharedPref(context: Context, prefKey: String, prefValue: Boolean) {
+        val preferenceFileName = context.getString(R.string.shared_preference_file_name)
+        val sharedPrefs = context.getSharedPreferences(preferenceFileName, 0)
+        val preferenceEditor = sharedPrefs!!.edit()
+
+        preferenceEditor.putBoolean(prefKey, prefValue)
+        preferenceEditor.apply()
+    }
+
+    fun retrieveBooleanSharedPref(context: Context, prefKey: String, defaultValue: Boolean) : Boolean {
+        val preferenceFileName = context.getString(R.string.shared_preference_file_name)
+        val sharedPrefs = context.getSharedPreferences(preferenceFileName, 0)
+        return sharedPrefs!!.getBoolean(prefKey, defaultValue)
+    }
+
+    private fun updateStringSharedPreference(context: Context, prefKey: String, prefValue: String) {
+        val preferenceFileName = context.getString(R.string.shared_preference_file_name)
+        val sharedPrefs = context.getSharedPreferences(preferenceFileName, 0)
+        val preferenceEditor = sharedPrefs!!.edit()
+
+        preferenceEditor.putString(prefKey, prefValue)
+        preferenceEditor.apply()
+    }
+
+    private fun retrieveStringSharedPreference(context:Context, prefKey: String, defaultValue: String) : String {
+        val preferenceFileName = context.getString(R.string.shared_preference_file_name)
+        val sharedPrefs = context.getSharedPreferences(preferenceFileName, 0)
+        return sharedPrefs!!.getString(prefKey, defaultValue)!!
+    }
+
+    fun getDayNightMode(context: Context) : Int {
+        val dayNightPreferenceName = context.getString(R.string.day_night_preference_name)
+        val currentPreferenceValue = retrieveStringSharedPreference(context, dayNightPreferenceName, "")
+        val dayNightAutoPreference = context.getString(R.string.preference_auto_mode_value)
+        if(currentPreferenceValue == "") {
+            updateStringSharedPreference(context, dayNightPreferenceName, dayNightAutoPreference)
+            return AppCompatDelegate.getDefaultNightMode()
+        }
+
+        return when(currentPreferenceValue) {
+            context.getString(R.string.preference_day_mode_value) -> AppCompatDelegate.MODE_NIGHT_NO
+            context.getString(R.string.preference_night_mode_value) -> AppCompatDelegate.MODE_NIGHT_YES
+            context.getString(R.string.preference_battery_saver_mode_value) -> AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY
+            context.getString(R.string.preference_auto_mode_value) -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+            else -> AppCompatDelegate.getDefaultNightMode()
+        }
+    }
+
+    private fun setNightMode(context: Context, dayNightMode: Int){
+        val dayNightPreferenceName = context.getString(R.string.day_night_preference_name)
+        val autoModeDefaultCase = when(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            true -> context.getString(R.string.preference_auto_mode_value)
+            else -> context.getString(R.string.preference_day_mode_value)
+        }
+        val desiredDayNightPreference = when(dayNightMode) {
+            AppCompatDelegate.MODE_NIGHT_NO -> context.getString(R.string.preference_day_mode_value)
+            AppCompatDelegate.MODE_NIGHT_YES -> context.getString(R.string.preference_night_mode_value)
+            AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY -> context.getString(R.string.preference_battery_saver_mode_value)
+            AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM -> context.getString(R.string.preference_auto_mode_value)
+            else -> autoModeDefaultCase
+        }
+
+        updateStringSharedPreference(context, dayNightPreferenceName, desiredDayNightPreference)
+        AppCompatDelegate.setDefaultNightMode(dayNightMode)
+    }
+
+    fun showDayNightModeDialog(context: Context) {
+        val builder = AlertDialog.Builder(context)
+
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_calculendar_daynight_mode, null)
+        var preferredDayNightMode = getDayNightMode(context)
+
+        when(preferredDayNightMode) {
+            AppCompatDelegate.MODE_NIGHT_NO -> dialogView.findViewById<RadioButton>(R.id.radio_day_mode).isChecked = true
+            AppCompatDelegate.MODE_NIGHT_YES -> dialogView.findViewById<RadioButton>(R.id.radio_night_mode).isChecked = true
+            AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY -> dialogView.findViewById<RadioButton>(R.id.radio_battery_mode).isChecked = true
+            AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM -> dialogView.findViewById<RadioButton>(R.id.radio_auto_mode).isChecked = true
+        }
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            dialogView.findViewById<RadioButton>(R.id.radio_auto_mode).visibility = View.VISIBLE
+
+            dialogView.findViewById<RadioButton>(R.id.radio_auto_mode).setOnCheckedChangeListener {
+                    _, isChecked -> if(isChecked) { preferredDayNightMode = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+            }}
+        }
+
+        dialogView.findViewById<RadioButton>(R.id.radio_day_mode).setOnCheckedChangeListener {
+            _, isChecked -> if(isChecked) { preferredDayNightMode = AppCompatDelegate.MODE_NIGHT_NO
+        }}
+
+        dialogView.findViewById<RadioButton>(R.id.radio_night_mode).setOnCheckedChangeListener {
+                _, isChecked -> if(isChecked) { preferredDayNightMode = AppCompatDelegate.MODE_NIGHT_YES
+        }}
+
+        dialogView.findViewById<RadioButton>(R.id.radio_battery_mode).setOnCheckedChangeListener {
+                _, isChecked -> if(isChecked) { preferredDayNightMode = AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY
+        }}
+
+        builder.setTitle(R.string.theme_dialog_title)
+        builder.setView(dialogView)
+
+        builder.setPositiveButton("OK") { dialog, _ ->
+            setNightMode(context, preferredDayNightMode)
+            dialog.dismiss()
+        }
+
+        builder.setNegativeButton("Cancel") {dialog, _ ->
+            dialog.dismiss()
+        }
+
+        builder.create().show()
+    }
+
+    suspend fun displayAnalyticsOptInDialog(context: Context) = suspendCoroutine<Boolean> {
+        val optInPreferenceName = context.getString(R.string.opt_in_preference_name)
+        val firstRunPreferenceName = context.getString(R.string.first_run_preference_name)
+        val builder = AlertDialog.Builder(context)
+
+        builder.setTitle(R.string.opt_in_dialog_title)
+        builder.setMessage(R.string.opt_in_dialog_message)
+
+        builder.setPositiveButton("Opt-In") { dialog, _ ->
+            updateBooleanSharedPref(context, optInPreferenceName, true)
+            updateBooleanSharedPref(context, firstRunPreferenceName, false)
+            dialog.dismiss()
+            it.resume(true)
+        }
+
+        builder.setNegativeButton("Opt-Out") { dialog, _ ->
+            updateBooleanSharedPref(context, optInPreferenceName, false)
+            updateBooleanSharedPref(context, firstRunPreferenceName, false)
+            dialog.dismiss()
+            it.resume(false)
+        }
+
+        builder.create().show()
     }
 
     suspend fun displayDatePickerDialog(context: Context, dialogTitle: String, rangeSelectionMode: Boolean, selectedDates: MutableList<Date> = mutableListOf(), excludedDates: MutableList<Date> = mutableListOf()) = suspendCoroutine<MutableList<Date>> {
