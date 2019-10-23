@@ -12,6 +12,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.crashlytics.android.Crashlytics
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.kennethfechter.calculendar.activities.CalculendarAbout
 import com.kennethfechter.calculendar.businesslogic.Utilities
 import io.fabric.sdk.android.Fabric
@@ -31,7 +32,7 @@ class CalculendarMain : AppCompatActivity(), AdapterView.OnItemSelectedListener 
     private var excludedDates: MutableList<Date> = mutableListOf()
     private var exclusionOption: String = ""
 
-    private var optInPreferenceKey = ""
+    private var analyticsPreferenceKey = ""
     private var firstRunPreferenceKey = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,7 +41,7 @@ class CalculendarMain : AppCompatActivity(), AdapterView.OnItemSelectedListener 
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             setSupportActionBar(toolbar)
 
-            optInPreferenceKey = getString(R.string.opt_in_preference_name)
+            analyticsPreferenceKey = getString(R.string.preference_name_analytics_level)
             firstRunPreferenceKey = getString(R.string.first_run_preference_name)
 
             btn_pick_range.setOnClickListener {
@@ -74,16 +75,13 @@ class CalculendarMain : AppCompatActivity(), AdapterView.OnItemSelectedListener 
                 showRangeDialog()
             }
 
-            if(firstRun) uiScope.launch {
-                val analyticsResult = Utilities.displayAnalyticsOptInDialog(this@CalculendarMain)
-                if (analyticsResult) {
-                    Fabric.with(this@CalculendarMain, Crashlytics())
-                }
+            val currentPreferenceValue = Utilities.retrieveStringSharedPreference(this@CalculendarMain, analyticsPreferenceKey, "Not-Set")
+
+            if(firstRun || currentPreferenceValue == "Not-Set") uiScope.launch {
+                val analyticsLevel = Utilities.displayAnalyticsOptInDialog(this@CalculendarMain)
+                setAnalytics(analyticsLevel)
             } else {
-                val analyticsOptIn = Utilities.retrieveBooleanSharedPref(this@CalculendarMain, optInPreferenceKey, false)
-                if(analyticsOptIn) {
-                    Fabric.with(this@CalculendarMain, Crashlytics())
-                }
+                setAnalytics(currentPreferenceValue)
             }
 
             val dayNightMode = Utilities.getDayNightMode(this@CalculendarMain)
@@ -101,7 +99,7 @@ class CalculendarMain : AppCompatActivity(), AdapterView.OnItemSelectedListener 
 
             R.id.analytics_opt_status -> uiScope.launch {
                 val optStatus = Utilities.displayAnalyticsOptInDialog(this@CalculendarMain)
-                Utilities.updateBooleanSharedPref(this@CalculendarMain, optInPreferenceKey, optStatus)
+                setAnalytics(optStatus)
             }
 
             R.id.day_night_mode -> Utilities.showDayNightModeDialog(this@CalculendarMain)
@@ -172,5 +170,23 @@ class CalculendarMain : AppCompatActivity(), AdapterView.OnItemSelectedListener 
     fun showCustomDialog() = uiScope.launch {
         excludedDates =  Utilities.displayDatePickerDialog(this@CalculendarMain, resources.getString(R.string.custom_date_dialog_title),false, selectedDates, excludedDates)
         btn_pick_custom.text = Utilities.getCustomDatesFormatterString(this@CalculendarMain, excludedDates.size)
+    }
+
+    fun setAnalytics(analyticsLevel : String) {
+        when(analyticsLevel) {
+            getString(R.string.full_analytics_preference_value) -> {
+                Fabric.with(this@CalculendarMain, Crashlytics())
+                FirebaseAnalytics.getInstance(this@CalculendarMain).setAnalyticsCollectionEnabled(true)
+            }
+
+            getString(R.string.crash_only_analytics_preference_value) -> {
+                Fabric.with(this@CalculendarMain, Crashlytics())
+                FirebaseAnalytics.getInstance(this@CalculendarMain).setAnalyticsCollectionEnabled(false)
+            }
+
+            getString(R.string.no_analytics_preference_value) -> {
+                FirebaseAnalytics.getInstance(this@CalculendarMain).setAnalyticsCollectionEnabled(false)
+            }
+        }
     }
 }
