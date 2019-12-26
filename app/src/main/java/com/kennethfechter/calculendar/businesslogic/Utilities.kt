@@ -109,7 +109,7 @@ object Utilities {
         preferenceEditor.apply()
     }
 
-    private fun retrieveStringSharedPreference(context:Context, prefKey: String, defaultValue: String) : String {
+    fun retrieveStringSharedPreference(context:Context, prefKey: String, defaultValue: String) : String {
         val preferenceFileName = context.getString(R.string.shared_preference_file_name)
         val sharedPrefs = context.getSharedPreferences(preferenceFileName, 0)
         return sharedPrefs!!.getString(prefKey, defaultValue)!!
@@ -199,26 +199,42 @@ object Utilities {
         builder.create().show()
     }
 
-    suspend fun displayAnalyticsOptInDialog(context: Context) = suspendCoroutine<Boolean> {
-        val optInPreferenceName = context.getString(R.string.opt_in_preference_name)
+    suspend fun displayAnalyticsOptInDialog(context: Context) = suspendCoroutine<String> {
+        val analyticsPreferenceName = context.getString(R.string.preference_name_analytics_level)
+
         val firstRunPreferenceName = context.getString(R.string.first_run_preference_name)
         val builder = AlertDialog.Builder(context)
+
+        val fullAnalyticsButton = context.getString(R.string.dialog_button_full_analytics)
+        val crashOnlyAnalyticsButton = context.getString(R.string.dialog_button_crash_only)
+        val optOutButton = context.getString(R.string.dialog_button_opt_out)
+
 
         builder.setTitle(R.string.opt_in_dialog_title)
         builder.setMessage(R.string.opt_in_dialog_message)
 
-        builder.setPositiveButton("Opt-In") { dialog, _ ->
-            updateBooleanSharedPref(context, optInPreferenceName, true)
+        builder.setPositiveButton(fullAnalyticsButton) { dialog, _ ->
+            val fullAnalyticsValue = context.getString(R.string.full_analytics_preference_value)
+            updateStringSharedPreference(context, analyticsPreferenceName, fullAnalyticsValue)
             updateBooleanSharedPref(context, firstRunPreferenceName, false)
             dialog.dismiss()
-            it.resume(true)
+            it.resume(fullAnalyticsValue)
         }
 
-        builder.setNegativeButton("Opt-Out") { dialog, _ ->
-            updateBooleanSharedPref(context, optInPreferenceName, false)
+        builder.setNegativeButton(crashOnlyAnalyticsButton) { dialog, _ ->
+            val crashAnalyticsValue = context.getString(R.string.crash_only_analytics_preference_value)
+            updateStringSharedPreference(context, analyticsPreferenceName, crashAnalyticsValue)
             updateBooleanSharedPref(context, firstRunPreferenceName, false)
             dialog.dismiss()
-            it.resume(false)
+            it.resume(crashAnalyticsValue)
+        }
+
+        builder.setNeutralButton(optOutButton) { dialog, _ ->
+            val noAnalyticsValue = context.getString(R.string.no_analytics_preference_value)
+            updateStringSharedPreference(context, analyticsPreferenceName, noAnalyticsValue)
+            updateBooleanSharedPref(context, firstRunPreferenceName, false)
+            dialog.dismiss()
+            it.resume(noAnalyticsValue)
         }
 
         builder.create().show()
