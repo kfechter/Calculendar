@@ -142,13 +142,80 @@ class EspressoMainActivityInstrumentationTests {
     }
 
     @Test
-    fun testAnalyticsOptInButton() {
-        onView(withId(R.id.analytics_opt_status)).perform(click())
-        val dialogText = activity.activity.getString(R.string.opt_in_dialog_message)
-        onView(withText(dialogText)).inRoot(isDialog()).check(matches(isDisplayed()))
+    fun testAnalyticsOptDialog() {
+        val context = activity.activity.applicationContext
+        val dialogText = context.getString(R.string.opt_in_dialog_message)
+        val fullButtonText = context.getString(R.string.dialog_button_full_analytics)
+        val crashOnlyButtonText = context.getString(R.string.dialog_button_crash_only)
+        val optOutButtonText = context.getString(R.string.dialog_button_opt_out)
 
-        onView(withText("Opt-Out"))
+
+        val preferenceKey = context.getString(R.string.preference_name_analytics_level)
+
+        onView(withId(R.id.analytics_opt_status))
             .perform(click())
+
+        /*
+        *
+        * Tests for checking that buttons are actually on the dialog
+        *
+        * */
+        onView(withText(dialogText))
+            .check(matches(isDisplayed()))
+
+        onView(withText(fullButtonText))
+            .check(matches(isDisplayed()))
+
+        onView(withText(crashOnlyButtonText))
+            .check(matches(isDisplayed()))
+
+        onView(withText(optOutButtonText))
+            .check(matches(isDisplayed()))
+
+        /*
+        *
+        * Tests for testing dialog functionality
+        *
+        *
+        * */
+
+        onView(withText(fullButtonText))
+            .perform(click())
+
+        val preferenceValueFull = Utilities.retrieveStringSharedPreference(context, preferenceKey, "Not-Set")
+        Assert.assertEquals("The analytics mode does not match", context.getString(R.string.full_analytics_preference_value), preferenceValueFull)
+
+
+        /*
+        *
+        *
+        * */
+
+        onView(withId(R.id.analytics_opt_status))
+            .perform(click())
+
+
+        onView(withText(crashOnlyButtonText))
+            .perform(click())
+
+        val preferenceValueCrash = Utilities.retrieveStringSharedPreference(context, preferenceKey, "Not-Set")
+        Assert.assertEquals("The analytics mode does not match", context.getString(R.string.crash_only_analytics_preference_value), preferenceValueCrash)
+
+        /*
+         *
+         *
+         * */
+
+        onView(withId(R.id.analytics_opt_status))
+            .perform(click())
+
+
+        onView(withText(optOutButtonText))
+            .perform(click())
+
+        val preferenceValueNone = Utilities.retrieveStringSharedPreference(context, preferenceKey, "Not-Set")
+        Assert.assertEquals("The analytics mode does not match", context.getString(R.string.no_analytics_preference_value), preferenceValueNone)
+
     }
 
     @Test
