@@ -11,6 +11,7 @@
             android:theme="@style/AppTheme" tools:ignore="GoogleAppIndexingWarning">
 
         <meta-data android:name="firebase_crash_collection_enabled" android:value="false" />
+        <meta-data android:name="firebase_analytics_collection_enabled" android:value="false" />
 
         <activity
                 android:name="com.kennethfechter.calculendar.activities.CalculendarAbout"
