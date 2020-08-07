@@ -7,6 +7,11 @@ before_script:
   - export LANGUAGE=en_US:en
   - export LC_ALL=en_US.UTF-8
   - gem install bundler && bundle update
+  - echo "y" | sdkmanager "build-tools;30.0.4"
+  - echo "y" | sdkmanager "platforms;android-30"
+  - echo "y" | sdkmanager "system-images;android-30;google_apis;x86"
+  - echo "y" | sdkmanager --update
+  - echo "no" | avdmanager create avd -n default -k "system-images;android-30;google_apis;x86" -d 17
 
 stages:
   - develop
