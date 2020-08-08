@@ -13,10 +13,7 @@ import androidx.test.espresso.intent.matcher.ComponentNameMatchers.hasClassName
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers.*
-import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
-import androidx.test.uiautomator.By
-import androidx.test.uiautomator.UiDevice
 import com.kennethfechter.calculendar.activities.CalculendarAbout
 import com.kennethfechter.calculendar.businesslogic.Utilities
 import org.hamcrest.CoreMatchers.*
@@ -27,8 +24,6 @@ import java.util.*
 class EspressoMainActivityInstrumentationTests {
     @get:Rule
     val activity = ActivityTestRule(CalculendarMain::class.java)
-
-    val device: UiDevice get() = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
     private lateinit var selectedDatesList: MutableList<Date>
     private lateinit var customDatesList: MutableList<Date>
