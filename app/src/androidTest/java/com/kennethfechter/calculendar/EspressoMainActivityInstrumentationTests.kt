@@ -4,7 +4,6 @@ import android.app.Instrumentation
 import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
@@ -13,23 +12,23 @@ import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.ComponentNameMatchers.hasClassName
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.RootMatchers.isDialog
-import androidx.test.espresso.matcher.RootMatchers.withDecorView
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
+import androidx.test.uiautomator.By
+import androidx.test.uiautomator.UiDevice
 import com.kennethfechter.calculendar.activities.CalculendarAbout
 import com.kennethfechter.calculendar.businesslogic.Utilities
 import org.hamcrest.CoreMatchers.*
-import org.junit.Assert
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
+import org.junit.*
 import java.util.*
 
 
 class EspressoMainActivityInstrumentationTests {
     @get:Rule
     val activity = ActivityTestRule(CalculendarMain::class.java)
+
+    val device: UiDevice get() = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
     private lateinit var selectedDatesList: MutableList<Date>
     private lateinit var customDatesList: MutableList<Date>
@@ -84,19 +83,6 @@ class EspressoMainActivityInstrumentationTests {
             .perform(click())
 
         onView(withText("Select")).inRoot(isDialog()).check(matches(isDisplayed()))
-    }
-
-    @Test
-    fun testSelectInvalidRange() {
-        onView(withId(R.id.btn_pick_range))
-            .perform(click())
-
-        onView(withText("Select"))
-            .perform(click())
-
-        onView(withText("A valid date range was not selected"))
-            .inRoot(withDecorView(not(`is`(activity.activity.window.decorView))))
-            .check(matches(isDisplayed()))
     }
 
     @Test
