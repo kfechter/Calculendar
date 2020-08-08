@@ -79,6 +79,6 @@ production:
     - fastlane prod 
   only:
     refs:
-      - master
+      - main
     variables:
        - $CI_COMMIT_MESSAGE =~ /\[Release\]/
