@@ -67,6 +67,7 @@ object Utilities {
             }
         }
 
+        // TODO: Allow Custom AND Saturdays/Sundays?
         excludedDays = when (exclusionMethod) {
             "Exclude Sundays" -> sundays
             "Exclude Saturdays" -> saturdays
