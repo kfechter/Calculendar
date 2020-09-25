@@ -11,11 +11,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import com.crashlytics.android.Crashlytics
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.kennethfechter.calculendar.activities.CalculendarAbout
 import com.kennethfechter.calculendar.businesslogic.Utilities
-import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_calculendar_main.*
 import kotlinx.coroutines.*
 import java.util.*
@@ -175,16 +174,17 @@ class CalculendarMain : AppCompatActivity(), AdapterView.OnItemSelectedListener 
     fun setAnalytics(analyticsLevel : String) {
         when(analyticsLevel) {
             getString(R.string.full_analytics_preference_value) -> {
-                Fabric.with(this@CalculendarMain, Crashlytics())
+                FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
                 FirebaseAnalytics.getInstance(this@CalculendarMain).setAnalyticsCollectionEnabled(true)
             }
 
             getString(R.string.crash_only_analytics_preference_value) -> {
-                Fabric.with(this@CalculendarMain, Crashlytics())
+                FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
                 FirebaseAnalytics.getInstance(this@CalculendarMain).setAnalyticsCollectionEnabled(false)
             }
 
             getString(R.string.no_analytics_preference_value) -> {
+                FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(false);
                 FirebaseAnalytics.getInstance(this@CalculendarMain).setAnalyticsCollectionEnabled(false)
             }
         }
