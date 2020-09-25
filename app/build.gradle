@@ -17,7 +17,7 @@ android {
             versionName = new Date().format('yyyyMMdd') + "-" + System.getenv("CI_COMMIT_SHORT_SHA")
         } else {
             versionCode = 2
-            versionName = new Date().format('yyyyMMdd')
+            versionName = new Date().format('yyyyMMdd') + "-DevBuild"
         }
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
