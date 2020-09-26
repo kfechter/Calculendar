@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools" package="com.kennethfechter.calculendar">
+        xmlns:tools="http://schemas.android.com/tools"
+        package="com.kennethfechter.calculendar">
 
     <application
             android:allowBackup="true"
@@ -8,21 +9,46 @@
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
-            android:theme="@style/AppTheme" tools:ignore="GoogleAppIndexingWarning">
-
-        <meta-data android:name="firebase_crash_collection_enabled" android:value="false" />
-        <meta-data android:name="firebase_analytics_collection_enabled" android:value="false" />
-
+            android:theme="@style/AppTheme"
+            tools:ignore="GoogleAppIndexingWarning">
         <activity
-                android:name="com.kennethfechter.calculendar.activities.CalculendarAbout"
-                android:label="@string/title_activity_calculendar_about"
+                android:name=".CalculationListActivity"
+                android:label="@string/title_calculation_list"
                 android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-        <activity android:name="com.kennethfechter.calculendar.CalculendarMain"
-        android:label="@string/app_name"
-        android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+                android:name=".CalculationDetailActivity"
+                android:label="@string/title_calculation_detail"
+                android:parentActivityName=".CalculationListActivity"
+                android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value="com.kennethfechter.calculendar.CalculationListActivity" />
+        </activity>
+
+        <meta-data
+                android:name="firebase_crash_collection_enabled"
+                android:value="false" />
+        <meta-data
+                android:name="firebase_analytics_collection_enabled"
+                android:value="false" />
+
+        <activity
+                android:name=".activities.CalculendarAbout"
+                android:label="@string/title_activity_calculendar_about"
+                android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+                android:name=".CalculendarMain"
+                android:label="@string/app_name"
+                android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 

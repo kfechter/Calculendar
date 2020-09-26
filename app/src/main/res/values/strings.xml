@@ -64,4 +64,6 @@
         <item quantity="one">Day</item>
         <item quantity="other">Days</item>
     </plurals>
+    <string name="title_calculation_list">Calculations</string>
+    <string name="title_calculation_detail">Calculation Detail</string>
 </resources>
