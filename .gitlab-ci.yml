@@ -25,6 +25,7 @@ develop:
     - /opt/start-default-emulator.sh
     - chmod +x ./gradlew
     - ./gradlew assembleRelease
+    - ls app
   only:
     refs:
       - develop
