@@ -25,7 +25,6 @@ develop:
     - /opt/start-default-emulator.sh
     - chmod +x ./gradlew
     - ./gradlew assembleRelease
-    - ls app/build/test-results/testReleaseUnitTest
   only:
     refs:
       - develop
@@ -58,6 +57,7 @@ alpha:
      paths:
        - app/build/outputs/apk/release/app-release.apk
        - app/build/outputs/androidTest-results/connected/*.xml
+       - app/build/test-results/testReleaseUnitTest/*.xml
 
 beta:
   stage: beta
