@@ -1,7 +1,6 @@
 package com.kennethfechter.calculendar
 
 import com.kennethfechter.calculendar.businesslogic.Converters
-import com.kennethfechter.calculendar.businesslogic.Utilities
 import org.junit.Test
 import org.junit.Assert.*
 import java.util.*

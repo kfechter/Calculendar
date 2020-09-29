@@ -2,7 +2,6 @@ package com.kennethfechter.calculendar.businesslogic
 
 import android.app.AlertDialog
 import android.content.Context
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Build
 import android.view.LayoutInflater
@@ -10,10 +9,7 @@ import android.view.View
 import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatDelegate
 import com.kennethfechter.calculendar.R
-import com.kennethfechter.calculendar.businesslogic.Utilities.getDayNightMode
-import com.kennethfechter.calculendar.businesslogic.Utilities.updateBooleanSharedPref
 import com.squareup.timessquare.CalendarPickerView
-import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
