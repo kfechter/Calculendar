@@ -16,6 +16,17 @@ import kotlin.coroutines.suspendCoroutine
 
 object Utilities {
 
+    val isRunningTest : Boolean by lazy {
+        try {
+            Class.forName("androidx.test.espresso.Espresso")
+            true
+        } catch (e: ClassNotFoundException) {
+            false
+        }
+    }
+
+    // Utilities below here should be moved and re-written
+
     fun getPackageVersionName(context: Context): String {
         return try {
             val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)

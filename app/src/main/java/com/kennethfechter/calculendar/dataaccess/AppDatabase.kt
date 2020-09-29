@@ -11,26 +11,43 @@ abstract class AppDatabase : RoomDatabase() {
     abstract val calculationDao: CalculationDao
 
     companion object {
+        var TEST_MODE = false
         private const val DB_NAME = "calculation.db"
 
         @Volatile
-        private var instance: AppDatabase? = null
+        private var db: AppDatabase? = null
+
+        @Volatile
+        private var instance: CalculationDao? = null
 
         @Synchronized
-        fun getInstance(context: Context): AppDatabase? {
+        fun getInstance(context: Context): CalculationDao? {
             if(instance == null) {
-                instance = create(context)
+                instance = create(context, TEST_MODE)
             }
 
-            return instance
+            return instance!!
         }
 
-        private fun create(context: Context): AppDatabase {
-            return Room.databaseBuilder(
-                context,
-                AppDatabase::class.java,
-                DB_NAME
-            ).build()
+        private fun create(context: Context, testMode: Boolean): CalculationDao? {
+            return if (testMode) {
+                db = Room.inMemoryDatabaseBuilder(
+                    context,
+                    AppDatabase::class.java
+                ).allowMainThreadQueries().build()
+                db?.calculationDao
+            } else {
+                db = Room.databaseBuilder(
+                    context,
+                    AppDatabase::class.java,
+                    DB_NAME
+                ).build()
+                db?.calculationDao
+            }
+        }
+
+        private fun close() {
+            db?.close()
         }
     }
 }

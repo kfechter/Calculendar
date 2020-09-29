@@ -70,14 +70,14 @@ class CalculendarMain : AppCompatActivity(), AdapterView.OnItemSelectedListener 
 
             val extraString = intent.extras?.getString("action")
 
-            val firstRun = Utilities.retrieveBooleanSharedPref(this@CalculendarMain, firstRunPreferenceKey, true)
+            val firstRun = (Utilities.retrieveBooleanSharedPref(this@CalculendarMain, firstRunPreferenceKey, true) && !Utilities.isRunningTest)
             if(extraString != null && extraString == "newCalc" && !firstRun) {
                 showRangeDialog()
             }
 
             val currentPreferenceValue = Utilities.retrieveStringSharedPreference(this@CalculendarMain, analyticsPreferenceKey, "Not-Set")
 
-            if(firstRun || currentPreferenceValue == "Not-Set") uiScope.launch {
+            if((firstRun || currentPreferenceValue == "Not-Set") && !Utilities.isRunningTest) uiScope.launch {
                 val analyticsLevel = Utilities.displayAnalyticsOptInDialog(this@CalculendarMain)
                 setAnalytics(analyticsLevel)
             } else {
