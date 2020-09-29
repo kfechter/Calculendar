@@ -20,15 +20,6 @@ import kotlin.coroutines.suspendCoroutine
 
 object Utilities {
 
-    fun getSelectedRangeString(selectedDates: MutableList<Date>): String {
-        if (selectedDates.size < 2 ) { return "Invalid Range" }
-        return "%s - %s".format(convertDateToString(selectedDates[0]), convertDateToString(selectedDates[selectedDates.size -1]))
-    }
-
-    fun convertDateToString(selectedDate: Date) : String {
-        return SimpleDateFormat("EEEE MMM d, yyyy", Locale.getDefault()).format(selectedDate)
-    }
-
     fun getPackageVersionName(context: Context): String {
         return try {
             val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
@@ -78,8 +69,8 @@ object Utilities {
 
         calculatedDays -= excludedDays
 
-        val startDate = convertDateToString(selectedDates[0])
-        val endDate = convertDateToString(selectedDates[selectedDates.size -1])
+        val startDate = Converters.convertDateToString(selectedDates[0])
+        val endDate = Converters.convertDateToString(selectedDates[selectedDates.size -1])
         val calculationPlural = context.resources.getQuantityString(R.plurals.calculated_days, calculatedDays)
 
         return context.resources.getString(R.string.calculation_result_formatter)

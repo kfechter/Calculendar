@@ -1,21 +1,31 @@
 package com.kennethfechter.calculendar
 
-import android.content.Context
-import androidx.test.platform.app.InstrumentationRegistry
+import com.kennethfechter.calculendar.businesslogic.Converters
 import com.kennethfechter.calculendar.businesslogic.Utilities
-import org.junit.Before
 import org.junit.Test
 import org.junit.Assert.*
 import java.util.*
 
-class UtilityInstrumentationTests {
-    private lateinit var instrumentationContext: Context
-    lateinit var selectedDatesList: MutableList<Date>
+class ConvertersUnitTests {
+    @Test
+    fun dateToStringConversionTest() {
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.YEAR, 1992)
+        calendar.set(Calendar.MONTH, 7)
+        calendar.set(Calendar.DAY_OF_MONTH, 23)
 
-    @Before
-    fun setup() {
-        instrumentationContext = InstrumentationRegistry.getInstrumentation().context
-        selectedDatesList = mutableListOf()
+        val selectedDate = Converters.convertDateToString(calendar.time)
+        assertEquals("Date string representation does not match expected value", "Sunday Aug 23, 1992", selectedDate)
+    }
+
+    @Test
+    fun invalidDateRangeStringConversionTest() {
+        assertEquals("Range string representation does not match expected value", "Invalid Range", Converters.getSelectedRangeString(mutableListOf()))
+    }
+
+    @Test
+    fun validDateRangeStringConversionTest() {
+        val selectedDatesList: MutableList<Date> = mutableListOf()
         selectedDatesList.add(Date(1567310400000))
         selectedDatesList.add(Date(1567396800000))
         selectedDatesList.add(Date(1567483200000))
@@ -46,23 +56,8 @@ class UtilityInstrumentationTests {
         selectedDatesList.add(Date(1569643200000))
         selectedDatesList.add(Date(1569729600000))
         selectedDatesList.add(Date(1569816000000))
-    }
 
-    @Test
-    fun testGetSelectedRangeString() {
-        val rangeStringPassing = Utilities.getSelectedRangeString(selectedDatesList)
-        val rangeStringFailing = Utilities.getSelectedRangeString(mutableListOf())
-
+        val rangeStringPassing = Converters.getSelectedRangeString(selectedDatesList)
         assertEquals("The converted range string does not match:","Sunday Sep 1, 2019 - Monday Sep 30, 2019", rangeStringPassing)
-        assertEquals("The converted range string does not match:","Invalid Range", rangeStringFailing)
-    }
-
-    @Test
-    fun testConvertDateToString() {
-        val convertedDateBeginning = Utilities.convertDateToString(selectedDatesList[0])
-        val convertedDateEnd  = Utilities.convertDateToString(selectedDatesList[selectedDatesList.size - 1])
-
-        assertEquals("The converted date string does not match:", "Sunday Sep 1, 2019", convertedDateBeginning)
-        assertEquals("The converted date string does not match:", "Monday Sep 30, 2019", convertedDateEnd)
     }
 }

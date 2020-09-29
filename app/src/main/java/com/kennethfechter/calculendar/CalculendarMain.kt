@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.kennethfechter.calculendar.activities.CalculendarAbout
+import com.kennethfechter.calculendar.businesslogic.Converters
 import com.kennethfechter.calculendar.businesslogic.Utilities
 import kotlinx.android.synthetic.main.activity_calculendar_main.*
 import kotlinx.coroutines.*
@@ -160,7 +161,7 @@ class CalculendarMain : AppCompatActivity(), AdapterView.OnItemSelectedListener 
             selectedDates = localSelectedDates
             exclusion_options_container.visibility = View.VISIBLE
             btnPerformCalculation.isEnabled = true
-            btn_pick_range.text = Utilities.getSelectedRangeString(selectedDates)
+            btn_pick_range.text = Converters.getSelectedRangeString(selectedDates)
         } else {
             Toast.makeText(this@CalculendarMain, "A valid date range was not selected", Toast.LENGTH_LONG).show()
         }
