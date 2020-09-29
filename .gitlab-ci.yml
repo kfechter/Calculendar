@@ -25,7 +25,7 @@ develop:
     - /opt/start-default-emulator.sh
     - chmod +x ./gradlew
     - ./gradlew assembleRelease
-    - ls app/build/test-results
+    - ls app/build/test-results/testReleaseUnitTest
   only:
     refs:
       - develop
