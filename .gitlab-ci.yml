@@ -35,7 +35,7 @@ develop:
      paths:
        - app/build/outputs/apk/release/app-release.apk
        - app/build/outputs/androidTest-results/connected/*.xml
-       - app/build/test-results/*.xml
+       - app/build/test-results/testReleaseUnitTest/*.xml
 
 alpha:
   stage: alpha
