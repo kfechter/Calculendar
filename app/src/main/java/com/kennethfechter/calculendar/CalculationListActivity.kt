@@ -14,6 +14,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 
 import com.kennethfechter.calculendar.dummy.DummyContent
+import com.kennethfechter.calculendar.views.CalculationDetailActivity
+import com.kennethfechter.calculendar.views.CalculationDetailFragment
 
 /**
  * An activity representing a list of Pings. This activity

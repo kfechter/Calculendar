@@ -13,8 +13,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
-import com.kennethfechter.calculendar.activities.CalculendarAbout
 import com.kennethfechter.calculendar.businesslogic.Converters
+import com.kennethfechter.calculendar.businesslogic.Dialogs
 import com.kennethfechter.calculendar.businesslogic.Utilities
 import kotlinx.android.synthetic.main.activity_calculendar_main.*
 import kotlinx.coroutines.*
@@ -95,7 +95,7 @@ class CalculendarMain : AppCompatActivity(), AdapterView.OnItemSelectedListener 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
-            R.id.about_application -> navigateToAbout()
+            R.id.about_application -> Dialogs.showAboutDialog(this@CalculendarMain)
 
             R.id.analytics_opt_status -> uiScope.launch {
                 val optStatus = Utilities.displayAnalyticsOptInDialog(this@CalculendarMain)
@@ -147,11 +147,6 @@ class CalculendarMain : AppCompatActivity(), AdapterView.OnItemSelectedListener 
 
     override fun onNothingSelected(adapterView: AdapterView<*>) {
 
-    }
-
-    private fun navigateToAbout() {
-        val aboutIntent = Intent(this, CalculendarAbout::class.java)
-        startActivity(aboutIntent)
     }
 
     fun showRangeDialog() = uiScope.launch {

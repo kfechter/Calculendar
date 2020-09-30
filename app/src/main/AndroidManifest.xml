@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".CalculationDetailActivity"
+                android:name=".views.CalculationDetailActivity"
                 android:label="@string/title_calculation_detail"
                 android:parentActivityName=".CalculationListActivity"
                 android:theme="@style/AppTheme.NoActionBar">

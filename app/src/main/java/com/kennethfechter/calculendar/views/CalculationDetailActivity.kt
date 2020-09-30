@@ -1,4 +1,4 @@
-package com.kennethfechter.calculendar
+package com.kennethfechter.calculendar.views
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,6 +6,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import android.view.MenuItem
+import com.kennethfechter.calculendar.CalculationListActivity
+import com.kennethfechter.calculendar.R
 
 /**
  * An activity representing a single Calculation detail screen. This

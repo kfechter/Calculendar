@@ -1,5 +1,5 @@
 package com.kennethfechter.calculendar
-
+/*
 import android.app.Instrumentation
 import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
@@ -273,4 +273,4 @@ class EspressoMainActivityInstrumentationTests {
         Assert.assertEquals("The returned shared preference value does not match", true, testSharedPref1)
         Assert.assertEquals("The returned shared preference value does not match", false, testSharedPref2)
     }
-}
+}*/

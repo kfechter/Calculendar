@@ -25,8 +25,6 @@ object Utilities {
         }
     }
 
-    // Utilities below here should be moved and re-written
-
     fun getPackageVersionName(context: Context): String {
         return try {
             val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
@@ -35,6 +33,8 @@ object Utilities {
             ""
         }
     }
+
+    // Utilities below here should be moved and re-written
 
     fun getCustomDatesFormatterString(context: Context, customDates: Int): String {
         val customDatePlural = context.resources.getQuantityString(R.plurals.custom_dates, customDates)

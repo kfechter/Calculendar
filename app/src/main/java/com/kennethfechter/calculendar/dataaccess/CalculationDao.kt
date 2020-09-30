@@ -24,13 +24,9 @@ interface CalculationDao {
     @Query("SELECT COUNT(*) FROM calculation")
     fun getCalculationCount() : Int
 
-    // fun filterByDate() // Get The item before or after a date?
-
     @Insert
-    fun insertAll(vararg calculations: Calculation)
+    fun insert(vararg calculation: Calculation)
 
     @Delete
     fun delete(calculation: Calculation)
-
-    // delete by age
 }

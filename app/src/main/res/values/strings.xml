@@ -16,7 +16,7 @@
     <string name="disabled_message_text">This shortcut is not currently enabled</string>
     <string name="shortcut_long_text">Open the app to the new calculation dialog</string>
     <string name="shortcut_short_text">New Calculation</string>
-    <string name="build_id_formatter">Build Id: %s</string>
+    <string name="build_id_formatter">Calculendar %s</string>
 
     <string name="first_run_preference_name">first_run</string>
     <string name="day_night_preference_name">day_night_mode</string>

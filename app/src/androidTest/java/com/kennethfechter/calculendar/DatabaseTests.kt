@@ -26,7 +26,8 @@ class DatabaseTests {
 
     @After
     fun teardown() {
-
+        calculationDao?.deleteAll()
+        Assert.assertEquals("Items were returned when none were expected", calculationDao?.getCalculationCount(), 0)
     }
 
     @Test
@@ -37,11 +38,11 @@ class DatabaseTests {
             startDate = "Sunday Aug 23, 1992",
             endDate = "Sunday Aug 30, 1992",
             exclusionMethod = "None",
-            customDates = "0",
+            customDates = "",
             calculatedInterval = 7
         )
 
-        calculationDao?.insertAll(calculation)
+        calculationDao?.insert(calculation)
         val testCalculation = getValue(calculationDao?.getByID(calculation.uid)!!)
 
         Assert.assertEquals(
@@ -89,11 +90,11 @@ class DatabaseTests {
 
     // Copied from stackoverflow
     @Throws(InterruptedException::class)
-    fun <T> getValue(liveData: LiveData<T>): T {
+    fun <Calculation> getValue(liveData: LiveData<Calculation>): Calculation {
         val data = arrayOfNulls<Any>(1)
         val latch = CountDownLatch(1)
-        val observer = object : Observer<T> {
-            override fun onChanged(t: T?) {
+        val observer = object : Observer<Calculation> {
+            override fun onChanged(t: Calculation) {
                 data[0] = t
                 latch.countDown()
                 liveData.removeObserver(this)//To change body of created functions use File | Settings | File Templates.
@@ -103,6 +104,6 @@ class DatabaseTests {
         liveData.observeForever(observer)
         latch.await(2, TimeUnit.SECONDS)
 
-        return data[0] as T
+        return data[0] as Calculation
     }
 }
