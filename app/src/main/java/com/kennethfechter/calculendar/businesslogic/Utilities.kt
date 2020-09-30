@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatDelegate
 import com.kennethfechter.calculendar.R
+import com.kennethfechter.calculendar.enumerations.Theme
 import com.squareup.timessquare.CalendarPickerView
 import java.util.*
 import kotlin.coroutines.resume
@@ -106,90 +107,6 @@ object Utilities {
         val preferenceFileName = context.getString(R.string.shared_preference_file_name)
         val sharedPrefs = context.getSharedPreferences(preferenceFileName, 0)
         return sharedPrefs!!.getString(prefKey, defaultValue)!!
-    }
-
-    fun getDayNightMode(context: Context) : Int {
-        val dayNightPreferenceName = context.getString(R.string.day_night_preference_name)
-        val currentPreferenceValue = retrieveStringSharedPreference(context, dayNightPreferenceName, "")
-        val dayNightAutoPreference = context.getString(R.string.preference_auto_mode_value)
-        if(currentPreferenceValue == "") {
-            updateStringSharedPreference(context, dayNightPreferenceName, dayNightAutoPreference)
-            return AppCompatDelegate.getDefaultNightMode()
-        }
-
-        return when(currentPreferenceValue) {
-            context.getString(R.string.preference_day_mode_value) -> AppCompatDelegate.MODE_NIGHT_NO
-            context.getString(R.string.preference_night_mode_value) -> AppCompatDelegate.MODE_NIGHT_YES
-            context.getString(R.string.preference_battery_saver_mode_value) -> AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY
-            context.getString(R.string.preference_auto_mode_value) -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-            else -> AppCompatDelegate.getDefaultNightMode()
-        }
-    }
-
-    private fun setNightMode(context: Context, dayNightMode: Int){
-        val dayNightPreferenceName = context.getString(R.string.day_night_preference_name)
-        val autoModeDefaultCase = when(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            true -> context.getString(R.string.preference_auto_mode_value)
-            else -> context.getString(R.string.preference_day_mode_value)
-        }
-        val desiredDayNightPreference = when(dayNightMode) {
-            AppCompatDelegate.MODE_NIGHT_NO -> context.getString(R.string.preference_day_mode_value)
-            AppCompatDelegate.MODE_NIGHT_YES -> context.getString(R.string.preference_night_mode_value)
-            AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY -> context.getString(R.string.preference_battery_saver_mode_value)
-            AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM -> context.getString(R.string.preference_auto_mode_value)
-            else -> autoModeDefaultCase
-        }
-
-        updateStringSharedPreference(context, dayNightPreferenceName, desiredDayNightPreference)
-        AppCompatDelegate.setDefaultNightMode(dayNightMode)
-    }
-
-    fun showDayNightModeDialog(context: Context) {
-        val builder = AlertDialog.Builder(context)
-
-        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_calculendar_daynight_mode, null)
-        var preferredDayNightMode = getDayNightMode(context)
-
-        when(preferredDayNightMode) {
-            AppCompatDelegate.MODE_NIGHT_NO -> dialogView.findViewById<RadioButton>(R.id.radio_day_mode).isChecked = true
-            AppCompatDelegate.MODE_NIGHT_YES -> dialogView.findViewById<RadioButton>(R.id.radio_night_mode).isChecked = true
-            AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY -> dialogView.findViewById<RadioButton>(R.id.radio_battery_mode).isChecked = true
-            AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM -> dialogView.findViewById<RadioButton>(R.id.radio_auto_mode).isChecked = true
-        }
-
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            dialogView.findViewById<RadioButton>(R.id.radio_auto_mode).visibility = View.VISIBLE
-
-            dialogView.findViewById<RadioButton>(R.id.radio_auto_mode).setOnCheckedChangeListener {
-                    _, isChecked -> if(isChecked) { preferredDayNightMode = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-            }}
-        }
-
-        dialogView.findViewById<RadioButton>(R.id.radio_day_mode).setOnCheckedChangeListener {
-            _, isChecked -> if(isChecked) { preferredDayNightMode = AppCompatDelegate.MODE_NIGHT_NO
-        }}
-
-        dialogView.findViewById<RadioButton>(R.id.radio_night_mode).setOnCheckedChangeListener {
-                _, isChecked -> if(isChecked) { preferredDayNightMode = AppCompatDelegate.MODE_NIGHT_YES
-        }}
-
-        dialogView.findViewById<RadioButton>(R.id.radio_battery_mode).setOnCheckedChangeListener {
-                _, isChecked -> if(isChecked) { preferredDayNightMode = AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY
-        }}
-
-        // builder.setTitle()
-        builder.setView(dialogView)
-
-        builder.setPositiveButton("OK") { dialog, _ ->
-            setNightMode(context, preferredDayNightMode)
-            dialog.dismiss()
-        }
-
-        builder.setNegativeButton("Cancel") {dialog, _ ->
-            dialog.dismiss()
-        }
-
-        builder.create().show()
     }
 
     suspend fun displayAnalyticsOptInDialog(context: Context) = suspendCoroutine<String> {

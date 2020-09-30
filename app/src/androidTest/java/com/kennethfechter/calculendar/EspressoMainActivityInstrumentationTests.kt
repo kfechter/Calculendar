@@ -183,72 +183,11 @@ class EspressoMainActivityInstrumentationTests {
         onView(withText(optOutButtonText))
             .perform(click())
 
-        val preferenceValueNone = Utilities.retrieveStringSharedPreference(context, preferenceKey, "Not-Set")
+        val preferenceValueNone = Utilities. (context, preferenceKey, "Not-Set")
         Assert.assertEquals("The analytics mode does not match", context.getString(R.string.no_analytics_preference_value), preferenceValueNone)
 
     }
 
-    @Test
-    fun testThemingButton() {
-        val testAutoThemeMode = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
-        val dialogText = activity.activity.getString(R.string.theme_dialog_title)
-
-        onView(withId(R.id.day_night_mode)).perform(click())
-        onView(withText(dialogText)).check(matches(isDisplayed()))
-
-        onView(withId(R.id.radio_day_mode)).check(matches(isDisplayed()))
-        onView(withId(R.id.radio_night_mode)).check(matches(isDisplayed()))
-        onView(withId(R.id.radio_battery_mode)).check(matches(isDisplayed()))
-
-        onView(withId(R.id.radio_day_mode)).perform(click())
-        onView(withText("OK")).perform(click())
-        var currentDayNightMode = AppCompatDelegate.getDefaultNightMode()
-        Assert.assertEquals("The Expected Mode does not match", AppCompatDelegate.MODE_NIGHT_NO, currentDayNightMode)
-
-
-        onView(withId(R.id.day_night_mode)).perform(click())
-        onView(withId(R.id.radio_night_mode)).perform(click())
-        onView(withText("OK")).perform(click())
-
-        currentDayNightMode = AppCompatDelegate.getDefaultNightMode()
-        Assert.assertEquals("The Expected Mode does not match", AppCompatDelegate.MODE_NIGHT_YES, currentDayNightMode)
-
-
-        onView(withId(R.id.day_night_mode)).perform(click())
-        onView(withId(R.id.radio_battery_mode)).perform(click())
-        onView(withText("OK")).perform(click())
-
-        currentDayNightMode = AppCompatDelegate.getDefaultNightMode()
-        Assert.assertEquals("The Expected Mode does not match", AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY, currentDayNightMode)
-
-        if(testAutoThemeMode) {
-            onView(withId(R.id.day_night_mode)).perform(click())
-            onView(withId(R.id.radio_auto_mode)).check(matches(isDisplayed()))
-            onView(withId(R.id.radio_auto_mode)).perform(click())
-            onView(withText("OK")).perform(click())
-
-            currentDayNightMode = AppCompatDelegate.getDefaultNightMode()
-            Assert.assertEquals("The Expected Mode does not match", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM, currentDayNightMode)
-        }
-    }
-
-    @Test
-    fun verifyDayNightMenuExists() {
-        onView(withId(R.id.day_night_mode))
-            .check(matches(isDisplayed()))
-    }
-
-    @Test
-    fun verifyAnalyticsMenuExists() {
-        onView(withId(R.id.analytics_opt_status))
-            .check(matches(isDisplayed()))
-    }
-
-    @Test
-    fun verifyAboutMenuExists() {
-        onView(withId(R.id.about_application))
-            .check(matches(isDisplayed()))
-    }
 
     @Test
     fun testSharedPreferences() {

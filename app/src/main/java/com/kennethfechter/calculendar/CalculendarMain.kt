@@ -11,11 +11,14 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.lifecycle.asLiveData
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.kennethfechter.calculendar.businesslogic.Converters
 import com.kennethfechter.calculendar.businesslogic.Dialogs
+import com.kennethfechter.calculendar.businesslogic.PreferenceManager
 import com.kennethfechter.calculendar.businesslogic.Utilities
+import com.kennethfechter.calculendar.enumerations.Theme
 import kotlinx.android.synthetic.main.activity_calculendar_main.*
 import kotlinx.coroutines.*
 import java.util.*
@@ -35,11 +38,16 @@ class CalculendarMain : AppCompatActivity(), AdapterView.OnItemSelectedListener 
     private var analyticsPreferenceKey = ""
     private var firstRunPreferenceKey = ""
 
+    lateinit var currentTheme: Theme
+    private lateinit var preferenceManager: PreferenceManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
             setContentView(layoutId)
-            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT // This will go away in the new UI
             setSupportActionBar(toolbar)
+
+            preferenceManager = PreferenceManager(applicationContext)
 
             analyticsPreferenceKey = getString(R.string.preference_name_analytics_level)
             firstRunPreferenceKey = getString(R.string.first_run_preference_name)
@@ -84,9 +92,22 @@ class CalculendarMain : AppCompatActivity(), AdapterView.OnItemSelectedListener 
                 setAnalytics(currentPreferenceValue)
             }
 
-            val dayNightMode = Utilities.getDayNightMode(this@CalculendarMain)
-            AppCompatDelegate.setDefaultNightMode(dayNightMode)
+           initializeThemeObserver()
         }
+
+    fun initializeThemeObserver() {
+        preferenceManager.themeFlow.asLiveData().observe(this) {theme ->
+            when(theme) {
+                Theme.Day -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                Theme.Night -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                Theme.PowerSave -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY)
+                Theme.System -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                null -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }
+
+            currentTheme = theme
+        }
+    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_calculendar_main, menu)
@@ -102,7 +123,7 @@ class CalculendarMain : AppCompatActivity(), AdapterView.OnItemSelectedListener 
                 setAnalytics(optStatus)
             }
 
-            R.id.day_night_mode -> Utilities.showDayNightModeDialog(this@CalculendarMain)
+            R.id.day_night_mode -> Dialogs.showThemeDialog(this@CalculendarMain, preferenceManager, currentTheme)
         }
 
         return super.onOptionsItemSelected(item)
