@@ -112,17 +112,6 @@ class EspressoMainActivityInstrumentationTests {
     }
 
     @Test
-    fun testAboutAppButton() {
-
-        Intents.init()
-        val expectedIntent = allOf(IntentMatchers.hasComponent(hasClassName(CalculendarAbout::class.java.name)))
-        intending(expectedIntent).respondWith(Instrumentation.ActivityResult(0, null))
-        onView(withId(R.id.about_application)).perform(click())
-        intended(expectedIntent)
-        Intents.release()
-    }
-
-    @Test
     fun testAnalyticsOptDialog() {
         val context = activity.activity.applicationContext
         val dialogText = context.getString(R.string.opt_in_dialog_message)

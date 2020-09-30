@@ -8,6 +8,7 @@ import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
 import android.widget.ArrayAdapter
+import android.widget.RadioButton
 import android.widget.Toast
 import com.kennethfechter.calculendar.R
 import kotlinx.android.synthetic.main.activity_calculendar_about.*
@@ -39,5 +40,17 @@ object Dialogs {
 
         aboutApplicationDialogView.developers_list.adapter = ArrayAdapter(context, R.layout.developer_name_list_item, context.resources.getStringArray(R.array.developer_names))
         aboutDialog.show()
+    }
+
+    fun showThemeDialog(context: Context) {
+        val themeDialogBuilder = AlertDialog.Builder(context)
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_calculendar_daynight_mode, null)
+        var preferredDayNightMode = Utilities.getDayNightMode(context)
+
+        val autoModeButton = dialogView.findViewById<RadioButton>(R.id.radio_auto_mode)
+
+        themeDialogBuilder.setTitle(R.string.theme_dialog_title)
+        themeDialogBuilder.setView(dialogView)
+
     }
 }

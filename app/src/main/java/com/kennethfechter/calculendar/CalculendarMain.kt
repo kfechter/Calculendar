@@ -136,13 +136,13 @@ class CalculendarMain : AppCompatActivity(), AdapterView.OnItemSelectedListener 
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, id: Long) {
         val exclusionOptions = resources.getStringArray(R.array.exclusion_options)
         exclusionOption = exclusionOptions[position]
-        when(exclusionOption) {
+        btn_pick_custom.visibility = when (exclusionOption) {
             "Exclude Custom" -> {
-                btn_pick_custom.visibility = View.VISIBLE
-                btn_pick_custom.text = Utilities.getCustomDatesFormatterString(this, excludedDates.size)
+                View.VISIBLE
             }
-            else -> btn_pick_custom.visibility = View.INVISIBLE
+            else ->  View.INVISIBLE
         }
+        btn_pick_custom.text = Converters.getFormattedCustomDateString(this, excludedDates.size)
     }
 
     override fun onNothingSelected(adapterView: AdapterView<*>) {
@@ -164,7 +164,7 @@ class CalculendarMain : AppCompatActivity(), AdapterView.OnItemSelectedListener 
 
     fun showCustomDialog() = uiScope.launch {
         excludedDates =  Utilities.displayDatePickerDialog(this@CalculendarMain, resources.getString(R.string.custom_date_dialog_title),false, selectedDates, excludedDates)
-        btn_pick_custom.text = Utilities.getCustomDatesFormatterString(this@CalculendarMain, excludedDates.size)
+        btn_pick_custom.text = Converters.getFormattedCustomDateString(this@CalculendarMain, excludedDates.size)
     }
 
     fun setAnalytics(analyticsLevel : String) {

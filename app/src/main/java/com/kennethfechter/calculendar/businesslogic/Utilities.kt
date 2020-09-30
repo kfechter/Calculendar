@@ -36,12 +36,6 @@ object Utilities {
 
     // Utilities below here should be moved and re-written
 
-    fun getCustomDatesFormatterString(context: Context, customDates: Int): String {
-        val customDatePlural = context.resources.getQuantityString(R.plurals.custom_dates, customDates)
-
-        return context.resources.getString(R.string.custom_dates_formatter).format(customDates, customDatePlural)
-    }
-
     fun calculateDays(context: Context, selectedDates: MutableList<Date>, customDateExclusions: MutableList<Date>, exclusionMethod: String) : String {
 
         var calculatedDays: Int = selectedDates.size
@@ -183,7 +177,7 @@ object Utilities {
                 _, isChecked -> if(isChecked) { preferredDayNightMode = AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY
         }}
 
-        builder.setTitle(R.string.theme_dialog_title)
+        // builder.setTitle()
         builder.setView(dialogView)
 
         builder.setPositiveButton("OK") { dialog, _ ->
