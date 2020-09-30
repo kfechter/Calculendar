@@ -5,6 +5,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.asLiveData
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
@@ -18,17 +22,24 @@ import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.activityScenarioRule
 import androidx.test.platform.app.InstrumentationRegistry
+import com.kennethfechter.calculendar.businesslogic.PreferenceManager
 import com.kennethfechter.calculendar.businesslogic.Utilities
 import org.hamcrest.Matchers.allOf
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 
 class ViewTests {
 
+    @Rule @JvmField
+    var instantTaskExecutorRule: InstantTaskExecutorRule = InstantTaskExecutorRule()
+
     @get:Rule
     val activity = activityScenarioRule<CalculendarMain>()
+
     private lateinit var context: Context
 
     @Before
@@ -151,6 +162,71 @@ class ViewTests {
             Assert.assertEquals("The Expected Mode does not match", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM, currentDayNightMode)
         }
 
+    }
+
+    @Test
+    fun verifyAnalyticsDialog() {
+        val dialogText = context.getString(R.string.opt_in_dialog_message)
+
+        val optInText = "Opt-In"
+        val optOutText = "Opt-Out"
+
+        onView(withId(R.id.analytics_opt_status))
+            .perform(click())
+
+        onView(withText(dialogText))
+            .check(matches(isDisplayed()))
+
+        onView(withText(optInText))
+            .check(matches(isDisplayed()))
+
+        onView(withText(optOutText))
+            .check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun validateOptOut() {
+        val preferenceManager = PreferenceManager(context)
+
+        onView(withId(R.id.analytics_opt_status))
+            .perform(click())
+
+        onView(withText("Opt-Out"))
+            .perform(click())
+
+        Assert.assertEquals("The current analytics value does not match the expected value", 0, getValue(preferenceManager.analyticsFlow.asLiveData()))
+    }
+
+    @Test
+    fun validateOptIn() {
+        val preferenceManager = PreferenceManager(context)
+
+        onView(withId(R.id.analytics_opt_status))
+            .perform(click())
+
+        onView(withText("Opt-In"))
+            .perform(click())
+
+        Assert.assertEquals("The current analytics value does not match the expected value", 1, getValue(preferenceManager.analyticsFlow.asLiveData()))
+    }
+
+    // Copied from stackoverflow
+    @Throws(InterruptedException::class)
+    fun <Int> getValue(liveData: LiveData<Int>): Int {
+        val data = arrayOfNulls<Any>(1)
+        val latch = CountDownLatch(1)
+        val observer = object : Observer<Int> {
+            override fun onChanged(t: Int) {
+                data[0] = t
+                latch.countDown()
+                liveData.removeObserver(this) //To change body of created functions use File | Settings | File Templates.
+            }
+
+        }
+        liveData.observeForever(observer)
+        latch.await(2, TimeUnit.SECONDS)
+
+        return data[0] as Int
     }
 
 }

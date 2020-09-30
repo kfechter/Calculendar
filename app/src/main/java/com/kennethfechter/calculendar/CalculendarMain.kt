@@ -1,6 +1,5 @@
 package com.kennethfechter.calculendar
 
-import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.Menu
@@ -22,6 +21,7 @@ import com.kennethfechter.calculendar.enumerations.Theme
 import kotlinx.android.synthetic.main.activity_calculendar_main.*
 import kotlinx.coroutines.*
 import java.util.*
+import kotlin.properties.Delegates
 
 class CalculendarMain : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
@@ -35,10 +35,10 @@ class CalculendarMain : AppCompatActivity(), AdapterView.OnItemSelectedListener 
     private var excludedDates: MutableList<Date> = mutableListOf()
     private var exclusionOption: String = ""
 
-    private var analyticsPreferenceKey = ""
-    private var firstRunPreferenceKey = ""
 
-    lateinit var currentTheme: Theme
+    private lateinit var currentTheme: Theme
+    private var analyticsEnabled by Delegates.notNull<Int>()
+
     private lateinit var preferenceManager: PreferenceManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,9 +48,8 @@ class CalculendarMain : AppCompatActivity(), AdapterView.OnItemSelectedListener 
             setSupportActionBar(toolbar)
 
             preferenceManager = PreferenceManager(applicationContext)
-
-            analyticsPreferenceKey = getString(R.string.preference_name_analytics_level)
-            firstRunPreferenceKey = getString(R.string.first_run_preference_name)
+            initializeAnalytics()
+            initializeThemeObserver()
 
             btn_pick_range.setOnClickListener {
                 showRangeDialog()
@@ -78,25 +77,13 @@ class CalculendarMain : AppCompatActivity(), AdapterView.OnItemSelectedListener 
 
             val extraString = intent.extras?.getString("action")
 
-            val firstRun = (Utilities.retrieveBooleanSharedPref(this@CalculendarMain, firstRunPreferenceKey, true) && !Utilities.isRunningTest)
-            if(extraString != null && extraString == "newCalc" && !firstRun) {
+            if(extraString != null && extraString == "newCalc" && (analyticsEnabled != -1)) {
                 showRangeDialog()
             }
-
-            val currentPreferenceValue = Utilities.retrieveStringSharedPreference(this@CalculendarMain, analyticsPreferenceKey, "Not-Set")
-
-            if((firstRun || currentPreferenceValue == "Not-Set") && !Utilities.isRunningTest) uiScope.launch {
-                val analyticsLevel = Utilities.displayAnalyticsOptInDialog(this@CalculendarMain)
-                setAnalytics(analyticsLevel)
-            } else {
-                setAnalytics(currentPreferenceValue)
-            }
-
-           initializeThemeObserver()
         }
 
     fun initializeThemeObserver() {
-        preferenceManager.themeFlow.asLiveData().observe(this) {theme ->
+        preferenceManager.themeFlow.asLiveData().observe(this) { theme ->
             when(theme) {
                 Theme.Day -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 Theme.Night -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
@@ -109,6 +96,18 @@ class CalculendarMain : AppCompatActivity(), AdapterView.OnItemSelectedListener 
         }
     }
 
+    fun initializeAnalytics() {
+        preferenceManager.analyticsFlow.asLiveData().observe(this) { analyticsPreference ->
+            when (analyticsPreference) {
+                -1 -> if (!Utilities.isRunningTest) { Dialogs.showAnalyticsDialog(this@CalculendarMain, preferenceManager) }
+                 0 -> if (!Utilities.isRunningTest) { configureAnalytics(false) }
+                 1 -> if (!Utilities.isRunningTest) { configureAnalytics(true) }
+            }
+
+            analyticsEnabled = analyticsPreference
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_calculendar_main, menu)
         return super.onCreateOptionsMenu(menu)
@@ -117,12 +116,7 @@ class CalculendarMain : AppCompatActivity(), AdapterView.OnItemSelectedListener 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             R.id.about_application -> Dialogs.showAboutDialog(this@CalculendarMain)
-
-            R.id.analytics_opt_status -> uiScope.launch {
-                val optStatus = Utilities.displayAnalyticsOptInDialog(this@CalculendarMain)
-                setAnalytics(optStatus)
-            }
-
+            R.id.analytics_opt_status -> Dialogs.showAnalyticsDialog(this@CalculendarMain, preferenceManager)
             R.id.day_night_mode -> Dialogs.showThemeDialog(this@CalculendarMain, preferenceManager, currentTheme)
         }
 
@@ -188,22 +182,8 @@ class CalculendarMain : AppCompatActivity(), AdapterView.OnItemSelectedListener 
         btn_pick_custom.text = Converters.getFormattedCustomDateString(this@CalculendarMain, excludedDates.size)
     }
 
-    fun setAnalytics(analyticsLevel : String) {
-        when(analyticsLevel) {
-            getString(R.string.full_analytics_preference_value) -> {
-                FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
-                FirebaseAnalytics.getInstance(this@CalculendarMain).setAnalyticsCollectionEnabled(true)
-            }
-
-            getString(R.string.crash_only_analytics_preference_value) -> {
-                FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
-                FirebaseAnalytics.getInstance(this@CalculendarMain).setAnalyticsCollectionEnabled(false)
-            }
-
-            getString(R.string.no_analytics_preference_value) -> {
-                FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(false);
-                FirebaseAnalytics.getInstance(this@CalculendarMain).setAnalyticsCollectionEnabled(false)
-            }
-        }
+    fun configureAnalytics(analyticsEnabled: Boolean) {
+        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(analyticsEnabled);
+        FirebaseAnalytics.getInstance(this@CalculendarMain).setAnalyticsCollectionEnabled(analyticsEnabled)
     }
 }

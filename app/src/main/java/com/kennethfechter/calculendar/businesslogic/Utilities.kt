@@ -3,13 +3,8 @@ package com.kennethfechter.calculendar.businesslogic
 import android.app.AlertDialog
 import android.content.Context
 import android.content.pm.PackageManager
-import android.os.Build
 import android.view.LayoutInflater
-import android.view.View
-import android.widget.RadioButton
-import androidx.appcompat.app.AppCompatDelegate
 import com.kennethfechter.calculendar.R
-import com.kennethfechter.calculendar.enumerations.Theme
 import com.squareup.timessquare.CalendarPickerView
 import java.util.*
 import kotlin.coroutines.resume
@@ -77,77 +72,6 @@ object Utilities {
 
         return context.resources.getString(R.string.calculation_result_formatter)
             .format(startDate, endDate, excludedDays, calculatedDays, calculationPlural)
-    }
-
-    fun updateBooleanSharedPref(context: Context, prefKey: String, prefValue: Boolean) {
-        val preferenceFileName = context.getString(R.string.shared_preference_file_name)
-        val sharedPrefs = context.getSharedPreferences(preferenceFileName, 0)
-        val preferenceEditor = sharedPrefs!!.edit()
-
-        preferenceEditor.putBoolean(prefKey, prefValue)
-        preferenceEditor.apply()
-    }
-
-    fun retrieveBooleanSharedPref(context: Context, prefKey: String, defaultValue: Boolean) : Boolean {
-        val preferenceFileName = context.getString(R.string.shared_preference_file_name)
-        val sharedPrefs = context.getSharedPreferences(preferenceFileName, 0)
-        return sharedPrefs!!.getBoolean(prefKey, defaultValue)
-    }
-
-    private fun updateStringSharedPreference(context: Context, prefKey: String, prefValue: String) {
-        val preferenceFileName = context.getString(R.string.shared_preference_file_name)
-        val sharedPrefs = context.getSharedPreferences(preferenceFileName, 0)
-        val preferenceEditor = sharedPrefs!!.edit()
-
-        preferenceEditor.putString(prefKey, prefValue)
-        preferenceEditor.apply()
-    }
-
-    fun retrieveStringSharedPreference(context:Context, prefKey: String, defaultValue: String) : String {
-        val preferenceFileName = context.getString(R.string.shared_preference_file_name)
-        val sharedPrefs = context.getSharedPreferences(preferenceFileName, 0)
-        return sharedPrefs!!.getString(prefKey, defaultValue)!!
-    }
-
-    suspend fun displayAnalyticsOptInDialog(context: Context) = suspendCoroutine<String> {
-        val analyticsPreferenceName = context.getString(R.string.preference_name_analytics_level)
-
-        val firstRunPreferenceName = context.getString(R.string.first_run_preference_name)
-        val builder = AlertDialog.Builder(context)
-
-        val fullAnalyticsButton = context.getString(R.string.dialog_button_full_analytics)
-        val crashOnlyAnalyticsButton = context.getString(R.string.dialog_button_crash_only)
-        val optOutButton = context.getString(R.string.dialog_button_opt_out)
-
-
-        builder.setTitle(R.string.opt_in_dialog_title)
-        builder.setMessage(R.string.opt_in_dialog_message)
-
-        builder.setPositiveButton(fullAnalyticsButton) { dialog, _ ->
-            val fullAnalyticsValue = context.getString(R.string.full_analytics_preference_value)
-            updateStringSharedPreference(context, analyticsPreferenceName, fullAnalyticsValue)
-            updateBooleanSharedPref(context, firstRunPreferenceName, false)
-            dialog.dismiss()
-            it.resume(fullAnalyticsValue)
-        }
-
-        builder.setNegativeButton(crashOnlyAnalyticsButton) { dialog, _ ->
-            val crashAnalyticsValue = context.getString(R.string.crash_only_analytics_preference_value)
-            updateStringSharedPreference(context, analyticsPreferenceName, crashAnalyticsValue)
-            updateBooleanSharedPref(context, firstRunPreferenceName, false)
-            dialog.dismiss()
-            it.resume(crashAnalyticsValue)
-        }
-
-        builder.setNeutralButton(optOutButton) { dialog, _ ->
-            val noAnalyticsValue = context.getString(R.string.no_analytics_preference_value)
-            updateStringSharedPreference(context, analyticsPreferenceName, noAnalyticsValue)
-            updateBooleanSharedPref(context, firstRunPreferenceName, false)
-            dialog.dismiss()
-            it.resume(noAnalyticsValue)
-        }
-
-        builder.create().show()
     }
 
     suspend fun displayDatePickerDialog(context: Context, dialogTitle: String, rangeSelectionMode: Boolean, selectedDates: MutableList<Date> = mutableListOf(), excludedDates: MutableList<Date> = mutableListOf()) = suspendCoroutine<MutableList<Date>> {

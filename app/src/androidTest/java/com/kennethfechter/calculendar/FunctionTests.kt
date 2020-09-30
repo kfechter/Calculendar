@@ -27,4 +27,10 @@ class FunctionTests {
         val singularDateString = Converters.getFormattedCustomDateString(context, 1)
         Assert.assertEquals("Formatted string does not match expected", "1 Custom Date Selected", singularDateString)
     }
+
+    @Test
+    fun testCustomStringFormatterMultiple() {
+        val multipleDateString = Converters.getFormattedCustomDateString(context, 7)
+        Assert.assertEquals("Formatted string does not match expected", "7 Custom Dates Selected", multipleDateString)
+    }
 }

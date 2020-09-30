@@ -27,10 +27,6 @@
     <string name="crash_only_analytics_preference_value">Crash</string>
     <string name="no_analytics_preference_value">Off</string>
 
-    <string name="dialog_button_full_analytics">Full Analytics</string>
-    <string name="dialog_button_crash_only">Crash Only</string>
-    <string name="dialog_button_opt_out">Opt-Out</string>
-
     <string name="radio_day_mode_text">Light Theme</string>
     <string name="radio_night_mode_text">Dark Theme</string>
     <string name="radio_battery_saver_mode_text">Follow Battery Saver</string>
@@ -47,12 +43,9 @@
     <string name="opt_in_dialog_title">Analytics Opt-In</string>
     <string name="opt_in_dialog_message">
         This app can optionally collect analytics data.
-        This data can be used to help debug and fix crashes and improve the app.
-        There are two levels of analytics, crash only and full. in crash only mode,
-        only application crashes will be logged. In full analytics mode, the application
-        will collect additional anonymous usage data. You can change your opt-in status at any time
-        by selecting the bug button on the action bar. Once set, changing status requires
-        an application restart.
+        This data can be used to help debug and fix crashes and improve the app. You can change
+        your opt-in status at any time by selecting the bug button on the action bar. Once set,
+        changing status requires an application restart.
     </string>
     <string name="app_daynight_action_text">Set Day/Night Mode</string>
 

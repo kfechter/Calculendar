@@ -12,7 +12,6 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.RadioButton
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatDelegate
 import com.kennethfechter.calculendar.R
 import com.kennethfechter.calculendar.enumerations.Theme
 import kotlinx.android.synthetic.main.activity_calculendar_about.view.*
@@ -94,5 +93,28 @@ object Dialogs {
         themeDialogBuilder.setTitle(R.string.theme_dialog_title)
         themeDialogBuilder.setView(dialogView)
         themeDialogBuilder.show()
+    }
+
+    fun showAnalyticsDialog(context: Context, preferenceManager: PreferenceManager) {
+        val analyticsDialogBuilder = AlertDialog.Builder(context)
+
+        analyticsDialogBuilder.setTitle(R.string.opt_in_dialog_title)
+        analyticsDialogBuilder.setMessage(R.string.opt_in_dialog_message)
+
+        analyticsDialogBuilder.setNegativeButton("Opt-Out") { dialog, _ ->
+            GlobalScope.launch {
+                preferenceManager.setAnalytics(false)
+                dialog.dismiss()
+            }
+        }
+
+        analyticsDialogBuilder.setPositiveButton("Opt-In") { dialog, _ ->
+            GlobalScope.launch {
+                preferenceManager.setAnalytics(true)
+                dialog.dismiss()
+            }
+        }
+
+        analyticsDialogBuilder.show()
     }
 }

@@ -28,9 +28,6 @@ class EspressoMainActivityInstrumentationTests {
     private lateinit var selectedDatesList: MutableList<Date>
     private lateinit var customDatesList: MutableList<Date>
 
-    private var testSharedPreferenceKey1 = "testSharedPreferenceKey1"
-    private var testSharedPreferenceKey2 = "testSharedPreferenceKey2"
-
     @Before
     fun setup() {
         selectedDatesList = mutableListOf()
@@ -81,17 +78,6 @@ class EspressoMainActivityInstrumentationTests {
     }
 
     @Test
-    fun testCustomDateFormatting() {
-        val multipleDatesString = Utilities.getCustomDatesFormatterString(activity.activity.applicationContext, 5)
-        val noDatesString = Utilities.getCustomDatesFormatterString(activity.activity.applicationContext, 0)
-        val singleDateString = Utilities.getCustomDatesFormatterString(activity.activity.applicationContext, 1)
-
-        Assert.assertEquals("The formatted string does not match", "5 Custom Dates Selected", multipleDatesString)
-        Assert.assertEquals("The formatted string does not match", "0 Custom Dates Selected", noDatesString)
-        Assert.assertEquals("The formatted string does not match", "1 Custom Date Selected", singleDateString)
-    }
-
-    @Test
     fun testDateCalculation() {
         val context = activity.activity.applicationContext
 
@@ -109,96 +95,5 @@ class EspressoMainActivityInstrumentationTests {
             Assert.assertEquals("The calculated result does not match: ", expectedOutcomes[index], outcome)
         }
 
-    }
-
-    @Test
-    fun testAnalyticsOptDialog() {
-        val context = activity.activity.applicationContext
-        val dialogText = context.getString(R.string.opt_in_dialog_message)
-        val fullButtonText = context.getString(R.string.dialog_button_full_analytics)
-        val crashOnlyButtonText = context.getString(R.string.dialog_button_crash_only)
-        val optOutButtonText = context.getString(R.string.dialog_button_opt_out)
-
-
-        val preferenceKey = context.getString(R.string.preference_name_analytics_level)
-
-        onView(withId(R.id.analytics_opt_status))
-            .perform(click())
-
-        /*
-        *
-        * Tests for checking that buttons are actually on the dialog
-        *
-        * */
-        onView(withText(dialogText))
-            .check(matches(isDisplayed()))
-
-        onView(withText(fullButtonText))
-            .check(matches(isDisplayed()))
-
-        onView(withText(crashOnlyButtonText))
-            .check(matches(isDisplayed()))
-
-        onView(withText(optOutButtonText))
-            .check(matches(isDisplayed()))
-
-        /*
-        *
-        * Tests for testing dialog functionality
-        *
-        *
-        * */
-
-        onView(withText(fullButtonText))
-            .perform(click())
-
-        val preferenceValueFull = Utilities.retrieveStringSharedPreference(context, preferenceKey, "Not-Set")
-        Assert.assertEquals("The analytics mode does not match", context.getString(R.string.full_analytics_preference_value), preferenceValueFull)
-
-
-        /*
-        *
-        *
-        * */
-
-        onView(withId(R.id.analytics_opt_status))
-            .perform(click())
-
-
-        onView(withText(crashOnlyButtonText))
-            .perform(click())
-
-        val preferenceValueCrash = Utilities.retrieveStringSharedPreference(context, preferenceKey, "Not-Set")
-        Assert.assertEquals("The analytics mode does not match", context.getString(R.string.crash_only_analytics_preference_value), preferenceValueCrash)
-
-        /*
-         *
-         *
-         * */
-
-        onView(withId(R.id.analytics_opt_status))
-            .perform(click())
-
-
-        onView(withText(optOutButtonText))
-            .perform(click())
-
-        val preferenceValueNone = Utilities. (context, preferenceKey, "Not-Set")
-        Assert.assertEquals("The analytics mode does not match", context.getString(R.string.no_analytics_preference_value), preferenceValueNone)
-
-    }
-
-
-    @Test
-    fun testSharedPreferences() {
-
-        Utilities.updateBooleanSharedPref(activity.activity.applicationContext,testSharedPreferenceKey1, true)
-        Utilities.updateBooleanSharedPref(activity.activity.applicationContext, testSharedPreferenceKey2, false)
-
-        val testSharedPref1 = Utilities.retrieveBooleanSharedPref(activity.activity.applicationContext, testSharedPreferenceKey1, false)
-        val testSharedPref2 = Utilities.retrieveBooleanSharedPref(activity.activity.applicationContext, testSharedPreferenceKey2, true)
-
-        Assert.assertEquals("The returned shared preference value does not match", true, testSharedPref1)
-        Assert.assertEquals("The returned shared preference value does not match", false, testSharedPref2)
     }
 }*/
