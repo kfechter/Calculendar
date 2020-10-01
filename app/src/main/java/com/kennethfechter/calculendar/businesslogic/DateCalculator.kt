@@ -3,6 +3,7 @@ package com.kennethfechter.calculendar.businesslogic
 import android.content.Context
 import com.kennethfechter.calculendar.R
 import com.kennethfechter.calculendar.dataaccess.AppDatabase
+import com.kennethfechter.calculendar.dataaccess.Calculation
 import com.kennethfechter.calculendar.dataaccess.CalculationDao
 import com.kennethfechter.calculendar.enumerations.ExclusionMode
 import java.util.*
@@ -44,11 +45,26 @@ object DateCalculator {
         val endDate = Converters.convertDateToString(selectedDates[selectedDates.size - 1])
         val resultPlural = context.resources.getQuantityString(R.plurals.calculated_days, calculatedDays)
 
+        val result = context.resources.getString(R.string.calculation_result_formatter)
+            .format(startDate, endDate, excludedDays, calculatedDays, resultPlural)
+
         if (storeResult) {
             calculationDao = AppDatabase.getInstance(context)
+            val calculation = Calculation(
+                startDate = startDate,
+                endDate = endDate,
+                customDates = when (exclusionMode) {
+                    ExclusionMode.CustomDates -> Converters.getCommaSeperatedExcludedDatesList(customDateExclusions)
+                    else -> null
+                },
+                numExcludedDates = excludedDays,
+                calculatedInterval = calculatedDays,
+                exclusionMethod = exclusionMode.toString()
+            )
+
+            calculationDao?.insert(calculation)
         }
 
-        return context.resources.getString(R.string.calculation_result_formatter)
-            .format(startDate, endDate, excludedDays, calculatedDays, resultPlural)
+        return result
     }
 }

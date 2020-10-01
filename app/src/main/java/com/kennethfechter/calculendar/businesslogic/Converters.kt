@@ -19,4 +19,8 @@ object Converters {
         val customDatePlural = context.resources.getQuantityString(R.plurals.custom_dates, numberOfCustomDates)
         return context.resources.getString(R.string.custom_dates_formatter).format(numberOfCustomDates, customDatePlural)
     }
+
+    fun getCommaSeperatedExcludedDatesList(excludedDatesList: MutableList<Date>) : String {
+        return ""
+    }
 }
