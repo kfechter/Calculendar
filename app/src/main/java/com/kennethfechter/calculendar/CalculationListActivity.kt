@@ -9,6 +9,7 @@ import androidx.appcompat.widget.Toolbar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -55,6 +56,11 @@ class CalculationListActivity : AppCompatActivity() {
         }
 
         setupRecyclerView(findViewById(R.id.calculation_list))
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_calculendar_main, menu)
+        return super.onCreateOptionsMenu(menu)
     }
 
     private fun setupRecyclerView(recyclerView: RecyclerView) {

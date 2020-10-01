@@ -9,7 +9,6 @@ import androidx.room.PrimaryKey
 data class Calculation (
     @PrimaryKey
     val uid: Int,
-    @ColumnInfo(name = "calculated_on") val calculatedOn: String?,
     @ColumnInfo(name = "start_date") val startDate: String?,
     @ColumnInfo(name = "end_date") val endDate: String?,
     @ColumnInfo(name = "exclusion_method") val exclusionMethod: String?,

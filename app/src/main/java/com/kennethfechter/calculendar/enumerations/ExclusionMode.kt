@@ -4,5 +4,6 @@ enum class ExclusionMode {
     None,
     Saturdays,
     Sundays,
-    Both
+    Both,
+    CustomDates
 }

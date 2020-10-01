@@ -34,7 +34,6 @@ class DatabaseTests {
     fun insertCalculation() {
         val calculation = Calculation(
             1,
-            calculatedOn = "Tuesday Sep 29, 2020",
             startDate = "Sunday Aug 23, 1992",
             endDate = "Sunday Aug 30, 1992",
             exclusionMethod = "None",
@@ -49,11 +48,6 @@ class DatabaseTests {
             "Returned item uid does not match",
             calculation.uid,
             testCalculation.uid
-        )
-        Assert.assertEquals(
-            "Returned item calculatedOn does not match",
-            calculation.calculatedOn,
-            testCalculation.calculatedOn
         )
         Assert.assertEquals(
             "Returned item startDate does not match",

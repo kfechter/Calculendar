@@ -32,48 +32,6 @@ object Utilities {
 
     // Utilities below here should be moved and re-written
 
-    fun calculateDays(context: Context, selectedDates: MutableList<Date>, customDateExclusions: MutableList<Date>, exclusionMethod: String) : String {
-
-        var calculatedDays: Int = selectedDates.size
-
-        val excludedDays: Int
-
-        var saturdays = 0
-        var sundays = 0
-
-        val iterator = selectedDates.listIterator()
-        for(item in iterator) {
-            val calendar = Calendar.getInstance()
-            calendar.time = item
-
-            if(calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
-                saturdays++
-            }
-
-            if(calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-                sundays++
-            }
-        }
-
-        // TODO: Allow Custom AND Saturdays/Sundays?
-        excludedDays = when (exclusionMethod) {
-            "Exclude Sundays" -> sundays
-            "Exclude Saturdays" -> saturdays
-            "Exclude Both" -> (saturdays + sundays)
-            "Exclude Custom" -> customDateExclusions.size
-            else -> 0
-        }
-
-        calculatedDays -= excludedDays
-
-        val startDate = Converters.convertDateToString(selectedDates[0])
-        val endDate = Converters.convertDateToString(selectedDates[selectedDates.size -1])
-        val calculationPlural = context.resources.getQuantityString(R.plurals.calculated_days, calculatedDays)
-
-        return context.resources.getString(R.string.calculation_result_formatter)
-            .format(startDate, endDate, excludedDays, calculatedDays, calculationPlural)
-    }
-
     suspend fun displayDatePickerDialog(context: Context, dialogTitle: String, rangeSelectionMode: Boolean, selectedDates: MutableList<Date> = mutableListOf(), excludedDates: MutableList<Date> = mutableListOf()) = suspendCoroutine<MutableList<Date>> {
         val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_calculendar_datepicker, null)
         val calendarPicker: CalendarPickerView = dialogView.findViewById(R.id.calendar_view)

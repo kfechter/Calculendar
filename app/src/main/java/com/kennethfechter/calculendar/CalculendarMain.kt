@@ -13,10 +13,8 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.asLiveData
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
-import com.kennethfechter.calculendar.businesslogic.Converters
-import com.kennethfechter.calculendar.businesslogic.Dialogs
-import com.kennethfechter.calculendar.businesslogic.PreferenceManager
-import com.kennethfechter.calculendar.businesslogic.Utilities
+import com.kennethfechter.calculendar.businesslogic.*
+import com.kennethfechter.calculendar.enumerations.ExclusionMode
 import com.kennethfechter.calculendar.enumerations.Theme
 import kotlinx.android.synthetic.main.activity_calculendar_main.*
 import kotlinx.coroutines.*
@@ -33,7 +31,7 @@ class CalculendarMain : AppCompatActivity(), AdapterView.OnItemSelectedListener 
 
     private var selectedDates: MutableList<Date> = mutableListOf()
     private var excludedDates: MutableList<Date> = mutableListOf()
-    private var exclusionOption: String = ""
+    private lateinit var exclusionOption: ExclusionMode
 
 
     private lateinit var currentTheme: Theme
@@ -60,7 +58,7 @@ class CalculendarMain : AppCompatActivity(), AdapterView.OnItemSelectedListener 
             }
 
             btnPerformCalculation.setOnClickListener {
-                val result = Utilities.calculateDays(this, selectedDates, excludedDates, exclusionOption)
+                val result = DateCalculator.CalculateInterval(this, selectedDates, excludedDates, exclusionOption, false)
 
                 val dialogBuilder = AlertDialog.Builder(this)
                 dialogBuilder.setTitle("Calculation Result")
@@ -150,9 +148,17 @@ class CalculendarMain : AppCompatActivity(), AdapterView.OnItemSelectedListener 
 
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, id: Long) {
         val exclusionOptions = resources.getStringArray(R.array.exclusion_options)
-        exclusionOption = exclusionOptions[position]
+        exclusionOption = when (exclusionOptions[position]) {
+            "Exclude None" -> ExclusionMode.None
+            "Exclude Saturdays" -> ExclusionMode.Saturdays
+            "Exclude Sundays" -> ExclusionMode.Sundays
+            "Exclude Both" -> ExclusionMode.Both
+            "Exclude Custom" -> ExclusionMode.CustomDates
+            else -> ExclusionMode.None
+        }
+
         btn_pick_custom.visibility = when (exclusionOption) {
-            "Exclude Custom" -> {
+            ExclusionMode.CustomDates -> {
                 View.VISIBLE
             }
             else ->  View.INVISIBLE
