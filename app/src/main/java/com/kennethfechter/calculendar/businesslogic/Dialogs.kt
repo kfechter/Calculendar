@@ -117,4 +117,16 @@ object Dialogs {
 
         analyticsDialogBuilder.show()
     }
+
+    fun showResultDialog(context: Context, result: String) {
+        val resultDialogBuilder = AlertDialog.Builder(context)
+        resultDialogBuilder.setTitle("Calculation Result")
+        resultDialogBuilder.setMessage(result)
+
+        resultDialogBuilder.setNeutralButton("OK") {dialog, _ ->
+            dialog.dismiss()
+        }
+
+        resultDialogBuilder.create().show()
+    }
 }

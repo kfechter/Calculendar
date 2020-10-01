@@ -59,16 +59,7 @@ class CalculendarMain : AppCompatActivity(), AdapterView.OnItemSelectedListener 
 
             btnPerformCalculation.setOnClickListener {
                 val result = DateCalculator.CalculateInterval(this, selectedDates, excludedDates, exclusionOption, false)
-
-                val dialogBuilder = AlertDialog.Builder(this)
-                dialogBuilder.setTitle("Calculation Result")
-                dialogBuilder.setMessage(result)
-
-                dialogBuilder.setNeutralButton("OK") {dialog, _ ->
-                    dialog.dismiss()
-                }
-
-                dialogBuilder.create().show()
+                Dialogs.showResultDialog(this, result)
             }
 
             exclusionOptions.onItemSelectedListener = this

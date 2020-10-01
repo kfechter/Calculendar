@@ -67,4 +67,11 @@ object DateCalculator {
 
         return result
     }
+
+    fun StartCalculation() {
+        // Show Date Range Picker Dialog
+        // Show Custom Dialog with Exclusion Options
+        // Show Result
+        // Store
+    }
 }
