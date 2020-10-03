@@ -1,6 +1,7 @@
 package com.kennethfechter.calculendar.businesslogic
 
 import android.content.Context
+import android.os.AsyncTask
 import android.provider.Settings
 import android.widget.Toast
 import com.kennethfechter.calculendar.R
@@ -67,15 +68,15 @@ object DateCalculator {
                 exclusionMethod = exclusionMode.toString()
             )
 
-            calculationDao?.insert(calculation)
+            GlobalScope.launch(Dispatchers.IO) {
+                calculationDao?.insert(calculation)
+            }
         }
 
         return result
     }
 
-    fun StartCalculation(context: Context) {
-        // Store
-
+    fun startCalculation(context: Context) {
         var selectedDates: MutableList<Date>
         var excludedDates: MutableList<Date>
         var exclusionMode: ExclusionMode
@@ -89,7 +90,7 @@ object DateCalculator {
                     excludedDates = exclusionOptions.first
                     exclusionMode = exclusionOptions.second
 
-                    val result = CalculateInterval(context, selectedDates, excludedDates, exclusionMode, false)
+                    val result = CalculateInterval(context, selectedDates, excludedDates, exclusionMode, true)
                     Dialogs.showResultDialog(context, result)
                 }
                 else {

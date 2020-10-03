@@ -44,9 +44,9 @@ class CalculationDetailActivity : AppCompatActivity() {
             // using a fragment transaction.
             val fragment = CalculationDetailFragment().apply {
                 arguments = Bundle().apply {
-                    putString(
+                    putInt(
                         CalculationDetailFragment.ARG_ITEM_ID,
-                        intent.getStringExtra(CalculationDetailFragment.ARG_ITEM_ID)
+                        intent.getIntExtra(CalculationDetailFragment.ARG_ITEM_ID, 0)
                     )
                 }
             }

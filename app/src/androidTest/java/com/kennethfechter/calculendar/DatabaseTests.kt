@@ -10,6 +10,8 @@ import com.kennethfechter.calculendar.dataaccess.AppDatabase
 import com.kennethfechter.calculendar.dataaccess.Calculation
 import com.kennethfechter.calculendar.dataaccess.CalculationDao
 import com.kennethfechter.calculendar.enumerations.ExclusionMode
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import org.junit.*
 import java.util.*
 import java.util.concurrent.CountDownLatch
@@ -73,7 +75,6 @@ class DatabaseTests {
     @After
     fun teardown() {
         calculationDao?.deleteAll()
-        Assert.assertEquals("Items were returned when none were expected", calculationDao?.getCalculationCount(), 0)
     }
 
     @Test
@@ -88,7 +89,7 @@ class DatabaseTests {
             calculatedInterval = 7
         )
 
-        calculationDao?.insert(calculation)
+        // calculationDao?.insert(calculation)
         val testCalculation = getValue(calculationDao?.getByID(calculation.uid)!!)
 
         Assert.assertEquals(

@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Calculendar</string>
+    <string name="main_title">My Calculations</string>
     <string name="app_about_action_text">About</string>
     <string name="app_analytics_action_text">Change opt-in Status</string>
     <string name="version_header">Version %s</string>
@@ -16,6 +17,10 @@
     <string name="shortcut_long_text">Open the app to the new calculation dialog</string>
     <string name="shortcut_short_text">New Calculation</string>
     <string name="build_id_formatter">Calculendar %s</string>
+
+    <string name="start_date_formatter">Start Date: %s</string>
+    <string name="end_date_formatter">End Date: %s</string>
+
 
     <string name="first_run_preference_name">first_run</string>
     <string name="day_night_preference_name">day_night_mode</string>
@@ -58,4 +63,5 @@
     </plurals>
     <string name="title_calculation_list">Calculendar</string>
     <string name="title_calculation_detail">Calculation Detail</string>
+    <string name="test">sdfdsf %s</string>
 </resources>

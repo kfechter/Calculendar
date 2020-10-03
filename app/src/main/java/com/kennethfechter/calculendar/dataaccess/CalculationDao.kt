@@ -28,7 +28,7 @@ interface CalculationDao {
     fun getCalculationCount() : Int
 
     @Insert
-    fun insert(vararg calculation: Calculation)
+    suspend fun insert(vararg calculation: Calculation)
 
     @Delete
     fun delete(calculation: Calculation)
