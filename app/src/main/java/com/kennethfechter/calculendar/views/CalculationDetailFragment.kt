@@ -6,11 +6,9 @@ import com.google.android.material.appbar.CollapsingToolbarLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import com.kennethfechter.calculendar.R
 import com.kennethfechter.calculendar.dataaccess.AppDatabase
 import com.kennethfechter.calculendar.dataaccess.Calculation
-import com.kennethfechter.calculendar.dummy.DummyContent
 
 /**
  * A fragment representing a single Calculation detail screen.
