@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Calculendar</string>
-    <string name="title_activity_calculendar_about">Calculendar</string>
     <string name="app_about_action_text">About</string>
     <string name="app_analytics_action_text">Change opt-in Status</string>
     <string name="version_header">Version %s</string>
@@ -57,6 +56,6 @@
         <item quantity="one">Day</item>
         <item quantity="other">Days</item>
     </plurals>
-    <string name="title_calculation_list">Calculations</string>
+    <string name="title_calculation_list">Calculendar</string>
     <string name="title_calculation_detail">Calculation Detail</string>
 </resources>

@@ -9,17 +9,24 @@ import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.RadioButton
 import android.widget.Toast
 import com.kennethfechter.calculendar.R
+import com.kennethfechter.calculendar.enumerations.ExclusionMode
 import com.kennethfechter.calculendar.enumerations.Theme
+import com.squareup.timessquare.CalendarPickerView
 import kotlinx.android.synthetic.main.activity_calculendar_about.view.*
 import kotlinx.android.synthetic.main.dialog_calculendar_daynight_mode.view.*
+import kotlinx.android.synthetic.main.dialog_exclusion_options.view.*
 import kotlinx.coroutines.*
+import java.util.*
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 object Dialogs {
-    fun ShowToastPrompt(context: Context, message: String, length: Int) {
+    fun showToastPrompt(context: Context, message: String, length: Int) {
         Toast.makeText(context, message, length).show()
     }
 
@@ -35,9 +42,11 @@ object Dialogs {
             }
         }
 
+        aboutApplicationDialogView.version_text.text = context.resources.getString(R.string.build_id_formatter).format(Utilities.getPackageVersionName(context))
+
         val aboutDialog = AlertDialog.Builder(context)
             .setView(aboutApplicationDialogView)
-            .setTitle(context.resources.getString(R.string.build_id_formatter).format(Utilities.getPackageVersionName(context)))
+            .setTitle("Calculendar Developers")
             .setPositiveButton("OK") { dialog, _ ->
                 dialog.dismiss()
             }
@@ -128,5 +137,97 @@ object Dialogs {
         }
 
         resultDialogBuilder.create().show()
+    }
+
+    suspend fun showDatePickerDialog(context: Context, dialogTitle: String, rangeSelectionMode: Boolean, selectedDates: MutableList<Date> = mutableListOf(), excludedDates: MutableList<Date> = mutableListOf()) = suspendCoroutine<MutableList<Date>> {
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_calculendar_datepicker, null)
+        val calendarPicker: CalendarPickerView = dialogView.findViewById(R.id.calendar_view)
+
+        if(rangeSelectionMode) {
+            val pastDate = Calendar.getInstance()
+            val futureDate = Calendar.getInstance()
+            futureDate.add(Calendar.YEAR, 1)
+            pastDate.add(Calendar.YEAR, -1)
+            val today = Date()
+
+            calendarPicker.init(pastDate.time, futureDate.time)
+                .inMode(CalendarPickerView.SelectionMode.RANGE)
+
+            calendarPicker.selectDate(today, true)
+        } else {
+            calendarPicker.init(selectedDates[0], selectedDates[selectedDates.size -1])
+                .inMode(CalendarPickerView.SelectionMode.MULTIPLE)
+                .withSelectedDates(excludedDates)
+        }
+
+        AlertDialog.Builder(context)
+            .setTitle(dialogTitle)
+            .setView(dialogView)
+            .setPositiveButton("Select") {
+                    dialog, _ ->
+                dialog.dismiss()
+                it.resume(calendarPicker.selectedDates)
+            }
+            .setNegativeButton("Cancel") {
+                    dialog, _ ->
+                dialog.dismiss()
+                it.resume(mutableListOf())
+            }
+            .create()
+            .show()
+    }
+
+    suspend fun showExclusionOptionsDialog(context: Context, dateRange: String, selectedDates: MutableList<Date>) = suspendCoroutine<Pair<MutableList<Date>, ExclusionMode>?> {
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_exclusion_options, null)
+        var exclusionMode: ExclusionMode = ExclusionMode.None
+        var excludedDates: MutableList<Date> = mutableListOf()
+
+        dialogView.exclusionHeader.text = dateRange
+        dialogView.exclusionOptions.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        override fun onNothingSelected(parent: AdapterView<*>?) {}
+
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            val exclusionOptions = context.resources.getStringArray(R.array.exclusion_options)
+            exclusionMode = when (exclusionOptions[position]) {
+                "Exclude None" -> ExclusionMode.None
+                "Exclude Saturdays" -> ExclusionMode.Saturdays
+                "Exclude Sundays" -> ExclusionMode.Sundays
+                "Exclude Both" -> ExclusionMode.Both
+                "Exclude Custom" -> ExclusionMode.CustomDates
+                else -> ExclusionMode.None
+            }
+
+            dialogView.btn_pick_custom.visibility = when (exclusionMode) {
+                ExclusionMode.CustomDates -> View.VISIBLE
+                else -> View.INVISIBLE
+            }
+
+            dialogView.btn_pick_custom.text = Converters.getFormattedCustomDateString(context, excludedDates.size)
+        }
+
+    }
+
+        dialogView.btn_pick_custom.setOnClickListener() {
+            GlobalScope.launch(Dispatchers.Main) {
+                excludedDates =  showDatePickerDialog(context, context.resources.getString(R.string.custom_date_dialog_title),false, selectedDates, excludedDates)
+                dialogView.btn_pick_custom.text = Converters.getFormattedCustomDateString(context, excludedDates.size)
+            }
+        }
+
+        AlertDialog.Builder(context)
+            .setTitle("Exclusion Options")
+            .setView(dialogView)
+            .setPositiveButton("Calculate") {
+                dialog, _ ->
+                it.resume(Pair(excludedDates, exclusionMode))
+                dialog.dismiss()
+            }
+            .setNegativeButton("Cancel") {
+                dialog, _ ->
+                it.resume(null)
+                dialog.dismiss()
+            }
+            .create()
+            .show()
     }
 }

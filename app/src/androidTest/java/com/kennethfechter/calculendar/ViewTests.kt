@@ -24,6 +24,7 @@ import androidx.test.ext.junit.rules.activityScenarioRule
 import androidx.test.platform.app.InstrumentationRegistry
 import com.kennethfechter.calculendar.businesslogic.PreferenceManager
 import com.kennethfechter.calculendar.businesslogic.Utilities
+import com.kennethfechter.calculendar.dataaccess.Calculation
 import org.hamcrest.Matchers.allOf
 import org.junit.Assert
 import org.junit.Before
@@ -38,7 +39,7 @@ class ViewTests {
     var instantTaskExecutorRule: InstantTaskExecutorRule = InstantTaskExecutorRule()
 
     @get:Rule
-    val activity = activityScenarioRule<CalculendarMain>()
+    val activity = activityScenarioRule<CalculationListActivity>()
 
     private lateinit var context: Context
 
@@ -71,11 +72,8 @@ class ViewTests {
     fun verifyAboutDialog() {
         onView(withId(R.id.about_application)).perform(click())
         val versionCode = Utilities.getPackageVersionName(context)
-        val dialogTitle = context.resources.getString(R.string.build_id_formatter).format(versionCode)
+        val dialogTitle = "Calculendar Developers"
         onView(withText(dialogTitle)).inRoot(isDialog()).check(matches(isDisplayed()))
-
-        onView(withText("Developers"))
-            .check(matches(isDisplayed()))
 
         onView(withText("Kenneth Fechter"))
             .check(matches(isDisplayed()))

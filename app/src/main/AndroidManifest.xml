@@ -4,6 +4,8 @@
         package="com.kennethfechter.calculendar">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
             android:allowBackup="true"
             android:fullBackupContent="@xml/full_backup_content"
@@ -15,13 +17,16 @@
             tools:ignore="GoogleAppIndexingWarning">
         <activity
                 android:name=".CalculationListActivity"
-                android:label="@string/title_calculation_list"
+                android:label="@string/app_name"
                 android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <meta-data
+                    android:name="android.app.shortcuts"
+                    android:resource="@xml/shortcuts" />
         </activity>
         <activity
                 android:name=".views.CalculationDetailActivity"
@@ -39,25 +44,5 @@
         <meta-data
                 android:name="firebase_analytics_collection_enabled"
                 android:value="false" />
-
-        <activity
-                android:name=".activities.CalculendarAbout"
-                android:label="@string/title_activity_calculendar_about"
-                android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity
-                android:name=".CalculendarMain"
-                android:label="@string/app_name"
-                android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
-            <meta-data
-                    android:name="android.app.shortcuts"
-                    android:resource="@xml/shortcuts" />
-        </activity>
     </application>
-
 </manifest>

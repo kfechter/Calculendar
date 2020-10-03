@@ -20,7 +20,13 @@ object Converters {
         return context.resources.getString(R.string.custom_dates_formatter).format(numberOfCustomDates, customDatePlural)
     }
 
-    fun getCommaSeperatedExcludedDatesList(excludedDatesList: MutableList<Date>) : String {
-        return ""
+    fun getCommaSeparatedExcludedDatesList(excludedDatesList: MutableList<Date>) : String {
+        val convertedDatesList: MutableList<String> = mutableListOf()
+        val iterator = excludedDatesList.listIterator()
+        for (date in iterator) {
+            convertedDatesList.add(convertDateToString(date))
+        }
+
+        return convertedDatesList.joinToString(",")
     }
 }

@@ -29,45 +29,5 @@ object Utilities {
             ""
         }
     }
-
-    // Utilities below here should be moved and re-written
-
-    suspend fun displayDatePickerDialog(context: Context, dialogTitle: String, rangeSelectionMode: Boolean, selectedDates: MutableList<Date> = mutableListOf(), excludedDates: MutableList<Date> = mutableListOf()) = suspendCoroutine<MutableList<Date>> {
-        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_calculendar_datepicker, null)
-        val calendarPicker: CalendarPickerView = dialogView.findViewById(R.id.calendar_view)
-
-        if(rangeSelectionMode) {
-            val pastDate = Calendar.getInstance()
-            val futureDate = Calendar.getInstance()
-            futureDate.add(Calendar.YEAR, 1)
-            pastDate.add(Calendar.YEAR, -1)
-            val today = Date()
-
-            calendarPicker.init(pastDate.time, futureDate.time)
-                .inMode(CalendarPickerView.SelectionMode.RANGE)
-
-            calendarPicker.selectDate(today, true)
-        } else {
-            calendarPicker.init(selectedDates[0], selectedDates[selectedDates.size -1])
-                .inMode(CalendarPickerView.SelectionMode.MULTIPLE)
-                .withSelectedDates(excludedDates)
-        }
-
-        AlertDialog.Builder(context)
-            .setTitle(dialogTitle)
-            .setView(dialogView)
-            .setPositiveButton("Select") {
-                dialog, _ ->
-                dialog.dismiss()
-                it.resume(calendarPicker.selectedDates)
-            }
-            .setNegativeButton("Cancel") {
-                dialog, _ ->
-                dialog.dismiss()
-                it.resume(mutableListOf())
-            }
-            .create()
-            .show()
-    }
 }
 

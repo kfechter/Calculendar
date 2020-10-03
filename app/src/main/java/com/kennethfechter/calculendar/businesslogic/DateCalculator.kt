@@ -1,11 +1,16 @@
 package com.kennethfechter.calculendar.businesslogic
 
 import android.content.Context
+import android.provider.Settings
+import android.widget.Toast
 import com.kennethfechter.calculendar.R
 import com.kennethfechter.calculendar.dataaccess.AppDatabase
 import com.kennethfechter.calculendar.dataaccess.Calculation
 import com.kennethfechter.calculendar.dataaccess.CalculationDao
 import com.kennethfechter.calculendar.enumerations.ExclusionMode
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.*
 
 object DateCalculator {
@@ -54,7 +59,7 @@ object DateCalculator {
                 startDate = startDate,
                 endDate = endDate,
                 customDates = when (exclusionMode) {
-                    ExclusionMode.CustomDates -> Converters.getCommaSeperatedExcludedDatesList(customDateExclusions)
+                    ExclusionMode.CustomDates -> Converters.getCommaSeparatedExcludedDatesList(customDateExclusions)
                     else -> null
                 },
                 numExcludedDates = excludedDays,
@@ -68,10 +73,32 @@ object DateCalculator {
         return result
     }
 
-    fun StartCalculation() {
-        // Show Date Range Picker Dialog
-        // Show Custom Dialog with Exclusion Options
-        // Show Result
+    fun StartCalculation(context: Context) {
         // Store
+
+        var selectedDates: MutableList<Date>
+        var excludedDates: MutableList<Date>
+        var exclusionMode: ExclusionMode
+
+        GlobalScope.launch(Dispatchers.Main) {
+            selectedDates = Dialogs.showDatePickerDialog(context, context.resources.getString(R.string.date_picker_dialog_title),true)
+
+            if (selectedDates.size > 1) {
+                val exclusionOptions: Pair<MutableList<Date>, ExclusionMode>? = Dialogs.showExclusionOptionsDialog(context, Converters.getSelectedRangeString(selectedDates), selectedDates)
+                if (exclusionOptions != null) {
+                    excludedDates = exclusionOptions.first
+                    exclusionMode = exclusionOptions.second
+
+                    val result = CalculateInterval(context, selectedDates, excludedDates, exclusionMode, false)
+                    Dialogs.showResultDialog(context, result)
+                }
+                else {
+                    Dialogs.showToastPrompt(context, "Date Calculation Canceled", Toast.LENGTH_LONG)
+                }
+            }
+            else {
+                Dialogs.showToastPrompt(context, "A valid date range was not selected", Toast.LENGTH_LONG)
+            }
+        }
     }
 }

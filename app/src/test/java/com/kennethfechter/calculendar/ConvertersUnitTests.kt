@@ -1,6 +1,7 @@
 package com.kennethfechter.calculendar
 
 import com.kennethfechter.calculendar.businesslogic.Converters
+import org.junit.Assert
 import org.junit.Test
 import org.junit.Assert.*
 import java.util.*
@@ -58,5 +59,16 @@ class ConvertersUnitTests {
 
         val rangeStringPassing = Converters.getSelectedRangeString(selectedDatesList)
         assertEquals("The converted range string does not match:","Sunday Sep 1, 2019 - Monday Sep 30, 2019", rangeStringPassing)
+    }
+
+    @Test
+    fun validDateListToCSVConversionTest() {
+        val customDatesList: MutableList<Date> = mutableListOf()
+        customDatesList.add(Date(1567396800000))
+        customDatesList.add(Date(1567483200000))
+        customDatesList.add(Date(1567569600000))
+
+        val commaSeperatedDates = Converters.getCommaSeparatedExcludedDatesList(customDatesList)
+        assertEquals("Returned CSV does not match the expected value", "Monday Sep 2, 2019,Tuesday Sep 3, 2019,Wednesday Sep 4, 2019", commaSeperatedDates)
     }
 }
