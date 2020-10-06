@@ -42,7 +42,6 @@ class CalculationListActivity : AppCompatActivity() {
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
-        toolbar.title = title
 
         preferenceManager = PreferenceManager(applicationContext)
         initializeAnalytics()

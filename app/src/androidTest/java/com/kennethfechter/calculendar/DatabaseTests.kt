@@ -12,6 +12,8 @@ import com.kennethfechter.calculendar.dataaccess.CalculationDao
 import com.kennethfechter.calculendar.enumerations.ExclusionMode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.newSingleThreadContext
+import kotlinx.coroutines.runBlocking
 import org.junit.*
 import java.util.*
 import java.util.concurrent.CountDownLatch
@@ -78,7 +80,7 @@ class DatabaseTests {
     }
 
     @Test
-    fun insertCalculation() {
+    fun insertCalculation() = runBlocking {
         val calculation = Calculation(
             1,
             startDate = "Sunday Aug 23, 1992",
@@ -89,7 +91,7 @@ class DatabaseTests {
             calculatedInterval = 7
         )
 
-        // calculationDao?.insert(calculation)
+        calculationDao?.insert(calculation)
         val testCalculation = getValue(calculationDao?.getByID(calculation.uid)!!)
 
         Assert.assertEquals(
@@ -130,7 +132,7 @@ class DatabaseTests {
     }
 
     @Test
-    fun testCalculationStorage() {
+    fun testCalculationStorage() = runBlocking {
         DateCalculator.CalculateInterval(context, selectedDatesList, customDatesList, ExclusionMode.Both, true)
         val testCalculation = getValue(calculationDao?.getByStartDate("Sunday Sep 1, 2019")!!)
 

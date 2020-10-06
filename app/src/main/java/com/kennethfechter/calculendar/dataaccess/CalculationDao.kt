@@ -18,7 +18,7 @@ interface CalculationDao {
     @Query("SELECT * FROM calculation WHERE uid = :calculationId")
     fun getByID(calculationId: Int) : LiveData<Calculation>
 
-    @Query("SELECT * FROM calculation WHERE start_date = :startDate")
+    @Query("SELECT * FROM calculation WHERE start_date = :startDate LIMIT 1")
     fun getByStartDate(startDate: String): LiveData<Calculation>
 
     @Query("DELETE FROM calculation")
