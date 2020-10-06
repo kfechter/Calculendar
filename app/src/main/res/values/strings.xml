@@ -20,6 +20,8 @@
 
     <string name="start_date_formatter">Start Date: %s</string>
     <string name="end_date_formatter">End Date: %s</string>
+    <string name="calculation_title">Calculation Detail</string>
+    <string name="date_range_formatter">%s - %s</string>
 
 
     <string name="first_run_preference_name">first_run</string>
@@ -63,5 +65,4 @@
     </plurals>
     <string name="title_calculation_list">Calculendar</string>
     <string name="title_calculation_detail">Calculation Detail</string>
-    <string name="test">sdfdsf %s</string>
 </resources>

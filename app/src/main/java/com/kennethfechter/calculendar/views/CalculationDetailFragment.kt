@@ -6,22 +6,18 @@ import com.google.android.material.appbar.CollapsingToolbarLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import com.kennethfechter.calculendar.R
 import com.kennethfechter.calculendar.dataaccess.AppDatabase
 import com.kennethfechter.calculendar.dataaccess.Calculation
 
 /**
  * A fragment representing a single Calculation detail screen.
- * This fragment is either contained in a [CalculationListActivity]
+ * This fragment is either contained in a [com.kennethfechter.calculendar.CalculationListActivity]
  * in two-pane mode (on tablets) or a [CalculationDetailActivity]
  * on handsets.
  */
 class CalculationDetailFragment : Fragment() {
-
-    /**
-     * The dummy content this fragment is presenting.
-     */
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -39,7 +35,8 @@ class CalculationDetailFragment : Fragment() {
     }
 
     private fun loadViewCalculation(calculation: Calculation) {
-        activity?.findViewById<CollapsingToolbarLayout>(R.id.toolbar_layout)?.title = calculation.startDate
+        activity?.findViewById<CollapsingToolbarLayout>(R.id.toolbar_layout)?.title = getString(R.string.calculation_title)
+        activity?.findViewById<TextView>(R.id.calculation_detail)?.text = getString(R.string.date_range_formatter).format(calculation.startDate, calculation.endDate)
     }
 
     override fun onCreateView(
