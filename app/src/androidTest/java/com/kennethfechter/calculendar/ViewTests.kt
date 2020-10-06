@@ -66,7 +66,21 @@ class ViewTests {
             .check(matches(isDisplayed()))
     }
 
+    @Test
+    fun verifyNewCalculationButton() {
+        onView(withId(R.id.fab))
+            .check(matches(isDisplayed()))
+            .perform(click())
 
+        onView(withText("Select"))
+            .inRoot(isDialog())
+            .check(matches(isDisplayed()))
+
+        onView(withText("Cancel"))
+            .perform(click())
+
+        onView(withText("Select")).check(doesNotExist())
+    }
 
     @Test
     fun verifyAboutDialog() {
