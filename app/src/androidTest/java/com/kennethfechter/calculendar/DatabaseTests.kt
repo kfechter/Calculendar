@@ -174,7 +174,8 @@ class DatabaseTests {
         Assert.assertEquals("Items were returned when none were expected", calculationDao?.getCalculationCount(), 0)
     }
 
-    // Copied from stackoverflow
+    // Copied from StackOverflow
+    @Suppress("UNCHECKED_CAST")
     @Throws(InterruptedException::class)
     fun <Calculation> getValue(liveData: LiveData<Calculation>): Calculation {
         val data = arrayOfNulls<Any>(1)
@@ -189,6 +190,7 @@ class DatabaseTests {
         }
         liveData.observeForever(observer)
         latch.await(2, TimeUnit.SECONDS)
+
 
         return data[0] as Calculation
     }

@@ -85,7 +85,6 @@ class ViewTests {
     @Test
     fun verifyAboutDialog() {
         onView(withId(R.id.about_application)).perform(click())
-        val versionCode = Utilities.getPackageVersionName(context)
         val dialogTitle = "Calculendar Developers"
         onView(withText(dialogTitle)).inRoot(isDialog()).check(matches(isDisplayed()))
 
@@ -223,6 +222,7 @@ class ViewTests {
     }
 
     // Copied from stackoverflow
+    @Suppress("UNCHECKED_CAST")
     @Throws(InterruptedException::class)
     fun <Int> getValue(liveData: LiveData<Int>): Int {
         val data = arrayOfNulls<Any>(1)
