@@ -10,7 +10,7 @@
 
         <intent
                 android:action="android.intent.action.VIEW"
-                android:targetClass="com.kennethfechter.calculendar.CalculendarMain"
+                android:targetClass="com.kennethfechter.calculendar.CalculationListActivity"
                 android:targetPackage="com.kennethfechter.calculendar" >
             <extra android:name="action" android:value="newCalc"/>
         </intent>
