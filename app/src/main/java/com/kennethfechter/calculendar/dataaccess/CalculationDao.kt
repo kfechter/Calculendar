@@ -24,6 +24,9 @@ interface CalculationDao {
     @Query("DELETE FROM calculation")
     fun deleteAll()
 
+    @Query("DELETE FROM calculation WHERE uid = :calculationId")
+    suspend fun deleteById(calculationId: Int)
+
     @Query("SELECT COUNT(*) FROM calculation")
     fun getCalculationCount() : Int
 

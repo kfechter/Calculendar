@@ -9,6 +9,9 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.TextView
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import com.kennethfechter.calculendar.R
 import com.kennethfechter.calculendar.businesslogic.Converters
 import com.kennethfechter.calculendar.dataaccess.AppDatabase
@@ -32,7 +35,7 @@ class CalculationDetailFragment : Fragment() {
     }
 
     private fun initializeContentView(id: Int) {
-        AppDatabase.getInstance(context!!)?.getByID(id)!!.observe(this) {
+        AppDatabase.getInstance(context!!)?.getByID(id)!!.observeOnce(this) {
             calculation -> loadViewCalculation(calculation)
         }
     }
@@ -64,6 +67,15 @@ class CalculationDetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.calculation_detail, container, false)
+    }
+
+    fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observer<T>) {
+        observe(lifecycleOwner, object : Observer<T> {
+            override fun onChanged(t: T?) {
+                observer.onChanged(t)
+                removeObserver(this)
+            }
+        })
     }
 
     companion object {

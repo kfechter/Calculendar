@@ -53,6 +53,7 @@ class CalculationListActivity : AppCompatActivity() {
 
         if (findViewById<NestedScrollView>(R.id.calculation_detail_container) != null) {
             twoPane = true
+            // Show a second (Smaller) Fab if a calculation is selected.
             findViewById<FloatingActionButton>(R.id.fab).setOnLongClickListener {
                 // Handle Deletion of selected item
                 true
