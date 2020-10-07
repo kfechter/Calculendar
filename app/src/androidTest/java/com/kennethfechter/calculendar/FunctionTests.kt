@@ -80,11 +80,11 @@ class FunctionTests {
     @Test
     fun testDateCalculator() {
 
-        val noExclusionResult = DateCalculator.CalculateInterval(context, selectedDatesList, customDatesList, ExclusionMode.None, false)
-        val saturdayExclusionResult = DateCalculator.CalculateInterval(context, selectedDatesList, customDatesList, ExclusionMode.Saturdays, false)
-        val sundayExclusionResult = DateCalculator.CalculateInterval(context, selectedDatesList, customDatesList, ExclusionMode.Sundays, false)
-        val saturdaySundayExclusionResult = DateCalculator.CalculateInterval(context, selectedDatesList, customDatesList, ExclusionMode.Both, false)
-        val customDateExclusionResult = DateCalculator.CalculateInterval(context, selectedDatesList, customDatesList, ExclusionMode.CustomDates, false)
+        val noExclusionResult = DateCalculator.calculateInterval(context, selectedDatesList, customDatesList, ExclusionMode.None, false)
+        val saturdayExclusionResult = DateCalculator.calculateInterval(context, selectedDatesList, customDatesList, ExclusionMode.Saturdays, false)
+        val sundayExclusionResult = DateCalculator.calculateInterval(context, selectedDatesList, customDatesList, ExclusionMode.Sundays, false)
+        val saturdaySundayExclusionResult = DateCalculator.calculateInterval(context, selectedDatesList, customDatesList, ExclusionMode.Both, false)
+        val customDateExclusionResult = DateCalculator.calculateInterval(context, selectedDatesList, customDatesList, ExclusionMode.CustomDates, false)
 
         Assert.assertEquals("The returned value does not match", "The interval from Sunday Sep 1, 2019 to Monday Sep 30, 2019 with 0 exclusions is 30 Days", noExclusionResult)
         Assert.assertEquals("The returned value does not match", "The interval from Sunday Sep 1, 2019 to Monday Sep 30, 2019 with 4 exclusions is 26 Days", saturdayExclusionResult)
