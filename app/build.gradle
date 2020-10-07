@@ -4,7 +4,6 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
-apply plugin: 'jacoco'
 
 android {
     compileSdkVersion 30
@@ -58,16 +57,9 @@ android {
 
 project.afterEvaluate {
     if (project.hasProperty("assembleRelease")) {
-        connectedAndroidTest.finalizedBy jacocoTestReport
-        test.finalizedBy jacocoTestReport
-
         assembleRelease.dependsOn connectedAndroidTest
         assembleRelease.dependsOn test
     }
-}
-
-jacoco {
-    toolVersion = "0.8.5"
 }
 
 dependencies {
