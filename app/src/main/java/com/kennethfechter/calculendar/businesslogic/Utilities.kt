@@ -39,6 +39,7 @@ object Utilities {
                 putInt(CalculationDetailFragment.ARG_ITEM_ID, -1)
             }
         }
+
         parentActivity.supportFragmentManager
             .beginTransaction()
             .replace(R.id.calculation_detail_container, fragment)

@@ -72,4 +72,5 @@
     <string name="custom_dates_header">Custom Dates</string>
     <string name="no_custom_date_text">No Custom Dates</string>
     <string name="delete_calculation_menu">Delete Calculation</string>
+    <string name="no_calculation_prompt">No Calculations, click the + button at the bottom to begin</string>
 </resources>

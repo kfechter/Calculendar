@@ -1,5 +1,6 @@
 package com.kennethfechter.calculendar.views
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.google.android.material.appbar.CollapsingToolbarLayout
@@ -47,7 +48,7 @@ class CalculationDetailFragment : Fragment() {
 
     private fun blankView() {
         val blankText = ""
-        activity?.findViewById<TextView>(R.id.calculation_detail)?.text = blankText
+        activity?.findViewById<TextView>(R.id.calculation_detail)?.text = getString(R.string.no_calculation_prompt)
         activity?.findViewById<TextView>(R.id.exclusion_mode)?.text = blankText
         activity?.findViewById<TextView>(R.id.excluded_days)?.text = blankText
         activity?.findViewById<TextView>(R.id.calculated_interval)?.text = blankText

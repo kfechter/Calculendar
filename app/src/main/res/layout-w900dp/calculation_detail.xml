@@ -19,6 +19,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center_horizontal"
+                android:text="@string/no_calculation_prompt"
                 android:padding="16dp"
                 android:textIsSelectable="true"
                 tools:context=".views.CalculationDetailFragment" />
