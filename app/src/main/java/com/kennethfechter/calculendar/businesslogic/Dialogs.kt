@@ -7,20 +7,23 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
-import android.os.Bundle
+
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.RadioButton
 import android.widget.Toast
+import com.elconfidencial.bubbleshowcase.BubbleShowCase
+import com.elconfidencial.bubbleshowcase.BubbleShowCaseBuilder
+import com.elconfidencial.bubbleshowcase.BubbleShowCaseListener
 import com.kennethfechter.calculendar.CalculationListActivity
 import com.kennethfechter.calculendar.R
 import com.kennethfechter.calculendar.dataaccess.AppDatabase
 import com.kennethfechter.calculendar.enumerations.ExclusionMode
 import com.kennethfechter.calculendar.enumerations.Theme
-import com.kennethfechter.calculendar.views.CalculationDetailFragment
 import com.squareup.timessquare.CalendarPickerView
 import kotlinx.android.synthetic.main.activity_calculendar_about.view.*
 import kotlinx.android.synthetic.main.dialog_calculendar_daynight_mode.view.*
@@ -221,6 +224,41 @@ object Dialogs {
                 it.resume(mutableListOf())
             }
             .create()
+            .show()
+    }
+
+    fun showSpotLight(parentActivity: CalculationListActivity, view: View, preferenceManager: PreferenceManager) {
+        BubbleShowCaseBuilder(parentActivity)
+            .title("Long press to delete")
+            .description("Long press the add (+) button to delete all calculations.")
+            .listener(object : BubbleShowCaseListener { //Listener for user actions
+                override fun onTargetClick(bubbleShowCase: BubbleShowCase) {
+                    GlobalScope.launch {
+                        preferenceManager.setTutorial(true)
+                    }
+                    bubbleShowCase.dismiss()
+                }
+                override fun onCloseActionImageClick(bubbleShowCase: BubbleShowCase) {
+                    GlobalScope.launch {
+                        preferenceManager.setTutorial(true)
+                    }
+                    bubbleShowCase.dismiss()
+                }
+                override fun onBubbleClick(bubbleShowCase: BubbleShowCase) {
+                    GlobalScope.launch {
+                        preferenceManager.setTutorial(true)
+                    }
+                    bubbleShowCase.dismiss()
+                }
+
+                override fun onBackgroundDimClick(bubbleShowCase: BubbleShowCase) {
+                    GlobalScope.launch {
+                        preferenceManager.setTutorial(true)
+                    }
+                    bubbleShowCase.dismiss()
+                }
+            })
+            .targetView(view)
             .show()
     }
 

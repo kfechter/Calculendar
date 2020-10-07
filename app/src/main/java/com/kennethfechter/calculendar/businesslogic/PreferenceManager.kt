@@ -18,6 +18,7 @@ class PreferenceManager(context: Context) {
     companion object {
         val THEME_SETTING = preferencesKey<Int>("theme_setting")
         val ANALYTICS_SETTING = preferencesKey<Int>("analytics_setting")
+        val TUTORIAL_SHOWN = preferencesKey<Boolean>("TUTORIAL_SHOWN")
     }
 
     suspend fun setTheme(theme: Theme) {
@@ -40,6 +41,13 @@ class PreferenceManager(context: Context) {
         }
     }
 
+    suspend fun setTutorial(tutorialShown: Boolean) {
+        dataStore.edit {preferences ->
+            preferences[TUTORIAL_SHOWN] = tutorialShown
+        }
+    }
+
+
     val themeFlow: Flow<Theme> = dataStore.data
         .catch {
             if (it is IOException) {
@@ -57,6 +65,19 @@ class PreferenceManager(context: Context) {
                 4 -> Theme.System
                 else -> Theme.Day
             }
+        }
+
+    val tutorialFlow: Flow<Boolean> = dataStore.data
+        .catch {
+            if (it is IOException) {
+                it.printStackTrace()
+                emit(emptyPreferences())
+            } else {
+                throw it
+            }
+        }
+        .map {
+            preference -> preference[TUTORIAL_SHOWN] ?: false
         }
 
     val analyticsFlow: Flow<Int> = dataStore.data

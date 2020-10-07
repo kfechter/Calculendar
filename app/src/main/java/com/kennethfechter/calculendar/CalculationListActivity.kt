@@ -1,16 +1,19 @@
 package com.kennethfechter.calculendar
 
 import android.os.Bundle
-import android.view.*
-import androidx.core.widget.NestedScrollView
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.RecyclerView
-import androidx.appcompat.widget.Toolbar
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.Toolbar
+import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.asLiveData
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.kennethfechter.calculendar.businesslogic.DateCalculator
@@ -19,9 +22,9 @@ import com.kennethfechter.calculendar.businesslogic.PreferenceManager
 import com.kennethfechter.calculendar.businesslogic.Utilities
 import com.kennethfechter.calculendar.dataaccess.AppDatabase
 import com.kennethfechter.calculendar.dataaccess.CalculationRecyclerViewAdapter
-
 import com.kennethfechter.calculendar.enumerations.Theme
 import kotlin.properties.Delegates
+
 
 class CalculationListActivity : AppCompatActivity() {
 
@@ -32,7 +35,7 @@ class CalculationListActivity : AppCompatActivity() {
     private var twoPane: Boolean = false
 
     private lateinit var currentTheme: Theme
-    private var analyticsEnabled by Delegates.notNull<Int>()
+    private var analyticsEnabled = -1
 
     private lateinit var preferenceManager: PreferenceManager
     private lateinit var recyclerView: RecyclerView
@@ -48,7 +51,9 @@ class CalculationListActivity : AppCompatActivity() {
         initializeAnalytics()
         initializeThemeObserver()
 
-        findViewById<FloatingActionButton>(R.id.fab).setOnClickListener {
+        val floatingActionButton: FloatingActionButton = findViewById(R.id.fab)
+
+        floatingActionButton.setOnClickListener {
             DateCalculator.startCalculation(this@CalculationListActivity)
         }
 
@@ -59,6 +64,19 @@ class CalculationListActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.calculation_list)
         recyclerView.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
         initializeCalculationList(recyclerView)
+
+        floatingActionButton.setOnLongClickListener {
+            if(recyclerView.adapter!!.itemCount > 0) {
+                Dialogs.showDeleteAllDialog(this@CalculationListActivity)
+            }
+            else {
+               Dialogs.showToastPrompt(this@CalculationListActivity, "No Calculations to delete.", Toast.LENGTH_LONG)
+            }
+
+            true
+        }
+
+        initializeTutorial(floatingActionButton, preferenceManager)
 
         val extraString = intent.extras?.getString("action")
 
@@ -84,9 +102,18 @@ class CalculationListActivity : AppCompatActivity() {
     private fun initializeAnalytics() {
         preferenceManager.analyticsFlow.asLiveData().observe(this) { analyticsPreference ->
             when (analyticsPreference) {
-                -1 -> if (!Utilities.isRunningTest) { Dialogs.showAnalyticsDialog(this@CalculationListActivity, preferenceManager) }
-                0 -> if (!Utilities.isRunningTest) { configureAnalytics(false) }
-                1 -> if (!Utilities.isRunningTest) { configureAnalytics(true) }
+                -1 -> if (!Utilities.isRunningTest) {
+                    Dialogs.showAnalyticsDialog(
+                        this@CalculationListActivity,
+                        preferenceManager
+                    )
+                }
+                0 -> if (!Utilities.isRunningTest) {
+                    configureAnalytics(false)
+                }
+                1 -> if (!Utilities.isRunningTest) {
+                    configureAnalytics(true)
+                }
             }
 
             analyticsEnabled = analyticsPreference
@@ -99,11 +126,18 @@ class CalculationListActivity : AppCompatActivity() {
     }
 
     private fun initializeCalculationList(recyclerView: RecyclerView) {
-        AppDatabase.getInstance(this@CalculationListActivity)!!.getAll().observe(this) {
-            calculationList ->
+        AppDatabase.getInstance(this@CalculationListActivity)!!.getAll().observe(this) { calculationList ->
             recyclerView.adapter = CalculationRecyclerViewAdapter(this, calculationList, twoPane)
             if (twoPane && recyclerView.adapter!!.itemCount == 0) {
                 Utilities.blankFragment(this)
+            }
+        }
+    }
+
+    private fun initializeTutorial(targetView: View, preferenceManager: PreferenceManager) {
+        preferenceManager.tutorialFlow.asLiveData().observe(this) { tutorialShown ->
+            if (!tutorialShown && !Utilities.isRunningTest && analyticsEnabled != -1) {
+               Dialogs.showSpotLight(this, targetView, preferenceManager)
             }
         }
     }
@@ -128,7 +162,11 @@ class CalculationListActivity : AppCompatActivity() {
             R.id.delete_calculation -> {
                 val recyclerViewAdapter = recyclerView.adapter as CalculationRecyclerViewAdapter
                 if (twoPane && recyclerViewAdapter.getSelectedUid() != -1) {
-                    Dialogs.showDeleteConfirmationDialog(this@CalculationListActivity, recyclerViewAdapter.getSelectedUid(), false)
+                    Dialogs.showDeleteConfirmationDialog(
+                        this@CalculationListActivity,
+                        recyclerViewAdapter.getSelectedUid(),
+                        false
+                    )
                 }
             }
         }
