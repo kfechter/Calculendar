@@ -35,9 +35,26 @@ class CalculationDetailFragment : Fragment() {
     }
 
     private fun initializeContentView(id: Int) {
-        AppDatabase.getInstance(context!!)?.getByID(id)!!.observeOnce(this) {
-            calculation -> loadViewCalculation(calculation)
+        if(id != -1) {
+            AppDatabase.getInstance(context!!)?.getByID(id)!!.observeOnce(this) {
+                    calculation -> loadViewCalculation(calculation)
+            }
         }
+        else {
+            blankView()
+        }
+    }
+
+    private fun blankView() {
+        val blankText = ""
+        activity?.findViewById<TextView>(R.id.calculation_detail)?.text = blankText
+        activity?.findViewById<TextView>(R.id.exclusion_mode)?.text = blankText
+        activity?.findViewById<TextView>(R.id.excluded_days)?.text = blankText
+        activity?.findViewById<TextView>(R.id.calculated_interval)?.text = blankText
+        activity?.findViewById<TextView>(R.id.custom_dates_header)?.visibility = View.INVISIBLE
+        val listView: ListView? = activity?.findViewById(R.id.custom_dates_list)
+        listView?.adapter = null
+        listView?.visibility = View.INVISIBLE
     }
 
     private fun loadViewCalculation(calculation: Calculation) {

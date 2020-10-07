@@ -37,7 +37,6 @@
                         android:layout_width="wrap_content"
                         android:textSize="17sp"
                         android:layout_height="wrap_content"
-                        android:text="@string/exclusion_mode_format"
                         android:layout_gravity="center_horizontal"
                         android:gravity="center_horizontal"
                         android:textStyle="bold" />
@@ -49,7 +48,6 @@
                         android:layout_height="wrap_content"
                         android:textSize="17sp"
                         android:layout_marginTop="5dp"
-                        android:text="@string/excluded_days_format"
                         android:layout_gravity="center_horizontal"
                         android:gravity="center_horizontal"
                         android:textStyle="bold" />
@@ -60,7 +58,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
-                        android:text="@string/calculated_interval_format"
                         android:textSize="17sp"
                         android:layout_gravity="center_horizontal"
                         android:gravity="center_horizontal"

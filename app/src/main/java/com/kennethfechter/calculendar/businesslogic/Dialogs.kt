@@ -1,11 +1,13 @@
 package com.kennethfechter.calculendar.businesslogic
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,9 +15,12 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.RadioButton
 import android.widget.Toast
+import com.kennethfechter.calculendar.CalculationListActivity
 import com.kennethfechter.calculendar.R
+import com.kennethfechter.calculendar.dataaccess.AppDatabase
 import com.kennethfechter.calculendar.enumerations.ExclusionMode
 import com.kennethfechter.calculendar.enumerations.Theme
+import com.kennethfechter.calculendar.views.CalculationDetailFragment
 import com.squareup.timessquare.CalendarPickerView
 import kotlinx.android.synthetic.main.activity_calculendar_about.view.*
 import kotlinx.android.synthetic.main.dialog_calculendar_daynight_mode.view.*
@@ -53,6 +58,27 @@ object Dialogs {
 
         aboutApplicationDialogView.developers_list.adapter = ArrayAdapter(context, R.layout.developer_name_list_item, context.resources.getStringArray(R.array.developer_names))
         aboutDialog.show()
+    }
+
+    fun showDeleteConfirmationDialog(context: Context, calculationId: Int, isActivity: Boolean) {
+        val deleteConfirmationDialog = AlertDialog.Builder(context)
+        deleteConfirmationDialog.setTitle("Delete Calculation?")
+        deleteConfirmationDialog.setPositiveButton("Yes") { dialog, _ ->
+            GlobalScope.launch {
+                    AppDatabase.getInstance(context)?.deleteById(calculationId)
+            }
+
+            if (isActivity) {
+                (context as Activity).onBackPressed()
+            }
+
+            dialog.dismiss()
+        }
+        deleteConfirmationDialog.setNegativeButton("No") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        deleteConfirmationDialog.create().show()
     }
 
     fun showThemeDialog(context: Context, preferenceManager: PreferenceManager, currentTheme: Theme) {

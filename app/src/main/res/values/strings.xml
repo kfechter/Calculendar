@@ -71,4 +71,5 @@
     <string name="excluded_days_format">Excluded Days: %d</string>
     <string name="custom_dates_header">Custom Dates</string>
     <string name="no_custom_date_text">No Custom Dates</string>
+    <string name="delete_calculation_menu">Delete Calculation</string>
 </resources>

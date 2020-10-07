@@ -19,12 +19,16 @@ class CalculationRecyclerViewAdapter(
 {
 
     private val onClickListener: View.OnClickListener
+    private var isInit = true
+
+    private var selectedItem: Int = -1
 
     init {
         onClickListener = View.OnClickListener {v ->
             val item = v.tag as Calculation
             if (twoPane) {
                 val fragment = CalculationDetailFragment().apply {
+                    selectedItem = item.uid
                     arguments = Bundle().apply {
                         putInt(CalculationDetailFragment.ARG_ITEM_ID, item.uid)
                     }
@@ -60,14 +64,20 @@ class CalculationRecyclerViewAdapter(
             tag = item
             setOnClickListener(onClickListener)
         }
+
+        if(position == 0 && isInit && twoPane) {
+            onClickListener.onClick(holder.itemView)
+            isInit = false;
+        }
     }
 
     override fun getItemCount() = values.size
+
+    fun getSelectedUid() = selectedItem
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val idView: TextView = view.findViewById(R.id.id_text)
         val startDateView: TextView = view.findViewById(R.id.startDate)
         val endDateView: TextView = view.findViewById(R.id.endDate)
-
     }
 }

@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.view.MenuItem
 import com.kennethfechter.calculendar.CalculationListActivity
 import com.kennethfechter.calculendar.R
+import com.kennethfechter.calculendar.businesslogic.Dialogs
 import com.kennethfechter.calculendar.dataaccess.AppDatabase
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -28,12 +29,7 @@ class CalculationDetailActivity : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.detail_toolbar))
 
         findViewById<FloatingActionButton>(R.id.fab).setOnClickListener {
-            if(calculationId != null) {
-                GlobalScope.launch {
-                    AppDatabase.getInstance(this@CalculationDetailActivity)?.deleteById(calculationId!!)
-                }
-            }
-            onBackPressed()
+            Dialogs.showDeleteConfirmationDialog(this@CalculationDetailActivity, calculationId!!, true)
         }
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

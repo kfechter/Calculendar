@@ -35,6 +35,7 @@ class CalculationListActivity : AppCompatActivity() {
     private var analyticsEnabled by Delegates.notNull<Int>()
 
     private lateinit var preferenceManager: PreferenceManager
+    private lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,20 +54,15 @@ class CalculationListActivity : AppCompatActivity() {
 
         if (findViewById<NestedScrollView>(R.id.calculation_detail_container) != null) {
             twoPane = true
-            // Show a second (Smaller) Fab if a calculation is selected.
-            findViewById<FloatingActionButton>(R.id.fab).setOnLongClickListener {
-                // Handle Deletion of selected item
-                true
-            }
         }
 
-        val recyclerView = findViewById<RecyclerView>(R.id.calculation_list)
+        recyclerView = findViewById(R.id.calculation_list)
         recyclerView.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
         initializeCalculationList(recyclerView)
 
         val extraString = intent.extras?.getString("action")
 
-        if (extraString != null && extraString == "newCalc" && (analyticsEnabled != -1)) {
+        if (extraString != null && extraString == "newCalc") {
             DateCalculator.startCalculation(this@CalculationListActivity)
         }
     }
@@ -104,7 +100,11 @@ class CalculationListActivity : AppCompatActivity() {
 
     private fun initializeCalculationList(recyclerView: RecyclerView) {
         AppDatabase.getInstance(this@CalculationListActivity)!!.getAll().observe(this) {
-            calculationList -> recyclerView.adapter = CalculationRecyclerViewAdapter(this, calculationList, twoPane)
+            calculationList ->
+            recyclerView.adapter = CalculationRecyclerViewAdapter(this, calculationList, twoPane)
+            if (twoPane && recyclerView.adapter!!.itemCount == 0) {
+                Utilities.blankFragment(this)
+            }
         }
     }
 
@@ -116,9 +116,23 @@ class CalculationListActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             R.id.about_application -> Dialogs.showAboutDialog(this@CalculationListActivity)
-            R.id.analytics_opt_status -> Dialogs.showAnalyticsDialog(this@CalculationListActivity, preferenceManager)
-            R.id.day_night_mode -> Dialogs.showThemeDialog(this@CalculationListActivity, preferenceManager, currentTheme)
+            R.id.analytics_opt_status -> Dialogs.showAnalyticsDialog(
+                this@CalculationListActivity,
+                preferenceManager
+            )
+            R.id.day_night_mode -> Dialogs.showThemeDialog(
+                this@CalculationListActivity,
+                preferenceManager,
+                currentTheme
+            )
+            R.id.delete_calculation -> {
+                val recyclerViewAdapter = recyclerView.adapter as CalculationRecyclerViewAdapter
+                if (twoPane && recyclerViewAdapter.getSelectedUid() != -1) {
+                    Dialogs.showDeleteConfirmationDialog(this@CalculationListActivity, recyclerViewAdapter.getSelectedUid(), false)
+                }
+            }
         }
+
 
         return super.onOptionsItemSelected(item)
     }
