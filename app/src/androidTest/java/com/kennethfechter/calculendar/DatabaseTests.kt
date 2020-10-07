@@ -130,44 +130,7 @@ class DatabaseTests {
             testCalculation.calculatedInterval
         )
     }
-
-    @Test
-    fun testCalculationStorage() = runBlocking {
-        DateCalculator.calculateInterval(context, selectedDatesList, customDatesList, ExclusionMode.Both, true)
-        val testCalculation = getValue(calculationDao?.getByStartDate("Sunday Sep 1, 2019")!!)
-
-        Assert.assertEquals(
-            "Returned item startDate does not match",
-            "Sunday Sep 1, 2019",
-            testCalculation.startDate
-        )
-        Assert.assertEquals(
-            "Returned item endDate does not match",
-            "Monday Sep 30, 2019",
-            testCalculation.endDate
-        )
-        Assert.assertEquals(
-            "Returned item exclusion method does not match",
-            "Both",
-            testCalculation.exclusionMethod
-        )
-        Assert.assertEquals(
-            "Returned item customDates does not match",
-            null,
-            testCalculation.customDates
-        )
-        Assert.assertEquals(
-            "Returned item numExcludedDates does not match",
-           9,
-            testCalculation.numExcludedDates
-        )
-        Assert.assertEquals(
-            "Returned item calculatedInterval does not match",
-            21,
-            testCalculation.calculatedInterval
-        )
-    }
-
+    
     @Test
     fun deleteCalculation() {
         calculationDao?.deleteAll()
