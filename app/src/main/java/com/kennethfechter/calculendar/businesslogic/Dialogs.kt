@@ -60,9 +60,29 @@ object Dialogs {
         aboutDialog.show()
     }
 
+    fun showDeleteAllDialog(context: Context) {
+        val deleteConfirmationDialog = AlertDialog.Builder(context)
+        deleteConfirmationDialog.setTitle("Delete All Calculations")
+        deleteConfirmationDialog.setMessage("Do you want to delete all stored calculations?")
+        deleteConfirmationDialog.setPositiveButton("Yes") { dialog, _ ->
+            GlobalScope.launch {
+                AppDatabase.getInstance(context)?.deleteAll()
+            }
+
+            dialog.dismiss()
+        }
+
+        deleteConfirmationDialog.setNegativeButton("No") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        deleteConfirmationDialog.create().show()
+    }
+
     fun showDeleteConfirmationDialog(context: Context, calculationId: Int, isActivity: Boolean) {
         val deleteConfirmationDialog = AlertDialog.Builder(context)
         deleteConfirmationDialog.setTitle("Delete Calculation?")
+        deleteConfirmationDialog.setMessage("Do you want to delete the current calculation?")
         deleteConfirmationDialog.setPositiveButton("Yes") { dialog, _ ->
             GlobalScope.launch {
                     AppDatabase.getInstance(context)?.deleteById(calculationId)
@@ -74,6 +94,7 @@ object Dialogs {
 
             dialog.dismiss()
         }
+
         deleteConfirmationDialog.setNegativeButton("No") { dialog, _ ->
             dialog.dismiss()
         }
