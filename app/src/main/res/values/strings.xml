@@ -65,4 +65,10 @@
     </plurals>
     <string name="title_calculation_list">Calculendar</string>
     <string name="title_calculation_detail">Calculation Detail</string>
+    <string name="calculation_options_header">Calculation Options</string>
+    <string name="exclusion_mode_format">Exclusion Mode: %s</string>
+    <string name="calculated_interval_format">Calculated Interval: %d</string>
+    <string name="excluded_days_format">Excluded Days: %d</string>
+    <string name="custom_dates_header">Custom Dates</string>
+    <string name="no_custom_date_text">No Custom Dates</string>
 </resources>

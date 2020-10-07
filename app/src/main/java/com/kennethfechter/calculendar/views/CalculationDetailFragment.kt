@@ -6,8 +6,11 @@ import com.google.android.material.appbar.CollapsingToolbarLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.ListView
 import android.widget.TextView
 import com.kennethfechter.calculendar.R
+import com.kennethfechter.calculendar.businesslogic.Converters
 import com.kennethfechter.calculendar.dataaccess.AppDatabase
 import com.kennethfechter.calculendar.dataaccess.Calculation
 
@@ -37,6 +40,23 @@ class CalculationDetailFragment : Fragment() {
     private fun loadViewCalculation(calculation: Calculation) {
         activity?.findViewById<CollapsingToolbarLayout>(R.id.toolbar_layout)?.title = getString(R.string.calculation_title)
         activity?.findViewById<TextView>(R.id.calculation_detail)?.text = getString(R.string.date_range_formatter).format(calculation.startDate, calculation.endDate)
+        activity?.findViewById<TextView>(R.id.exclusion_mode)?.text = getString(R.string.exclusion_mode_format).format(calculation.exclusionMethod)
+        activity?.findViewById<TextView>(R.id.excluded_days)?.text = getString(R.string.excluded_days_format).format(calculation.numExcludedDates)
+        activity?.findViewById<TextView>(R.id.calculated_interval)?.text = getString(R.string.calculated_interval_format).format(calculation.calculatedInterval)
+
+        val customDateHeader: TextView =  activity?.findViewById(R.id.custom_dates_header)!!
+
+        if (calculation.exclusionMethod == "CustomDates" && calculation.numExcludedDates ?: 0 > 0) {
+            customDateHeader.visibility = View.VISIBLE
+            val listView: ListView = activity?.findViewById(R.id.custom_dates_list)!!
+            listView.visibility = View.VISIBLE
+            listView.adapter = ArrayAdapter(context!!, R.layout.developer_name_list_item, Converters.getCustomDateStringList(calculation.customDates)!!)
+        }
+        else {
+            customDateHeader.text = getString(R.string.no_custom_date_text)
+            customDateHeader.visibility = View.VISIBLE
+        }
+
     }
 
     override fun onCreateView(
