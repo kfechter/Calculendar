@@ -133,7 +133,7 @@ class DatabaseTests {
 
     @Test
     fun testCalculationStorage() = runBlocking {
-        DateCalculator.CalculateInterval(context, selectedDatesList, customDatesList, ExclusionMode.Both, true)
+        DateCalculator.calculateInterval(context, selectedDatesList, customDatesList, ExclusionMode.Both, true)
         val testCalculation = getValue(calculationDao?.getByStartDate("Sunday Sep 1, 2019")!!)
 
         Assert.assertEquals(
