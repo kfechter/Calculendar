@@ -65,17 +65,17 @@ class CalculationDetailFragment : Fragment() {
         activity?.findViewById<TextView>(R.id.excluded_days)?.text = getString(R.string.excluded_days_format).format(calculation.numExcludedDates)
         activity?.findViewById<TextView>(R.id.calculated_interval)?.text = getString(R.string.calculated_interval_format).format(calculation.calculatedInterval)
 
-        val customDateHeader: TextView =  activity?.findViewById(R.id.custom_dates_header)!!
+        val customDateHeader: TextView? =  activity?.findViewById(R.id.custom_dates_header)
 
         if (calculation.exclusionMethod == "CustomDates" && calculation.numExcludedDates ?: 0 > 0) {
-            customDateHeader.visibility = View.VISIBLE
-            val listView: ListView = activity?.findViewById(R.id.custom_dates_list)!!
-            listView.visibility = View.VISIBLE
-            listView.adapter = ArrayAdapter(context!!, R.layout.developer_name_list_item, Converters.getCustomDateStringList(calculation.customDates)!!)
+            customDateHeader?.visibility = View.VISIBLE
+            val listView: ListView? = activity?.findViewById(R.id.custom_dates_list)
+            listView?.visibility = View.VISIBLE
+            listView?.adapter = ArrayAdapter(context!!, R.layout.developer_name_list_item, Converters.getCustomDateStringList(calculation.customDates)!!)
         }
         else {
-            customDateHeader.text = getString(R.string.no_custom_date_text)
-            customDateHeader.visibility = View.VISIBLE
+            customDateHeader?.text = getString(R.string.no_custom_date_text)
+            customDateHeader?.visibility = View.VISIBLE
         }
 
     }
