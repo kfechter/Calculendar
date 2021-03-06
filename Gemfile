@@ -1,3 +1,3 @@
 source "https://rubygems.org"
-gem "rake"
+gem "rake", '12.3.1'
 gem "fastlane"
