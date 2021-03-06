@@ -3,7 +3,7 @@ default:
 
 before_script:
   - apt-get --quiet update --yes
-  - apt-get --quiet install --yes ruby-full build-essential git locales
+  - apt-get --quiet install --yes ruby-full rake build-essential git locales
   - echo "en_US UTF-8" > /etc/locale.gen
   - locale-gen en_US.UTF-8
   - export LANG=en_US.UTF-8
