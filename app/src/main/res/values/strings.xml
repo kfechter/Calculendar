@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Calculendar</string>
-    <string name="title_activity_calculendar_about">Calculendar</string>
+    <string name="main_title">My Calculations</string>
     <string name="app_about_action_text">About</string>
     <string name="app_analytics_action_text">Change opt-in Status</string>
     <string name="version_header">Version %s</string>
@@ -16,20 +16,14 @@
     <string name="disabled_message_text">This shortcut is not currently enabled</string>
     <string name="shortcut_long_text">Open the app to the new calculation dialog</string>
     <string name="shortcut_short_text">New Calculation</string>
-    <string name="build_id_formatter">Build Id: %s</string>
+    <string name="build_id_formatter">Calculendar %s</string>
 
-    <string name="first_run_preference_name">first_run</string>
-    <string name="day_night_preference_name">day_night_mode</string>
+    <string name="start_date_formatter">Start Date: %s</string>
+    <string name="end_date_formatter">End Date: %s</string>
+    <string name="calculation_title">Calculation Detail</string>
+    <string name="date_range_formatter">%1$s - %2$s</string>
+
     <string name="shared_preference_file_name">com.kennethfechter.calculendar.prefs</string>
-
-    <string name="preference_name_analytics_level">analytics_level</string>
-    <string name="full_analytics_preference_value">Full</string>
-    <string name="crash_only_analytics_preference_value">Crash</string>
-    <string name="no_analytics_preference_value">Off</string>
-
-    <string name="dialog_button_full_analytics">Full Analytics</string>
-    <string name="dialog_button_crash_only">Crash Only</string>
-    <string name="dialog_button_opt_out">Opt-Out</string>
 
     <string name="radio_day_mode_text">Light Theme</string>
     <string name="radio_night_mode_text">Dark Theme</string>
@@ -38,21 +32,12 @@
 
     <string name="theme_dialog_title">Set Application Theme</string>
 
-    <string name="preference_day_mode_value">Day</string>
-    <string name="preference_night_mode_value">Night</string>
-    <string name="preference_battery_saver_mode_value">Battery</string>
-    <string name="preference_auto_mode_value">Auto</string>
-
-
     <string name="opt_in_dialog_title">Analytics Opt-In</string>
     <string name="opt_in_dialog_message">
         This app can optionally collect analytics data.
-        This data can be used to help debug and fix crashes and improve the app.
-        There are two levels of analytics, crash only and full. in crash only mode,
-        only application crashes will be logged. In full analytics mode, the application
-        will collect additional anonymous usage data. You can change your opt-in status at any time
-        by selecting the bug button on the action bar. Once set, changing status requires
-        an application restart.
+        This data can be used to help debug and fix crashes and improve the app. You can change
+        your opt-in status at any time by selecting the bug button on the action bar. Once set,
+        changing status requires an application restart.
     </string>
     <string name="app_daynight_action_text">Set Day/Night Mode</string>
 
@@ -64,4 +49,15 @@
         <item quantity="one">Day</item>
         <item quantity="other">Days</item>
     </plurals>
+    <string name="title_calculation_list">Calculendar</string>
+    <string name="title_calculation_detail">Calculation Detail</string>
+    <string name="calculation_options_header">Calculation Options</string>
+    <string name="exclusion_mode_format">Exclusion Mode: %s</string>
+    <string name="calculated_interval_format">Calculated Interval: %d</string>
+    <string name="excluded_days_format">Excluded Days: %d</string>
+    <string name="custom_dates_header">Custom Dates</string>
+    <string name="no_custom_date_text">No Custom Dates</string>
+    <string name="delete_calculation_menu">Delete Calculation</string>
+    <string name="no_calculation_prompt">No Calculations, click the + button at the bottom to begin</string>
+    <string name="mobile_no_calculations_header">No Calculations, press (+) to Begin</string>
 </resources>
