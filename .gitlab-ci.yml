@@ -47,7 +47,7 @@ alpha:
     - /opt/start-default-emulator.sh
     - chmod +x ./gradlew
     - ./gradlew assembleRelease
-    - fastlane alpha 
+    - bundle exec fastlane alpha 
   only:
     refs:
       - alpha
@@ -67,7 +67,7 @@ beta:
     - android
   script:
     - echo "$SUPPLY_JSON_KEY_DATA" > /root/.google_secrets.json
-    - fastlane beta 
+    - bundle exec fastlane beta 
   only:
     refs:
       - beta
@@ -80,7 +80,7 @@ production:
     - android
   script:
     - echo "$SUPPLY_JSON_KEY_DATA" > /root/.google_secrets.json
-    - fastlane prod 
+    - bundle exec fastlane prod 
   only:
     refs:
       - main
