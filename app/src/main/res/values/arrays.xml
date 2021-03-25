@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="developer_names">
+        <item>Kenneth Fechter</item>
+        <item>Graham Klein</item>
+        <item>Tobyn Collinsworth</item>
+    </string-array>
+    <string-array name="developer_profiles">
+        <item>https://www.linkedin.com/in/kafechter/</item>
+        <item>https://www.linkedin.com/in/graham-klein-04b976106/</item>
+        <item>https://www.linkedin.com/in/tobyncollinsworth/</item>
+    </string-array>
+    <string-array name="exclusion_options">
+        <item>Exclude None</item>
+        <item>Exclude Saturdays</item>
+        <item>Exclude Sundays</item>
+        <item>Exclude Both</item>
+        <item>Exclude Custom</item>
+    </string-array>
+</resources>

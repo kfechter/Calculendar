@@ -1,0 +1,84 @@
+default:
+  image: kfechter/android-sdk
+
+before_script:
+  - apt-get --quiet update --yes
+  - apt-get --quiet install --yes ruby-full build-essential git locales
+  - echo "en_US UTF-8" > /etc/locale.gen
+  - locale-gen en_US.UTF-8
+  - export LANG=en_US.UTF-8
+  - export LANGUAGE=en_US:en
+  - export LC_ALL=en_US.UTF-8
+  - gem install bundler && bundle update
+
+stages:
+  - develop
+  - alpha
+  - beta
+  - production
+
+develop:
+  stage: develop
+  tags:
+    - android
+  script:
+    - /opt/start-default-emulator.sh
+    - chmod +x ./gradlew
+    - ./gradlew assembleRelease
+  only:
+    refs:
+      - develop
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /\[Build\]/
+    
+  artifacts:
+     paths:
+       - app/build/outputs/apk/release/app-release.apk
+       - app/build/outputs/androidTest-results/connected/*.xml
+
+alpha:
+  stage: alpha
+  tags:
+    - android
+  script:
+    - echo "$SUPPLY_JSON_KEY_DATA" > /root/.google_secrets.json
+    - /opt/start-default-emulator.sh
+    - chmod +x ./gradlew
+    - ./gradlew assembleRelease
+    - fastlane alpha 
+  only:
+    refs:
+      - alpha
+    variables:
+       - $CI_COMMIT_MESSAGE =~ /\[Alpha\]/
+    
+  artifacts:
+     paths:
+       - app/build/outputs/apk/release/app-release.apk
+       - app/build/outputs/androidTest-results/connected/*.xml
+
+beta:
+  stage: beta
+  tags:
+    - android
+  script:
+    - echo "$SUPPLY_JSON_KEY_DATA" > /root/.google_secrets.json
+    - fastlane beta 
+  only:
+    refs:
+      - beta
+    variables:
+       - $CI_COMMIT_MESSAGE =~ /\[Beta\]/
+
+production:
+  stage: production
+  tags:
+    - android
+  script:
+    - echo "$SUPPLY_JSON_KEY_DATA" > /root/.google_secrets.json
+    - fastlane prod 
+  only:
+    refs:
+      - main
+    variables:
+       - $CI_COMMIT_MESSAGE =~ /\[Release\]/
