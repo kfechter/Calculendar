@@ -51,8 +51,7 @@ steps:
   - /opt/start-default-emulator.sh
   - chmod +x ./gradlew
   - ./gradlew assembleRelease
-  - echo "$SUPPLY_JSON_KEY_DATA" > ~/.google_secrets.json
-  - ls -blah ~/ 
+  - echo "$SUPPLY_JSON_KEY_DATA" | base64 --decode > ~/.google_secrets.json
   - bundle exec fastlane alpha 
   when:
     branch:
