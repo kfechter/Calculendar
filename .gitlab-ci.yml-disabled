@@ -1,15 +1,8 @@
 default:
-  image: kfechter/android-sdk
+  image: 
 
 before_script:
-  - apt-get --quiet update --yes
-  - apt-get --quiet install --yes ruby-full rake build-essential git locales
-  - echo "en_US UTF-8" > /etc/locale.gen
-  - locale-gen en_US.UTF-8
-  - export LANG=en_US.UTF-8
-  - export LANGUAGE=en_US:en
-  - export LC_ALL=en_US.UTF-8
-  - gem install bundler && bundle update
+  
 
 stages:
   - develop
@@ -22,9 +15,7 @@ develop:
   tags:
     - android
   script:
-    - /opt/start-default-emulator.sh
-    - chmod +x ./gradlew
-    - ./gradlew assembleRelease
+    
   only:
     refs:
       - develop
