@@ -1,7 +1,7 @@
-[![Build Status](https://drone.kennethfechter.com/api/badges/kfechter/Calculendar/status.svg?ref=refs/heads/main)](https://drone.kennethfechter.com/kfechter/Calculendar)
-[![Build Status](https://drone.kennethfechter.com/api/badges/kfechter/Calculendar/status.svg?ref=refs/heads/develop)](https://drone.kennethfechter.com/kfechter/Calculendar)
-[![Build Status](https://drone.kennethfechter.com/api/badges/kfechter/Calculendar/status.svg?ref=refs/heads/alpha)](https://drone.kennethfechter.com/kfechter/Calculendar)
-[![Build Status](https://drone.kennethfechter.com/api/badges/kfechter/Calculendar/status.svg?ref=refs/heads/beta)](https://drone.kennethfechter.com/kfechter/Calculendar)
+main | develop | alpha | beta    
+[![Build Status](https://drone.kennethfechter.com/api/badges/kfechter/Calculendar/status.svg?ref=refs/heads/main)]() | [![Build Status](https://drone.kennethfechter.com/api/badges/kfechter/Calculendar/status.svg?ref=refs/heads/develop)]() | [![Build Status](https://drone.kennethfechter.com/api/badges/kfechter/Calculendar/status.svg?ref=refs/heads/alpha)]() | [![Build Status](https://drone.kennethfechter.com/api/badges/kfechter/Calculendar/status.svg?ref=refs/heads/beta)]()
+
+
 
 # Calculendar
 
