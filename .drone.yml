@@ -49,6 +49,7 @@ steps:
   - /opt/start-default-emulator.sh
   - chmod +x ./gradlew
   - ./gradlew assembleRelease
+  - ls /drone/src/
   - bundle exec fastlane alpha 
   when:
     branch:
