@@ -36,6 +36,8 @@ steps:
       from_secret: RELEASE_SIGNING
     KEYSTORE_MASTER:
       from_secret: KEYSTORE_MASTER
+    JSON_64:
+      from_secret: JSON_64
       
   commands:
   - apt-get --quiet update --yes
@@ -49,7 +51,7 @@ steps:
   - /opt/start-default-emulator.sh
   - chmod +x ./gradlew
   - ./gradlew assembleRelease
-  - ls /drone/src/
+  - echo $JSON_64 | base64 --decode > ~/.google_secrets.json
   - bundle exec fastlane alpha 
   when:
     branch:
