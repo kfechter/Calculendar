@@ -52,7 +52,7 @@ steps:
   - chmod +x ./gradlew
   - ./gradlew assembleRelease
   - echo "$SUPPLY_JSON_KEY_DATA" > ~/.google_secrets.json
-  - cat ~/.google_secrets.json
+  - ls -blah ~/ 
   - bundle exec fastlane alpha 
   when:
     branch:
