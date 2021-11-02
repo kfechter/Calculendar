@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <LinearLayout android:layout_width="match_parent"
+            android:id="@+id/exclusion_options_container"
+            android:paddingTop="50dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_centerHorizontal="true">
+
+        <TextView
+                android:id="@+id/exclusionHeader"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textAllCaps="false"
+                android:textColor="?android:attr/textColorPrimary"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"/>
+
+        <Spinner
+                android:id="@+id/exclusionOptions"
+                android:minHeight="48dp"
+                android:enabled="false"
+                android:minWidth="48dp"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:textAllCaps="false"
+                android:spinnerMode="dropdown"
+                android:entries="@array/exclusion_options"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <Button
+                android:id="@+id/btn_pick_custom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"
+                android:layout_marginTop="10dp"
+                android:textAllCaps="false"
+                android:textStyle="bold"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/button_select_custom" />
+
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,15 +1,8 @@
 default:
-  image: kfechter/android-sdk
+  image: 
 
 before_script:
-  - apt-get --quiet update --yes
-  - apt-get --quiet install --yes ruby-full build-essential git locales
-  - echo "en_US UTF-8" > /etc/locale.gen
-  - locale-gen en_US.UTF-8
-  - export LANG=en_US.UTF-8
-  - export LANGUAGE=en_US:en
-  - export LC_ALL=en_US.UTF-8
-  - gem install bundler && bundle update
+  
 
 stages:
   - develop
@@ -22,9 +15,7 @@ develop:
   tags:
     - android
   script:
-    - /opt/start-default-emulator.sh
-    - chmod +x ./gradlew
-    - ./gradlew assembleRelease
+    
   only:
     refs:
       - develop
@@ -35,6 +26,8 @@ develop:
      paths:
        - app/build/outputs/apk/release/app-release.apk
        - app/build/outputs/androidTest-results/connected/*.xml
+       - app/build/test-results/testReleaseUnitTest/*.xml
+       - app/build/reports
 
 alpha:
   stage: alpha
@@ -45,7 +38,7 @@ alpha:
     - /opt/start-default-emulator.sh
     - chmod +x ./gradlew
     - ./gradlew assembleRelease
-    - fastlane alpha 
+    - bundle exec fastlane alpha 
   only:
     refs:
       - alpha
@@ -56,6 +49,8 @@ alpha:
      paths:
        - app/build/outputs/apk/release/app-release.apk
        - app/build/outputs/androidTest-results/connected/*.xml
+       - app/build/test-results/testReleaseUnitTest/*.xml
+       - app/build/reports
 
 beta:
   stage: beta
@@ -63,7 +58,7 @@ beta:
     - android
   script:
     - echo "$SUPPLY_JSON_KEY_DATA" > /root/.google_secrets.json
-    - fastlane beta 
+    - bundle exec fastlane beta 
   only:
     refs:
       - beta
@@ -76,7 +71,7 @@ production:
     - android
   script:
     - echo "$SUPPLY_JSON_KEY_DATA" > /root/.google_secrets.json
-    - fastlane prod 
+    - bundle exec fastlane prod 
   only:
     refs:
       - main
