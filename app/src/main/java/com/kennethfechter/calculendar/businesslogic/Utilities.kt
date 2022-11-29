@@ -1,17 +1,16 @@
 package com.kennethfechter.calculendar.businesslogic
 
-import android.app.AlertDialog
 import android.content.Context
+import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
-import android.view.LayoutInflater
 import com.kennethfechter.calculendar.CalculationListActivity
 import com.kennethfechter.calculendar.R
+import com.kennethfechter.calculendar.dataaccess.AppDatabase
 import com.kennethfechter.calculendar.views.CalculationDetailFragment
-import com.squareup.timessquare.CalendarPickerView
-import java.util.*
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 object Utilities {
 
@@ -24,12 +23,12 @@ object Utilities {
         }
     }
 
-    fun getPackageVersionName(context: Context): String {
-        return try {
-            val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
-            packageInfo.versionName
-        } catch (e: PackageManager.NameNotFoundException) {
-            ""
+    @Suppress("DEPRECATION")
+    fun Context.getPackageInfo(): PackageInfo {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            packageManager.getPackageInfo(packageName, PackageManager.PackageInfoFlags.of(0))
+        } else {
+            packageManager.getPackageInfo(packageName, 0)
         }
     }
 

@@ -22,9 +22,7 @@ import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.activityScenarioRule
 import androidx.test.platform.app.InstrumentationRegistry
-import com.kennethfechter.calculendar.businesslogic.Utilities
 import com.kennethfechter.calculendar.businesslogic.readAnalytics
-import com.kennethfechter.calculendar.dataaccess.Calculation
 import org.hamcrest.Matchers.allOf
 import org.junit.Assert
 import org.junit.Before

@@ -13,13 +13,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.RadioButton
 import android.widget.Toast
 import com.elconfidencial.bubbleshowcase.BubbleShowCase
 import com.elconfidencial.bubbleshowcase.BubbleShowCaseBuilder
 import com.elconfidencial.bubbleshowcase.BubbleShowCaseListener
 import com.kennethfechter.calculendar.CalculationListActivity
 import com.kennethfechter.calculendar.R
+import com.kennethfechter.calculendar.businesslogic.Utilities.getPackageInfo
 import com.kennethfechter.calculendar.dataaccess.AppDatabase
 import com.kennethfechter.calculendar.databinding.ActivityCalculendarAboutBinding
 import com.kennethfechter.calculendar.databinding.DialogCalculendarDaynightModeBinding
@@ -40,7 +40,7 @@ object Dialogs {
     fun showAboutDialog(context: Context) {
         val layoutInflater = LayoutInflater.from(context)
         val developerProfiles = context.resources.getStringArray(R.array.developer_profiles)
-        var binding = ActivityCalculendarAboutBinding.inflate(layoutInflater)
+        val binding = ActivityCalculendarAboutBinding.inflate(layoutInflater)
         binding.developersList.setOnItemClickListener{ _, _, position, _ ->
             try {
                 val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(developerProfiles[position]))
@@ -49,8 +49,8 @@ object Dialogs {
                 Log.d("Calculendar", "Device does not have a browser available")
             }
         }
-
-        binding.versionText.text = context.resources.getString(R.string.build_id_formatter).format(Utilities.getPackageVersionName(context))
+        val versionNameString = context.getPackageInfo().versionName
+        binding.versionText.text = context.resources.getString(R.string.build_id_formatter).format(versionNameString)
 
         val aboutDialog = AlertDialog.Builder(context)
             .setView(binding.root)
@@ -68,10 +68,9 @@ object Dialogs {
         deleteConfirmationDialog.setTitle("Delete All Calculations")
         deleteConfirmationDialog.setMessage("Do you want to delete all stored calculations?")
         deleteConfirmationDialog.setPositiveButton("Yes") { dialog, _ ->
-            GlobalScope.launch {
+            CoroutineScope(Dispatchers.IO).launch{
                 AppDatabase.getInstance(context)?.deleteAll()
             }
-
             dialog.dismiss()
         }
 
@@ -82,12 +81,13 @@ object Dialogs {
         deleteConfirmationDialog.create().show()
     }
 
+    @Suppress("DEPRECATION")
     fun showDeleteConfirmationDialog(context: Context, calculationId: Int, isActivity: Boolean) {
         val deleteConfirmationDialog = AlertDialog.Builder(context)
         deleteConfirmationDialog.setTitle("Delete Calculation?")
         deleteConfirmationDialog.setMessage("Do you want to delete the current calculation?")
         deleteConfirmationDialog.setPositiveButton("Yes") { dialog, _ ->
-            GlobalScope.launch {
+            CoroutineScope(Dispatchers.IO).launch {
                     AppDatabase.getInstance(context)?.deleteById(calculationId)
             }
 
@@ -108,7 +108,7 @@ object Dialogs {
     fun showThemeDialog(context: Context, currentTheme: Theme) {
         val themeDialogBuilder = AlertDialog.Builder(context)
         val layoutInflater = LayoutInflater.from(context)
-        var binding = DialogCalculendarDaynightModeBinding.inflate(layoutInflater)
+        val binding = DialogCalculendarDaynightModeBinding.inflate(layoutInflater)
         var preferredDayNightMode = currentTheme
 
         when (preferredDayNightMode) {
@@ -139,7 +139,7 @@ object Dialogs {
         }
 
         themeDialogBuilder.setPositiveButton("OK") { dialog, _ ->
-            GlobalScope.launch {
+            CoroutineScope(Dispatchers.IO).launch {
                 context.setAppTheme(preferredDayNightMode)
             }
             dialog.dismiss()
@@ -161,14 +161,14 @@ object Dialogs {
         analyticsDialogBuilder.setMessage(R.string.opt_in_dialog_message)
 
         analyticsDialogBuilder.setNegativeButton("Opt-Out") { dialog, _ ->
-            GlobalScope.launch {
+            CoroutineScope(Dispatchers.IO).launch {
                 context.setAnalytics(false)
                 dialog.dismiss()
             }
         }
 
         analyticsDialogBuilder.setPositiveButton("Opt-In") { dialog, _ ->
-            GlobalScope.launch {
+            CoroutineScope(Dispatchers.IO).launch {
                 context.setAnalytics(true)
                 dialog.dismiss()
             }
@@ -233,26 +233,26 @@ object Dialogs {
             .description("Long press the add (+) button to delete all calculations.")
             .listener(object : BubbleShowCaseListener { //Listener for user actions
                 override fun onTargetClick(bubbleShowCase: BubbleShowCase) {
-                    GlobalScope.launch {
+                    CoroutineScope(Dispatchers.IO).launch {
                         context.setTutorial(true)
                     }
                     bubbleShowCase.dismiss()
                 }
                 override fun onCloseActionImageClick(bubbleShowCase: BubbleShowCase) {
-                    GlobalScope.launch {
+                    CoroutineScope(Dispatchers.IO).launch {
                         context.setTutorial(true)
                     }
                     bubbleShowCase.dismiss()
                 }
                 override fun onBubbleClick(bubbleShowCase: BubbleShowCase) {
-                    GlobalScope.launch {
+                    CoroutineScope(Dispatchers.IO).launch {
                         context.setTutorial(true)
                     }
                     bubbleShowCase.dismiss()
                 }
 
                 override fun onBackgroundDimClick(bubbleShowCase: BubbleShowCase) {
-                    GlobalScope.launch {
+                    CoroutineScope(Dispatchers.IO).launch {
                         context.setTutorial(true)
                     }
                     bubbleShowCase.dismiss()
@@ -262,9 +262,9 @@ object Dialogs {
             .show()
     }
 
-    suspend fun showExclusionOptionsDialog(context: Context, dateRange: String, selectedDates: MutableList<Date>) = suspendCoroutine<Pair<MutableList<Date>, ExclusionMode>?> {
+    suspend fun showExclusionOptionsDialog(context: Context, dateRange: String, selectedDates: MutableList<Date>) = suspendCoroutine {
         val layoutInflater = LayoutInflater.from(context)
-        var binding = DialogExclusionOptionsBinding.inflate(layoutInflater)
+        val binding = DialogExclusionOptionsBinding.inflate(layoutInflater)
         var exclusionMode: ExclusionMode = ExclusionMode.None
         var excludedDates: MutableList<Date> = mutableListOf()
 
@@ -293,8 +293,8 @@ object Dialogs {
 
     }
 
-        binding.btnPickCustom.setOnClickListener() {
-            GlobalScope.launch(Dispatchers.Main) {
+        binding.btnPickCustom.setOnClickListener {
+            CoroutineScope(Dispatchers.IO).launch(Dispatchers.Main) {
                 excludedDates =  showDatePickerDialog(context, context.resources.getString(R.string.custom_date_dialog_title),false, selectedDates, excludedDates)
                 binding.btnPickCustom.text = Converters.getFormattedCustomDateString(context, excludedDates.size)
             }
