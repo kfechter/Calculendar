@@ -11,7 +11,6 @@ import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.RadioButton
@@ -22,12 +21,12 @@ import com.elconfidencial.bubbleshowcase.BubbleShowCaseListener
 import com.kennethfechter.calculendar.CalculationListActivity
 import com.kennethfechter.calculendar.R
 import com.kennethfechter.calculendar.dataaccess.AppDatabase
+import com.kennethfechter.calculendar.databinding.ActivityCalculendarAboutBinding
+import com.kennethfechter.calculendar.databinding.DialogCalculendarDaynightModeBinding
+import com.kennethfechter.calculendar.databinding.DialogExclusionOptionsBinding
 import com.kennethfechter.calculendar.enumerations.ExclusionMode
 import com.kennethfechter.calculendar.enumerations.Theme
 import com.squareup.timessquare.CalendarPickerView
-import kotlinx.android.synthetic.main.activity_calculendar_about.view.*
-import kotlinx.android.synthetic.main.dialog_calculendar_daynight_mode.view.*
-import kotlinx.android.synthetic.main.dialog_exclusion_options.view.*
 import kotlinx.coroutines.*
 import java.util.*
 import kotlin.coroutines.resume
@@ -39,9 +38,10 @@ object Dialogs {
     }
 
     fun showAboutDialog(context: Context) {
-        val aboutApplicationDialogView = LayoutInflater.from(context).inflate(R.layout.activity_calculendar_about, null)
+        val layoutInflater = LayoutInflater.from(context)
         val developerProfiles = context.resources.getStringArray(R.array.developer_profiles)
-        aboutApplicationDialogView.developers_list.setOnItemClickListener{ _, _, position, _ ->
+        var binding = ActivityCalculendarAboutBinding.inflate(layoutInflater)
+        binding.developersList.setOnItemClickListener{ _, _, position, _ ->
             try {
                 val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(developerProfiles[position]))
                 context.startActivity(browserIntent)
@@ -50,16 +50,16 @@ object Dialogs {
             }
         }
 
-        aboutApplicationDialogView.version_text.text = context.resources.getString(R.string.build_id_formatter).format(Utilities.getPackageVersionName(context))
+        binding.versionText.text = context.resources.getString(R.string.build_id_formatter).format(Utilities.getPackageVersionName(context))
 
         val aboutDialog = AlertDialog.Builder(context)
-            .setView(aboutApplicationDialogView)
+            .setView(binding.root)
             .setTitle("Calculendar Developers")
             .setPositiveButton("OK") { dialog, _ ->
                 dialog.dismiss()
             }
 
-        aboutApplicationDialogView.developers_list.adapter = ArrayAdapter(context, R.layout.developer_name_list_item, context.resources.getStringArray(R.array.developer_names))
+        binding.developersList.adapter = ArrayAdapter(context, R.layout.developer_name_list_item, context.resources.getStringArray(R.array.developer_names))
         aboutDialog.show()
     }
 
@@ -105,42 +105,42 @@ object Dialogs {
         deleteConfirmationDialog.create().show()
     }
 
-    fun showThemeDialog(context: Context, preferenceManager: PreferenceManager, currentTheme: Theme) {
+    fun showThemeDialog(context: Context, currentTheme: Theme) {
         val themeDialogBuilder = AlertDialog.Builder(context)
-        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_calculendar_daynight_mode, null)
+        val layoutInflater = LayoutInflater.from(context)
+        var binding = DialogCalculendarDaynightModeBinding.inflate(layoutInflater)
         var preferredDayNightMode = currentTheme
-        val autoModeButton = dialogView.findViewById<RadioButton>(R.id.radio_auto_mode)
 
         when (preferredDayNightMode) {
-            Theme.Day -> dialogView.radio_day_mode.isChecked = true
-            Theme.Night -> dialogView.radio_night_mode.isChecked = true
-            Theme.PowerSave -> dialogView.radio_battery_mode.isChecked = true
-            Theme.System -> autoModeButton.isChecked = true
+            Theme.Day -> binding.radioDayMode.isChecked = true
+            Theme.Night -> binding.radioNightMode.isChecked = true
+            Theme.PowerSave -> binding.radioBatteryMode.isChecked = true
+            Theme.System -> binding.radioAutoMode.isChecked = true
         }
 
-        dialogView.radio_day_mode.setOnCheckedChangeListener {
+        binding.radioDayMode.setOnCheckedChangeListener {
            _, isChecked -> if (isChecked) { preferredDayNightMode = Theme.Day }
         }
 
-        dialogView.radio_night_mode.setOnCheckedChangeListener {
+        binding.radioNightMode.setOnCheckedChangeListener {
             _, isChecked -> if (isChecked) { preferredDayNightMode = Theme.Night }
         }
 
-        dialogView.radio_battery_mode.setOnCheckedChangeListener {
+        binding.radioBatteryMode.setOnCheckedChangeListener {
             _, isChecked -> if (isChecked) { preferredDayNightMode = Theme.PowerSave}
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            autoModeButton.visibility = View.VISIBLE
+            binding.radioAutoMode.visibility = View.VISIBLE
 
-            dialogView.radio_auto_mode.setOnCheckedChangeListener {
+            binding.radioAutoMode.setOnCheckedChangeListener {
                 _, isChecked -> if (isChecked) { preferredDayNightMode = Theme.System }
             }
         }
 
         themeDialogBuilder.setPositiveButton("OK") { dialog, _ ->
             GlobalScope.launch {
-                preferenceManager.setTheme(preferredDayNightMode)
+                context.setAppTheme(preferredDayNightMode)
             }
             dialog.dismiss()
         }
@@ -150,11 +150,11 @@ object Dialogs {
         }
 
         themeDialogBuilder.setTitle(R.string.theme_dialog_title)
-        themeDialogBuilder.setView(dialogView)
+        themeDialogBuilder.setView(binding.root)
         themeDialogBuilder.show()
     }
 
-    fun showAnalyticsDialog(context: Context, preferenceManager: PreferenceManager) {
+    fun showAnalyticsDialog(context: Context) {
         val analyticsDialogBuilder = AlertDialog.Builder(context)
 
         analyticsDialogBuilder.setTitle(R.string.opt_in_dialog_title)
@@ -162,14 +162,14 @@ object Dialogs {
 
         analyticsDialogBuilder.setNegativeButton("Opt-Out") { dialog, _ ->
             GlobalScope.launch {
-                preferenceManager.setAnalytics(false)
+                context.setAnalytics(false)
                 dialog.dismiss()
             }
         }
 
         analyticsDialogBuilder.setPositiveButton("Opt-In") { dialog, _ ->
             GlobalScope.launch {
-                preferenceManager.setAnalytics(true)
+                context.setAnalytics(true)
                 dialog.dismiss()
             }
         }
@@ -227,33 +227,33 @@ object Dialogs {
             .show()
     }
 
-    fun showSpotLight(parentActivity: CalculationListActivity, view: View, preferenceManager: PreferenceManager) {
+    fun showSpotLight(context: Context, parentActivity: CalculationListActivity, view: View) {
         BubbleShowCaseBuilder(parentActivity)
             .title("Long press to delete")
             .description("Long press the add (+) button to delete all calculations.")
             .listener(object : BubbleShowCaseListener { //Listener for user actions
                 override fun onTargetClick(bubbleShowCase: BubbleShowCase) {
                     GlobalScope.launch {
-                        preferenceManager.setTutorial(true)
+                        context.setTutorial(true)
                     }
                     bubbleShowCase.dismiss()
                 }
                 override fun onCloseActionImageClick(bubbleShowCase: BubbleShowCase) {
                     GlobalScope.launch {
-                        preferenceManager.setTutorial(true)
+                        context.setTutorial(true)
                     }
                     bubbleShowCase.dismiss()
                 }
                 override fun onBubbleClick(bubbleShowCase: BubbleShowCase) {
                     GlobalScope.launch {
-                        preferenceManager.setTutorial(true)
+                        context.setTutorial(true)
                     }
                     bubbleShowCase.dismiss()
                 }
 
                 override fun onBackgroundDimClick(bubbleShowCase: BubbleShowCase) {
                     GlobalScope.launch {
-                        preferenceManager.setTutorial(true)
+                        context.setTutorial(true)
                     }
                     bubbleShowCase.dismiss()
                 }
@@ -263,12 +263,13 @@ object Dialogs {
     }
 
     suspend fun showExclusionOptionsDialog(context: Context, dateRange: String, selectedDates: MutableList<Date>) = suspendCoroutine<Pair<MutableList<Date>, ExclusionMode>?> {
-        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_exclusion_options, null)
+        val layoutInflater = LayoutInflater.from(context)
+        var binding = DialogExclusionOptionsBinding.inflate(layoutInflater)
         var exclusionMode: ExclusionMode = ExclusionMode.None
         var excludedDates: MutableList<Date> = mutableListOf()
 
-        dialogView.exclusionHeader.text = dateRange
-        dialogView.exclusionOptions.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        binding.exclusionHeader.text = dateRange
+        binding.exclusionOptions.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
         override fun onNothingSelected(parent: AdapterView<*>?) {}
 
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -282,26 +283,26 @@ object Dialogs {
                 else -> ExclusionMode.None
             }
 
-            dialogView.btn_pick_custom.visibility = when (exclusionMode) {
+            binding.btnPickCustom.visibility = when (exclusionMode) {
                 ExclusionMode.CustomDates -> View.VISIBLE
                 else -> View.INVISIBLE
             }
 
-            dialogView.btn_pick_custom.text = Converters.getFormattedCustomDateString(context, excludedDates.size)
+            binding.btnPickCustom.text = Converters.getFormattedCustomDateString(context, excludedDates.size)
         }
 
     }
 
-        dialogView.btn_pick_custom.setOnClickListener() {
+        binding.btnPickCustom.setOnClickListener() {
             GlobalScope.launch(Dispatchers.Main) {
                 excludedDates =  showDatePickerDialog(context, context.resources.getString(R.string.custom_date_dialog_title),false, selectedDates, excludedDates)
-                dialogView.btn_pick_custom.text = Converters.getFormattedCustomDateString(context, excludedDates.size)
+                binding.btnPickCustom.text = Converters.getFormattedCustomDateString(context, excludedDates.size)
             }
         }
 
         AlertDialog.Builder(context)
             .setTitle("Exclusion Options")
-            .setView(dialogView)
+            .setView(binding.root)
             .setPositiveButton("Calculate") {
                 dialog, _ ->
                 it.resume(Pair(excludedDates, exclusionMode))

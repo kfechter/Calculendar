@@ -1,29 +1,23 @@
 package com.kennethfechter.calculendar.businesslogic
 
 import android.content.Context
-import androidx.datastore.preferences.createDataStore
-import androidx.datastore.preferences.edit
-import androidx.datastore.preferences.emptyPreferences
-import androidx.datastore.preferences.preferencesKey
-import com.google.android.gms.measurement.module.Analytics
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.*
+import androidx.datastore.preferences.core.*
 import com.kennethfechter.calculendar.enumerations.Theme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import java.io.IOException
 
-class PreferenceManager(context: Context) {
-    private val dataStore = context.createDataStore(name = "calculendar_settings")
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "calculendar_settings")
+val THEME_SETTING = intPreferencesKey("theme_setting")
+val ANALYTICS_SETTING = intPreferencesKey("analytics_setting")
+val TUTORIAL_SHOWN = booleanPreferencesKey("TUTORIAL_SHOWN")
 
-    companion object {
-        val THEME_SETTING = preferencesKey<Int>("theme_setting")
-        val ANALYTICS_SETTING = preferencesKey<Int>("analytics_setting")
-        val TUTORIAL_SHOWN = preferencesKey<Boolean>("TUTORIAL_SHOWN")
-    }
-
-    suspend fun setTheme(theme: Theme) {
-        dataStore.edit { preferences ->
-            preferences[THEME_SETTING] = when (theme) {
+suspend fun Context.setAppTheme(theme: Theme) {
+    dataStore.edit { settings ->
+            settings[THEME_SETTING] = when (theme) {
                 Theme.Day -> 1
                 Theme.Night -> 2
                 Theme.PowerSave -> 3
@@ -32,7 +26,7 @@ class PreferenceManager(context: Context) {
         }
     }
 
-    suspend fun setAnalytics(analyticsEnabled: Boolean) {
+    suspend fun Context.setAnalytics(analyticsEnabled: Boolean) {
         dataStore.edit { preferences ->
             preferences[ANALYTICS_SETTING] = when (analyticsEnabled) {
                 false -> 0
@@ -41,14 +35,14 @@ class PreferenceManager(context: Context) {
         }
     }
 
-    suspend fun setTutorial(tutorialShown: Boolean) {
+    suspend fun Context.setTutorial(tutorialShown: Boolean) {
         dataStore.edit {preferences ->
             preferences[TUTORIAL_SHOWN] = tutorialShown
         }
     }
 
-
-    val themeFlow: Flow<Theme> = dataStore.data
+fun Context.readTheme(): Flow<Theme> {
+    return dataStore.data
         .catch {
             if (it is IOException) {
                 it.printStackTrace()
@@ -66,8 +60,9 @@ class PreferenceManager(context: Context) {
                 else -> Theme.Day
             }
         }
-
-    val tutorialFlow: Flow<Boolean> = dataStore.data
+}
+fun Context.readTutorial() : Flow<Boolean> {
+    return dataStore.data
         .catch {
             if (it is IOException) {
                 it.printStackTrace()
@@ -77,10 +72,12 @@ class PreferenceManager(context: Context) {
             }
         }
         .map {
-            preference -> preference[TUTORIAL_SHOWN] ?: false
+                preference -> preference[TUTORIAL_SHOWN] ?: false
         }
+}
 
-    val analyticsFlow: Flow<Int> = dataStore.data
+fun Context.readAnalytics(): Flow<Int> {
+    return dataStore.data
         .catch {
             if (it is IOException) {
                 it.printStackTrace()
