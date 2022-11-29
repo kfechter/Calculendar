@@ -4,7 +4,7 @@ name: default
 
 steps:
 - name: develop
-  image: androidsdk/android-31
+  image: kfechter/android-sdk
   privileged: true
   environment:
     RELEASE_SIGNING:
