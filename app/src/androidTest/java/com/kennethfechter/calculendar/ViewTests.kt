@@ -22,9 +22,7 @@ import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.activityScenarioRule
 import androidx.test.platform.app.InstrumentationRegistry
-import com.kennethfechter.calculendar.businesslogic.PreferenceManager
-import com.kennethfechter.calculendar.businesslogic.Utilities
-import com.kennethfechter.calculendar.dataaccess.Calculation
+import com.kennethfechter.calculendar.businesslogic.readAnalytics
 import org.hamcrest.Matchers.allOf
 import org.junit.Assert
 import org.junit.Before
@@ -197,28 +195,24 @@ class ViewTests {
 
     @Test
     fun validateOptOut() {
-        val preferenceManager = PreferenceManager(context)
-
         onView(withId(R.id.analytics_opt_status))
             .perform(click())
 
         onView(withText("Opt-Out"))
             .perform(click())
 
-        Assert.assertEquals("The current analytics value does not match the expected value", 0, getValue(preferenceManager.analyticsFlow.asLiveData()))
+        Assert.assertEquals("The current analytics value does not match the expected value", 0, getValue(context.readAnalytics().asLiveData()))
     }
 
     @Test
     fun validateOptIn() {
-        val preferenceManager = PreferenceManager(context)
-
         onView(withId(R.id.analytics_opt_status))
             .perform(click())
 
         onView(withText("Opt-In"))
             .perform(click())
 
-        Assert.assertEquals("The current analytics value does not match the expected value", 1, getValue(preferenceManager.analyticsFlow.asLiveData()))
+        Assert.assertEquals("The current analytics value does not match the expected value", 1, getValue(context.readAnalytics().asLiveData()))
     }
 
     // Copied from stackoverflow
