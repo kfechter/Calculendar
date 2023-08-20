@@ -37,7 +37,7 @@ class CalculationDetailFragment : Fragment() {
 
     private fun initializeContentView(id: Int) {
         if(id != -1) {
-            AppDatabase.getInstance(context!!)?.getByID(id)!!.observeOnce(this) {
+            AppDatabase.getInstance(requireContext())?.getByID(id)!!.observeOnce(this) {
                     calculation -> loadViewCalculation(calculation)
             }
         }
@@ -71,7 +71,7 @@ class CalculationDetailFragment : Fragment() {
             customDateHeader?.visibility = View.VISIBLE
             val listView: ListView? = activity?.findViewById(R.id.custom_dates_list)
             listView?.visibility = View.VISIBLE
-            listView?.adapter = ArrayAdapter(context!!, R.layout.developer_name_list_item, Converters.getCustomDateStringList(calculation.customDates)!!)
+            listView?.adapter = ArrayAdapter(requireContext(), R.layout.developer_name_list_item, Converters.getCustomDateStringList(calculation.customDates)!!)
         }
         else {
             customDateHeader?.text = getString(R.string.no_custom_date_text)
@@ -89,7 +89,7 @@ class CalculationDetailFragment : Fragment() {
 
     fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observer<T>) {
         observe(lifecycleOwner, object : Observer<T> {
-            override fun onChanged(t: T?) {
+            override fun onChanged(t: T) {
                 observer.onChanged(t)
                 removeObserver(this)
             }
