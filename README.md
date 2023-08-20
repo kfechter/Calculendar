@@ -7,3 +7,4 @@
 Android application for calculating the number of days between two dates
 
 ##### Todo: Add more info here, maybe about contributing or building?
+##### Todo: Testing the new pipelines
