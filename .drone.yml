@@ -78,3 +78,25 @@ steps:
   when:
     branch:
     - beta
+
+- name: prod
+  image: kfechter/android-sdk
+  privileged: true
+  environment:
+    JSON_64:
+      from_secret: JSON_64
+      
+  commands:
+  - apt-get --quiet update --yes
+  - apt-get --quiet install --yes ruby-full rake build-essential git locales
+  - echo "en_US UTF-8" > /etc/locale.gen
+  - locale-gen en_US.UTF-8
+  - export LANG=en_US.UTF-8
+  - export LANGUAGE=en_US:en
+  - export LC_ALL=en_US.UTF-8
+  - gem install bundler && bundle update
+  - echo "$JSON_64" | base64 --decode > ~/.google_secrets.json
+  - bundle exec fastlane prod 
+  when:
+    branch:
+    - main
