@@ -79,7 +79,7 @@ steps:
     branch:
     - beta
 
-- name: beta
+- name: prod
   image: kfechter/android-sdk
   privileged: true
   environment:
